@@ -1,0 +1,19 @@
+/* 风格样式 */
+
+/* =================主题颜色================= */
+
+/* ------------暖色------------ */
+.warm-theme {
+	background-color: lemonchiffon;
+}
+
+
+
+/* ------------黑色------------ */
+.black-theme {
+	background-color: rgb(36, 41, 46);
+}
+
+.black-theme a,p,h1,h2,h3,h4,h5,h6 {
+	color: white;
+}
