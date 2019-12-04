@@ -17,3 +17,19 @@
 .black-theme a,p,h1,h2,h3,h4,h5,h6 {
 	color: white;
 }
+
+/* ------------棕色------------ */
+.brown-theme {
+	background-color: #594c3b;
+}
+
+.brown-border {
+	background-color: #594c3b;
+}
+
+.gray-theme {
+	background-color: #8a92a0;
+}
+
+
+

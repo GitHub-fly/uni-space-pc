@@ -12,7 +12,13 @@ a {
 	text-decoration: none;
 }
 
-p {
+p,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
 	display: inline-block;
 }
 
@@ -78,6 +84,11 @@ img {
 	display: flex;
 	justify-content: center;
 }
+/* x轴为主轴,水平方向居右 */
+.ba-xx-e {
+	display: flex;
+	justify-content: flex-end;
+}
 /* x轴为主轴,垂直方向均分 */
 .ba-xy-a {
 	display: flex;
@@ -93,6 +104,14 @@ img {
 	display: flex;
 	align-items: center;
 }
+/* x轴为主轴,垂直方向居下 */
+.ba-xy-e {
+	display: flex;
+	align-items: flex-end;
+}
+
+
+
 
 
 /* y轴为主轴,垂直方向居中 */

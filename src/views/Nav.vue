@@ -1,15 +1,20 @@
 <template>
 	<div>
 		<div class="banner black-theme ba-yy-b">
-			<div class="banner-tool"></div>
-			<div class="banner-bar ba-xy-c ba-xx-a">
-				<div class="avatar warm-theme">
-					<div class="ba-xx-c ba-xy-c">
-						<p class="fontcolor-dark" >去登陆~</p>
+			<div class="banner-tool ba-xy-c ba-xx-e">
+				<div class="spinner"></div>
+				<i class="iconfont mar">&#xe610;</i>
+				<i class="iconfont mar">&#xe654;</i>
+				<i class="iconfont mar">&#xe786;</i>
+			</div>
+			<div class="banner-bar ba-xy-e ba-xx-a">
+				<div class="avatar warm-theme ba-xx-c ba-xy-c">
+					<div class="">
+						<p class="fontcolor-dark" @click="signIn()">去登陆~</p>
 					</div>
 				</div>
 				<div class="nav ba-xx-a ba-xy-c">
-					<router-link to="/dynamic">动态</router-link>
+					<router-link to="/dynamic" class="a">动态</router-link>
 					<router-link to="/photo">相册</router-link>
 					<router-link to="/mylog">我的日志</router-link>
 				</div>
@@ -36,32 +41,64 @@
 </script>
 
 <style scoped>
+	
+	.a:hover{
+		font-size: 30px;
+	}
+	
+	@font-face {
+	  font-family: 'iconfont';  /* project id 1541989 */
+	  src: url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.eot');
+	  src: url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.eot?#iefix') format('embedded-opentype'),
+	  url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.woff2') format('woff2'),
+	  url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.woff') format('woff'),
+	  url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.ttf') format('truetype'),
+	  url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.svg#iconfont') format('svg');
+	}
+	
+	.iconfont {
+	    font-family:"iconfont" !important;
+	    font-size:36px;
+		font-style:normal;
+		color: #FFFFFF;
+		cursor: pointer;
+	    -webkit-font-smoothing: antialiased;
+	    -webkit-text-stroke-width: 0.2px;
+	    -moz-osx-font-smoothing: grayscale;
+	}
+	
+	.mar {
+		margin-left: 1%;
+	}
+	
 	.banner {
 		width: 100%;
-		height: 450px;
+		height: 550px;
 	}
 	
 	.banner-tool {
 		width: 100%;
 		height: 15%;
+		padding: 20px 20px;
 		border: 1px solid white;
 	}
 	
 	.banner-bar {
 		width: 100%;
-		height: 50%;
-		border: 1px solid white;
+		height: 40%;
+		/* border: 1px solid white; */
 	}
 	
 	.avatar {
 		width: 200px;
 		height: 200px;
+		cursor: pointer;
 	}
 	
 	.nav {
 		width: 50%;
 		height: 40%;
-		border: 1px solid white;
+		/* border: 1px solid white; */
 	}
 	
 	.container {
