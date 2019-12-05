@@ -9,8 +9,9 @@
 			</div>
 			<div class="banner-bar ba-xy-e ba-xx-a">
 				<div class="avatar warm-theme ba-xx-c ba-xy-c">
-					<div class="">
-						<p class="fontcolor-dark" @click="signIn()">去登陆~</p>
+					<p class="fontcolor-dark" @click="signIn()">去登陆~</p>
+					<div class="img">
+						<img src="http://m.imeitou.com/uploads/allimg/2018082311/qdtnl3ajzuf.jpg" alt="测试头像">
 					</div>
 				</div>
 				<div class="nav ba-xx-a ba-xy-c">
@@ -77,8 +78,10 @@
 	}
 	
 	.banner-tool {
+		position: sticky;
+		top: 0;
 		width: 100%;
-		height: 15%;
+		height: 10%;
 		padding: 20px 20px;
 		border: 1px solid white;
 	}
@@ -95,6 +98,17 @@
 		cursor: pointer;
 	}
 	
+	.avatar:hover {
+		animation: mymove 2s infinite;
+	}
+	
+	@keyframes mymove {
+	    50% {border-top-left-radius: 50%;}
+		50% {border-top-right-radius: 50%;}
+		50% {border-bottom-left-radius: 50%;}
+		50% {border-bottom-right-radius: 50%;}
+	}
+	
 	.nav {
 		width: 50%;
 		height: 40%;
@@ -107,6 +121,11 @@
 	
 	.fontcolor-dark {
 		color: gold;
+	}
+	
+	.img {
+		width: 100%;
+		height: 100%;
 	}
 	
 	

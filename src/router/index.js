@@ -11,41 +11,41 @@ import Photo from '@/views/Photo.vue'
 Vue.use(VueRouter)
 
 const routes = [
-  {
-    path: '/',
-    component: Nav,
-	children: [
-		{
-			path: '/',
-			redirect: '/dynamic'
-		},
-		{
-			path: '/dynamic',
-			component: Dynamic
-		},
-		{
-			path: '/sign',
-			component:Sign
-		},
-		{
-			path: '/mylog',
-			component: Mylog
-		},
-		{
-			path: '/publish',
-			component: Publish
-		},
-		{
-			path: '/photo',
-			component: Photo
-		}
-	]
-  }
-  
+	{
+		path: '/',
+		component: Nav,
+		children: [
+			{
+				path: '/',
+				redirect: '/dynamic'
+			},
+			{
+				path: '/dynamic',
+				component: Dynamic
+			},
+			{
+				path: '/mylog',
+				component: Mylog
+			},
+			{
+				path: '/publish',
+				component: Publish
+			},
+			{
+				path: '/photo',
+				component: Photo
+			}
+		]
+	},
+	{
+		path: '/sign',
+		component: Sign
+	}
+
 ]
 
 const router = new VueRouter({
-  routes
+	routes
 })
 
 export default router
