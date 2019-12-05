@@ -4,11 +4,11 @@
 			<div class="form-container sign-up-container" v-if="selected===0">
 				<h1>register</h1>
 				<span>电子邮箱注册</span>
-				<input type="text" placeholder="手机号">
-				<input type="password" placeholder="密码">
+				<input type="text" placeholder="手机号" v-model="userDto.mobile">
+				<input type="password" placeholder="密码" v-model="userDto.password">
 				<div class="row">
-					<input type="text" placeholder="验证码" style="width: 65%;">
-					<a @click="getcode">获取验证码</a>
+					<input type="text" placeholder="验证码" style="width: 65%;" v-model="userDto.usercode">
+					<a @click="getcode" style="cursor: pointer;">获取验证码</a>
 				</div>
 
 				<button @click="toregister">注册</button>
@@ -18,9 +18,10 @@
 				<a @click="mobilelogin" style="cursor: pointer;">或用手机号登录</a>
 				<input type="text" placeholder="账号" v-model="userDto.mobile">
 				<input type="password" placeholder="密码" v-model="userDto.password">
+				<img class="verify" @click.prevent="refresh" ref="codeImg" />
 				<button @click="signIn">登录</button>
 			</div>
-			
+
 			<div class="form-container sign-in-container" v-if="selected===2">
 				<h1>login</h1>
 				<input type="text" placeholder="手机号">
@@ -65,7 +66,8 @@
 				userDto: {
 					mobile: '',
 					password: '',
-					code:''
+					code:'',
+					usercode:''
 				},
 				selected: 1,
 				judgemobile:false
@@ -86,6 +88,7 @@
 						verifyCode: this.userDto.mobile
 					},
 				}).then(res =>{
+					console.log(res)
 					if(res.data.msg == "成功"){
 						alert("登录成功");
 					}else{
@@ -93,18 +96,21 @@
 					}
 				});
 			},
+			// 注册接口测试,对验证码进行了判断,还没有调用注册的接口
 			toregister(){
-				
+				if(this.userDto.code === this.userDto.usercode){
+					
+				}else{
+					alert("验证码输入错误");
+				}
 			},
 			getcode(){
-
-				this.axios.get(this.GLOBAL.baseUrl+'sms?mobile='+this.userDto.code)
+				alert("进入函数");
+				this.axios.post('http://2oa7155039.qicp.vip/api/sms?mobile='+this.userDto.mobile)
 					.then(function(response) {
-						
-						alert(this.GLOBAL.baseUrl+'sms?mobile='+userDto.code);
-						alert(response.data.data);
+						alert("发送成功")
+						this.userDto.code= response.data.data;
 					})
-					
 			},
 			changelogin() {
 				if(this.selected==1){
@@ -164,7 +170,11 @@
 		text-decoration: none;
 		margin: 15px 0;
 	}
-
+	.verify {
+		display: flex;
+		justify-content: center;
+		align-items: center;
+	}
 	.container {
 		border-radius: 10px;
 		box-shadow: 0 14px 28px rgba(0, 0, 0, 0.25), 0 10px 10px rgba(0, 0, 0, 0.22);
@@ -222,8 +232,6 @@
 		font-weight: bold;
 		padding: 12px 45px;
 		letter-spacing: 1px;
-		text-transform: uppercase;
-		transition: transform 80ms ease-in;
 	}
 
 	input[type=text] {
@@ -235,7 +243,7 @@
 		font-family: 'PLay', sans-serif;
 		font-size: 16px;
 		font-weight: 200px;
-		transition: border 0.5s;
+		/* transition: border 0.5s; */
 		outline: none;
 		color: #fff;
 		font-weight: bold;
@@ -273,10 +281,10 @@
 		height: 100%;
 		transition: all 0.6s ease-in-out;
 	}
-
 	.sign-in-container {
 		left: 0;
 		width: 50%;
+
 	}
 
 	.sign-up-container {
@@ -300,7 +308,6 @@
 		position: absolute;
 		height: 100%;
 		width: 100%;
-		transform: translateX(0);
 		transition: transform 0.6s ease-in-out;
 	}
 
@@ -315,43 +322,10 @@
 		height: 100%;
 		width: 50%;
 		text-align: center;
-		transform: translateX(0);
 		transition: transform 0.6s ease-in-out;
 	}
-
-	.overlay-left {
-		transform: translateX(0);
-	}
-
 	.overlay-right {
 		position: relative;
 		left: 50%;
-		transform: translateX(0);
-	}
-
-
-	.container.right-panel-active .overlay-container {
-		transform: translateX(-100%);
-	}
-
-	.container.right-panel-active .sign-up-container {
-		transform: translateX(100%);
-	}
-
-	.container.right-panel-active .sign-in-container {
-		transform: translateX(100%);
-	}
-
-
-	.container.right-panel-active .overlay {
-		transform: translateX(50%);
-	}
-
-	.container.right-panel-active .overlay-left {
-		transform: translateX(-100%);
-	}
-
-	.container.right-panel-active .overlay-right {
-		transform: translateX(20%);
 	}
 </style>
