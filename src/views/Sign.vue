@@ -1,39 +1,44 @@
 <template>
 	<div class="big-container">
 		<div class="container">
-			
 			<div class="form-container sign-up-container" v-if="selected===0">
 				<h1>register</h1>
 				<span>电子邮箱注册</span>
-				<input type="text" placeholder="手机号" v-model="userDto.mobile">
+				<div class="blank">
+					<label class="alert">{{mobileTip}}</label>
+				</div>
+				<input type="text" placeholder="手机号" v-model="userDto.mobile" @input="checkPhone()">
 				<input type="password" placeholder="密码" v-model="userDto.password">
 				<div class="row">
 					<input type="text" placeholder="验证码" style="width: 65%;" v-model="usercode">
 					<a @click="getcode" style="cursor: pointer;">获取验证码</a>
 				</div>
-				<button @click="toregister">注册</button>
+				<button @click="toregister" :disabled="status">注册</button>
 			</div>
-			
 			<div class="form-container sign-in-container" v-if="selected===1">
 				<h1>login</h1>
 				<a @click="mobilelogin" style="cursor: pointer;">或用手机号登录</a>
 				<input type="text" placeholder="账号" v-model="userDto.mobile">
-				<input type="text" placeholder="验证码" v-model="usercode">
-				<img class="verify" @click.prevent="refresh" ref="codeImg" />
 				<input type="password" placeholder="密码" v-model="userDto.password">
+				<div class="code-box">
+					<input type="text" placeholder="验证码" v-model="usercode" style="width: 70%;">
+					<img class="verify" @click.prevent="refresh" ref="codeImg" />
+				</div>
 				<button @click="signIn">登录</button>
 			</div>
-			
+
 			<div class="form-container sign-in-container" v-if="selected===2">
 				<h1>login</h1>
-				<input type="text" placeholder="手机号" v-model="userDto.mobile">
+				<div class="blank">
+					<label class="alert">{{mobileTip}}</label>
+				</div>
+				<input type="text" placeholder="手机号" v-model="userDto.mobile" @input="checkPhone()">
 				<div class="row">
 					<input type="text" placeholder="验证码" style="width: 70%;" v-model="usercode">
 					<span @click="getcode" style="cursor: pointer;">获取验证码</span>
 				</div>
 				<button @click="avoidlogin">登录</button>
 			</div>
-
 
 			<div class="overlay-container">
 				<div class="overlay">
@@ -73,17 +78,18 @@
 				usercode: null,
 				selected: 1,
 				judgemobile: false,
-				codeimage:''
+				codeimage: '',
+				status: false,
+				mobileTip: ''
 			};
 		},
-		created() {
-		},
+		created() {},
 		mounted() {
 			this.refresh();
 		},
 		methods: {
 			signIn() {
-				if(this.code==this.usercode){
+				if (this.code == this.usercode) {
 					this.axios({
 						method: 'post',
 						url: this.GLOBAL.baseUrl + '/user/sign_in',
@@ -92,27 +98,45 @@
 							password: this.userDto.password,
 						},
 					}).then(res => {
+						console.log(res.data.data);
 						if (res.data.msg == "成功") {
+							this.$router.push({
+								path:  '/nav',
+								query: {
+									id: res.data.data.id
+								}
+							})
 							alert("登录成功");
 						} else {
 							alert("密码错误")
 						}
 					});
-				}else{
+				} else {
 					alert("验证码错误");
-				}	
+				}
 			},
-			avoidlogin(){
+			checkPhone() {
+				var phone = this.userDto.mobile;
+				if (!(/^1[3456789]\d{9}$/.test(phone))) {
+					this.mobileTip = "手机格式不正确";
+					this.status = true;
+					return false;
+				} else {
+					this.mobileTip = '';
+					this.status = false;
+				}
+			},
+			avoidlogin() {
 				alert("进入函数")
-				if(this.usercode == this.code){
+				if (this.usercode == this.code) {
 					this.axios({
-						method:'post',
-						url:this.GLOBAL.baseUrl + '/user/sign_in',
+						method: 'post',
+						url: this.GLOBAL.baseUrl + '/user/sign_in',
 						data: {
 							name: this.userDto.mobile,
 							verifyCode: this.usercode
 						},
-					}).then(res=>{
+					}).then(res => {
 						console.log(res.data)
 						if (res.data.msg === "成功") {
 							alert("登录成功");
@@ -120,22 +144,22 @@
 							alert("密码错误")
 						}
 					})
-				}else{
+				} else {
 					alert("验证码错误");
-				}				
+				}
 			},
 			toregister() {
 				if (this.code === this.usercode) {
 					this.axios({
-						method:'post',
-						url:'http://localhost:8080/api/user/sign_up',
-						data:{
-							  "name": this.userDto.mobile,
-							  "password": this.userDto.password,
-							  "verifyCode": this.usercode
+						method: 'post',
+						url: 'http://localhost:8080/api/user/sign_up',
+						data: {
+							"name": this.userDto.mobile,
+							"password": this.userDto.password,
+							"verifyCode": this.usercode
 						}
-					}).then(res=>{
-						if(res.data.msg==="成功"){
+					}).then(res => {
+						if (res.data.msg === "成功") {
 							alert("注册成功")
 						}
 					})
@@ -143,9 +167,9 @@
 					alert("验证码输入错误");
 				}
 			},
-			refresh(){
+			refresh() {
 				let _this = this;
-				this.axios.get('http://localhost:8080/api/code').then(res=>{
+				this.axios.get('http://localhost:8080/api/code').then(res => {
 					_this.code = res.data.data.code;
 					var img = this.$refs.codeImg;
 					// let url = window.URL.createObjectURL(res.data);
@@ -154,7 +178,7 @@
 			},
 			getcode() {
 				alert("发送验证码")
-				let _this= this;
+				let _this = this;
 				this.axios.post('http://localhost:8080/api/sms?mobile=' + this.userDto.mobile)
 					.then(function(response) {
 						_this.code = response.data.data;
@@ -169,21 +193,22 @@
 				if (this.selected == 2) {
 					this.selected = 1;
 				}
-				this.code='';
-				this.usercode=null;
-				this.userDto.password='';
-				this.userDto.mobile='';
+				this.code = '';
+				this.usercode = null;
+				this.userDto.password = '';
+				this.userDto.mobile = '';
 				this.refresh();
+				this.mobileTip = '';
 			},
 			mobilelogin() {
 				if (this.selected == 1) {
 					this.selected = 2;
 				}
-				this.code='';
-				this.usercode=null;
-				this.userDto.password='';
-				this.userDto.mobile='';
-				
+				this.code = '';
+				this.usercode = null;
+				this.userDto.password = '';
+				this.userDto.mobile = '';
+
 
 			}
 
@@ -193,6 +218,22 @@
 </script>
 
 <style scoped>
+	.code-box {
+		display: flex;
+		justify-content: space-between;
+		width: 90%;
+		position: relative;
+	}
+
+	.alert {
+		color: red;
+	}
+
+	.blank {
+		padding: 3%;
+		height: 3%;
+	}
+
 	.big-container {
 		font-family: 'Montserrat', sans-serif;
 		background: #f6f5f7;
@@ -234,9 +275,13 @@
 		display: flex;
 		justify-content: center;
 		align-items: center;
-		width: 25%;
-		height: 7%;
+		width: 30%;
+		height: 70%;
 		cursor: pointer;
+		border-radius: 5%;
+		position: absolute;
+		right: 0;
+		bottom: 14%;
 	}
 
 	.container {
@@ -284,7 +329,6 @@
 		padding: 12px 15px;
 		margin: 8px 0;
 		width: 100%;
-		background-color: red;
 	}
 
 	button {

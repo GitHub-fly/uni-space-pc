@@ -40,9 +40,11 @@ img {
 .ba-col-12 {
 	flex: 1 1 100%;
 }
-.ba-col-10{
-	flex:1 1 83.33%
+
+.ba-col-10 {
+	flex: 1 1 83.33%
 }
+
 .ba-col-8 {
 	flex: 1 1 66%;
 	border-radius: 3px;
@@ -76,36 +78,43 @@ img {
 	display: flex;
 	justify-content: space-around;
 }
+
 /* x轴为主轴,水平方向两端对齐 */
 .ba-xx-b {
 	display: flex;
 	justify-content: space-between;
 }
+
 /* x轴为主轴,水平方向居中 */
 .ba-xx-c {
 	display: flex;
 	justify-content: center;
 }
+
 /* x轴为主轴,水平方向居右 */
 .ba-xx-e {
 	display: flex;
 	justify-content: flex-end;
 }
+
 /* x轴为主轴,垂直方向均分 */
 .ba-xy-a {
 	display: flex;
 	align-items: space-around;
 }
+
 /* x轴为主轴,垂直方向两端对齐 */
 .ba-xy-b {
 	display: flex;
 	align-items: space-between;
 }
+
 /* x轴为主轴,垂直方向居中 */
 .ba-xy-c {
 	display: flex;
 	align-items: center;
 }
+
 /* x轴为主轴,垂直方向居下 */
 .ba-xy-e {
 	display: flex;
@@ -130,3 +139,23 @@ img {
 	justify-content: space-between;
 }
 
+/* 阿里图标 */
+@font-face {
+	font-family: 'iconfont';
+	/* project id 1550259 */
+	src: url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.eot');
+	src: url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.eot?#iefix') format('embedded-opentype'),
+		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.woff2') format('woff2'),
+		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.woff') format('woff'),
+		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.ttf') format('truetype'),
+		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.svg#iconfont') format('svg');
+}
+
+.iconfont {
+	font-family: "iconfont" !important;
+	font-size: 16px;
+	font-style: normal;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-stroke-width: 0.2px;
+	-moz-osx-font-smoothing: grayscale;
+}

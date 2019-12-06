@@ -5,6 +5,24 @@
 </template>
 
 <script>
+	export default {
+		data() {
+			return {
+				
+			};
+		},
+	
+		created() {
+			console.log(this.user)
+			alert(this.user.id)
+		},
+	
+		methods: {
+			
+		},
+	
+		computed: {}
+	};
 </script>
 
 <style>

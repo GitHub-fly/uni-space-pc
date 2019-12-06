@@ -17,26 +17,26 @@ const routes = [
 		children: [
 			{
 				path: '/',
-				redirect: '/user'
+				redirect: 'user'
 			},
 			{
-				path: '/dynamic',
+				path: 'dynamic',
 				component: Dynamic
 			},
 			{
-				path: '/mylog',
+				path: 'mylog',
 				component: Mylog
 			},
 			{
-				path: '/publish',
+				path: 'publish',
 				component: Publish
 			},
 			{
-				path: '/photo',
+				path: 'photo',
 				component: Photo
 			},
 			{
-				path:'/user',
+				path:'user',
 				component:User
 			}
 		]
