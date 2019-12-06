@@ -6,7 +6,7 @@ import Dynamic from '@/views/Dynamic.vue'
 import Mylog from '@/views/Mylog.vue'
 import Publish from '@/views/Publish.vue'
 import Photo from '@/views/Photo.vue'
-
+import User from '@/views/User.vue'
 
 Vue.use(VueRouter)
 
@@ -17,7 +17,7 @@ const routes = [
 		children: [
 			{
 				path: '/',
-				redirect: '/dynamic'
+				redirect: '/user'
 			},
 			{
 				path: '/dynamic',
@@ -34,6 +34,10 @@ const routes = [
 			{
 				path: '/photo',
 				component: Photo
+			},
+			{
+				path:'/user',
+				component:User
 			}
 		]
 	},

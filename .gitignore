@@ -20,6 +20,7 @@ target/
 *.iml
 *.ipr
 ##忽略这些文件夹
+node_modules/
 logs/
 .idea/
 .mvn/
