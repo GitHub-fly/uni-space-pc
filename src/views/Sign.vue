@@ -101,7 +101,7 @@
 						console.log(res.data.data);
 						if (res.data.msg == "成功") {
 							this.$router.push({
-								path:  '/nav',
+								path:  '/',
 								query: {
 									id: res.data.data.id
 								}
