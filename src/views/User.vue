@@ -5,53 +5,118 @@
 		<div class="ba-col-8 hy-user-container">
 			<div class="ba-col-1"></div>
 			<div class="ba-col-10">
-				<div class="info">
-					<div class="item"><h1>昵称</h1></div>
-					<div class="value"><input type="text" class="value" :disabled="status" v-model="user.nickname" /></div>
+				<div class="info" @mouseover="showFunction()" @mouseleave="hideFunction()">
+					<h1 class="title">昵称</h1>
+					<div class="value">
+						<input type="text" class="input" :disabled="status" v-model="user.nickname" v-if="showInput" />
+						<span v-else class="content">{{ user.nickname }}</span>
+						<i class="iconfont" @click="saveNickname()" v-if="showSave">&#xea6e;保存</i>
+						<i class="iconfont" @click="update()" v-if="showUpdate">&#xe600;修改</i>
+					</div>
 				</div>
-				<div class="info">
-					<div class="item"><h1>手机号:</h1></div>
-					<div class="value"><input type="text" class="mobile" disabled :placeholder="user.mobile" /></div>
+
+				<div class="info" @mouseover="showFunctionGender()" @mouseleave="hideFunctionGender()">
+					<h1 class="title">性别</h1>
+					<div class="value">
+						<div class="radio" v-if="showRadio">
+							<label for="" style="margin-right: 30px;">
+								<input name="gender" type="radio" value="男" />
+								男
+							</label>
+							<label for="" style="margin-right: 30px;">
+								<input name="gender" type="radio" value="女" />
+								女
+							</label>
+						</div>
+
+						<span class="content" v-else>{{ user.gender }}</span>
+
+						<i class="iconfont" @click="saveGender()" v-if="showSaveGender">&#xea6e;保存</i>
+						<i class="iconfont" @click="updateGender()" v-if="showUpdateGender">&#xe600;修改</i>
+					</div>
 				</div>
-				<div class="info">
-					<div class="item"><h1>账号:</h1></div>
-					<div class="value"><input type="text" class="value" placeholder="未设置" :disabled="status" v-model="user.account" /></div>
+
+				<div class="info" @mouseover="showFunctionIntro()" @mouseleave="hideFunctionIntro()">
+					<h1 class="title">简介</h1>
+					<div class="value">
+						<!-- <input type="text" class="input" v-model="user.introduction" v-if="showInputIntro" /> -->
+						<textarea id="textarea" v-if="showInputIntro" rows="5" :value="user.introduction"></textarea>
+						<span class="content-intro" v-else>{{ user.introduction.substring(0, 13) }}</span>
+						<i class="iconfont" @click="saveIntro()" v-if="showSaveIntro">&#xea6e;保存</i>
+						<i class="iconfont" @click="updateIntro()" v-if="showUpdateIntro">&#xe600;修改</i>
+					</div>
 				</div>
-				<div class="info">
-					<div class="item"><h1>邮箱:</h1></div>
-					<div class="value"><input type="text" class="value" placeholder="未设置" :disabled="status" v-model="user.email" /></div>
+
+				<div class="info" @mouseover="showFunctionAddress()" @mouseleave="hideFunctionAddress()">
+					<h1 class="title">居住地</h1>
+					<div class="value">
+						<input type="text" class="input" v-model="user.address" v-if="showInputAddress" />
+						<span v-else class="content">{{ user.address }}</span>
+						<i class="iconfont" @click="saveAddress()" v-if="showSaveAddress">&#xea6e;保存</i>
+						<i class="iconfont" @click="updateAddress()" v-if="showUpdateAddress">&#xe600;修改</i>
+					</div>
 				</div>
+
 				<div class="info">
-					<div class="item"><h1>地址:</h1></div>
-					<div class="value"><input type="text" class="value" :disabled="status" v-model="user.address" /></div>
+					<h1 class="title">手机号</h1>
+					<div class="value">
+						<span class="content">{{ user.mobile }}</span>
+					</div>
 				</div>
-				<div class="info">
-					<div class="item"><h1>性别:</h1></div>
-					<div class="value"><input type="text" class="value" :disabled="status" v-model="user.gender" /></div>
+
+				<div class="info" @mouseover="showFunctionEmail()" @mouseleave="hideFunctionEmail()">
+					<h1 class="title">邮箱</h1>
+					<div class="value">
+						<input type="email" class="input" v-model="user.email" v-if="showInputEmail"  />
+						<span v-else class="content">{{ user.email }}</span>
+						<i class="iconfont" @click="saveEmail()" v-if="showSaveEmail">&#xea6e;保存</i>
+						<i class="iconfont" @click="updateEmail()" v-if="showUpdateEmail">&#xe600;修改</i>
+					</div>
 				</div>
-				<div class="info">
-					<div class="item"><h1>简介:</h1></div>
-					<div class="value"><input type="text" class="value" :disabled="status" v-model="user.introduction" /></div>
+
+				<div class="info" @mouseover="showFunctionAccount()" @mouseleave="hideFunctionAccount()">
+					<h1 class="title">账号</h1>
+					<div class="value">
+						<input type="text" class="input" v-model="user.account" v-if="showInputAccount" />
+						<span v-else class="content">{{ user.account }}</span>
+						<i class="iconfont" @click="saveAccount()" v-if="showSaveAccount">&#xea6e;保存</i>
+						<i class="iconfont" @click="updateAccount()" v-if="showUpdateAccount">&#xe600;修改</i>
+					</div>
 				</div>
-				<div class="info">
-					<div class="item"><h1>星座:</h1></div>
-					<div class="value"><input type="text" class="value" :disabled="status" v-model="user.constellation" /></div>
+
+				<div class="info" @mouseover="showFunctionBirthday()" @mouseleave="hideFunctionBirthday()">
+					<h1 class="title">生日</h1>
+					<div class="value">
+						<div v-if="showInputBirthday" class="selectBox">
+							<select name="year" id="year" @change="changeDays()">
+								<option :value="index + 1960" v-for="(item, index) in 60" :key="index">{{ item + 1959 }}</option>
+							</select>
+							<select name="month" id="month" @change="changeDays()">
+								<option :value="index + 1" v-for="(item, index) in 12" :key="index">{{ item }}</option>
+							</select>
+							<select name="day" id="day">
+								<option :value="index" v-for="(item, index) in days" :key="index">{{ item }}</option>
+							</select>
+						</div>
+						<span class="content" v-else>{{ user.birthady }}</span>
+						<i class="iconfont" @click="saveBirthday()" v-if="showSaveBirthday">&#xea6e;保存</i>
+						<i class="iconfont" @click="updateBirthday()" v-if="showUpdateBirthday">&#xe600;修改</i>
+					</div>
 				</div>
-				<div class="info">
-					<div class="item"><h1>生日:</h1></div>
-					<div class="value"><input type="text" class="value" :disabled="status" v-model="user.birthday" /></div>
+
+				<div class="info" @mouseover="showFunctionConstellation()" @mouseleave="hideFunctionConstellation()">
+					<h1 class="title">星座</h1>
+					<div class="value">
+						<select name="" id="constellation" v-if="showInputConstellation">
+							<option :value="item" v-for="(item, index) in constellationList" :key="index">{{ item }}</option>
+						</select>
+						<span class="content" v-else>{{ user.constellation }}</span>
+						<i class="iconfont" @click="saveConstellation()" v-if="showSaveConstellation">&#xea6e;保存</i>
+						<i class="iconfont" @click="updateConstellation()" v-if="showUpdateConstellation">&#xe600;修改</i>
+					</div>
 				</div>
 			</div>
-			<div class="function">
-				<label for="">
-					<i class="iconfont" @click="update()">&#xe600;</i>
-					修改
-				</label>
-				<label for="" @click="save()">
-					<i class="iconfont">&#xea6e;</i>
-					保存
-				</label>
-			</div>
+			<div class="function"></div>
 		</div>
 
 		<div class="ba-col-2"></div>
@@ -72,9 +137,49 @@ export default {
 				gender: '',
 				introduction: '',
 				constellation: '',
-				birthady: ''
+				birthady: '',
 			},
-			status: true
+			status: true,
+			showInput: false,
+			showUpdate: false,
+			showSave: false,
+
+			showRadio: false,
+			showUpdateGender: false,
+			showSaveGender: false,
+
+			// 个人简介：
+			showInputIntro: false,
+			showUpdateIntro: false,
+			showSaveIntro: false,
+
+			// 地址
+			showSaveAddress: false,
+			showUpdateAddress: false,
+			showInputAddress: false,
+
+			// 邮箱
+			showSaveEmail: false,
+			showUpdateEmail: false,
+			showInputEmail: false,
+
+			// 地址
+			showSaveAccount: false,
+			showUpdateAccount: false,
+			showInputAccount: false,
+
+			// 星座
+			showSaveConstellation: false,
+			showUpdateConstellation: false,
+			showInputConstellation: false,
+			constellationList: ['白羊座', '金牛座', '双子座', '巨蟹座', '狮子座', '处女座', '天秤座', '天蝎座', '射手座', '摩羯座', '水瓶座', '双鱼座'],
+
+			// 生日
+			showSaveBirthday: false,
+			showUpdateBirthday: false,
+			showInputBirthday: false,
+
+			days: 31
 		};
 	},
 
@@ -94,17 +199,177 @@ export default {
 				headers: {
 					'Content-Type': 'application/json'
 				}
-			}).then(res => {
-				if (res.data.msg == '成功') {
-					alert('修改成功');
-					this.status = true;
-				} else {
-					alert('修改失败');
-				}
-			});
+			}).then(res => {});
 		},
 		update() {
+			this.showInput = true;
 			this.status = false;
+			this.showSave = true;
+		},
+
+		showFunction() {
+			this.showUpdate = true;
+		},
+		hideFunction() {
+			this.showUpdate = false;
+		},
+
+		saveNickname() {
+			this.save();
+			this.showSave = false;
+			this.showInput = false;
+		},
+
+		showFunctionGender() {
+			this.showUpdateGender = true;
+		},
+		updateGender() {
+			this.showRadio = true;
+			this.showSaveGender = true;
+		},
+		hideFunctionGender() {
+			this.showUpdateGender = false;
+		},
+		saveGender() {
+			//获取所有单选按钮（同一组），得到对象
+			var genders = document.getElementsByName('gender');
+			for (var i = 0; i < genders.length; i++) {
+				if (genders[i].checked) {
+					this.user.gender = genders[i].value;
+				}
+			}
+			this.save();
+			this.showSaveGender = false;
+			this.showRadio = false;
+		},
+
+		showFunctionIntro() {
+			this.showUpdateIntro = true;
+		},
+		saveIntro() {
+			this.user.introduction = document.getElementById('textarea').value;
+			this.save();
+			this.showSaveIntro = false;
+			this.showInputIntro = false;
+		},
+		updateIntro() {
+			this.introStatus = false;
+			this.showInputIntro = true;
+			this.showSaveIntro = true;
+		},
+		hideFunctionIntro() {
+			this.showUpdateIntro = false;
+		},
+
+		showFunctionAddress() {
+			this.showUpdateAddress = true;
+		},
+		updateAddress() {
+			this.showInputAddress = true;
+			this.AddressStatus = false;
+			this.showSaveAddress = true;
+		},
+		saveAddress() {
+			this.axios({
+				method: 'put',
+				url: this.GLOBAL.baseUrl + '/user/userData',
+				data: JSON.stringify(this.user),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(res => {
+				this.showInputAddress = false;
+				this.showSaveAddress = false;
+			});
+		},
+		hideFunctionAddress() {
+			this.showUpdateAddress = false;
+		},
+
+		showFunctionEmail() {
+			this.showUpdateEmail = true;
+		},
+		updateEmail() {
+			this.showInputEmail = true;
+			this.showSaveEmail = true;
+		},
+		saveEmail() {
+			this.save();
+			this.showSaveEmail = false;
+			this.showInputEmail = false;
+		},
+		hideFunctionEmail() {
+			this.showUpdateEmail = false;
+		},
+
+		showFunctionAccount() {
+			this.showUpdateAccount = true;
+		},
+		updateAccount() {
+			this.showInputAccount = true;
+			this.showSaveAccount = true;
+		},
+		saveAccount() {
+			this.save();
+			this.showSaveAccount = false;
+			this.showInputAccount = false;
+		},
+		hideFunctionAccount() {
+			this.showUpdateAccount = false;
+		},
+
+		showFunctionBirthday() {
+			this.showUpdateBirthday = true;
+		},
+		updateBirthday() {
+			this.showInputBirthday = true;
+			this.showSaveBirthday = true;
+		},
+		saveBirthday() {
+			let year = document.getElementById('year').value;
+			let month = document.getElementById('month').value;
+			let day = document.getElementById('day').value;
+			this.user.birthady = year + '-' + month + '-' + day;
+			this.save();
+			this.showSaveBirthday = false;
+			this.showInputBirthday = false;
+		},
+		hideFunctionBirthday() {
+			this.showUpdateBirthday = false;
+		},
+
+		changeDays() {
+			let year = document.getElementById('year').value;
+			let month = document.getElementById('month').value;
+			if (year % 4 == 0 && month == 2) {
+				return (this.days = 29);
+			}
+			if (year % 4 != 0 && month == 2) {
+				return (this.days = 28);
+			}
+
+			if (month == 1 || month == 3 || month == 5 || month == 7 || month == 8 || month == 10 || month == 12) {
+				return (this.days = 31);
+			} else {
+				return (this.days = 30);
+			}
+		},
+
+		showFunctionConstellation() {
+			this.showUpdateConstellation = true;
+		},
+		updateConstellation() {
+			this.showInputConstellation = true;
+			this.showSaveConstellation = true;
+		},
+		saveConstellation() {
+			this.user.constellation = document.getElementById('constellation').value;
+			this.save();
+			this.showSaveConstellation = false;
+			this.showInputConstellation = false;
+		},
+		hideFunctionConstellation() {
+			this.showUpdateConstellation = false;
 		}
 	},
 
@@ -114,67 +379,71 @@ export default {
 
 <style scoped>
 * {
-	transition: all 0.8s ease 0s;
+	transition: all 1s ease 0s;
 }
+select {
+	margin-right: 20px;
+	height: 30px;
+	width: 80px;
+}
+.selectBox {
+	height: 100%;
+}
+textarea {
+	width: 75%;
+}
+.content-intro {
+	font-family: '楷体';
+	font-size: 30px;
+}
+.iconfont {
+	margin-right: 10px;
+}
+.content {
+	font-family: '楷体';
+	font-size: 30px;
+}
+.title {
+	font-size: 30px;
+	width: 20%;
+}
+h1,
 input {
+	font-family: '楷体';
+	color: #000000;
+}
+.input {
 	outline: none;
-	border: none;
-}
-i {
-	margin-right: 10%;
-}
-
-label {
-	margin-bottom: 50%;
-	cursor: pointer;
-	width: 100%;
-	height: 6%;
+	font-size: 25px;
 	border-radius: 20px;
-	background-color: rgb(255, 255, 255);
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	transform: none;
+	border: 1px solid gray;
+	padding-left: 20px;
 }
-label:hover {
-	background-color: rgb(158, 158, 158);
-}
-
 .function {
 	padding: 10px;
 	display: flex;
 	flex-direction: column;
 	align-items: center;
-	width: 10%;
+	width: 20%;
 }
-.value,
-.mobile {
-	width: 89%;
-	height: 100%;
-	/* background-color: lawngreen; */
-}
-
-.item {
-	width: 15%;
-	height: 100%;
+.value {
+	width: 90%;
+	margin-left: 20%;
 	display: flex;
-	margin-right: 1%;
 	align-items: center;
-	background-color: lightgray;
 }
 
 .info {
 	width: 100%;
-	height: 30px;
+	height: 75px;
 	display: flex;
 	align-items: center;
-	margin-bottom: 2%;
-	background-color: lemonchiffon;
+	margin-bottom: 5%;
+	border-bottom: 1px solid lightgray;
 }
 
 .ba-col-10 {
-	padding: 10px;
-	height: 100%;
+	padding: 30px 10px 10px 10px;
 	display: flex;
 	flex-direction: column;
 }

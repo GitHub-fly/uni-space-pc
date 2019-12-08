@@ -11,11 +11,11 @@
 			<div class="banner-bar ba-xy-e ba-xx-a">
 				<div class="avatar ba-xx-c ba-xy-c">
 					<p class="fontcolor-dark" @click="toSignIn()" v-if="user === null">去登陆~</p>
+
 					<div class="img" v-else>
 						<img :src="user.avatar" alt="测试头像" />
-						<div class="file-box">
-							<!-- <input type="file" title="更改头像" id="file" @change="changeAvatar()" /> -->
-						</div>
+						<div class="file-box"><input type="file" title="更改头像" id="file" @change="changeAvatar($event)" accept=".jpg,.gif,.png,.bmp" 
+						ref="InputFile" name="files" /></div>
 					</div>
 				</div>
 				<div class="nav ba-xx-a ba-xy-c">
@@ -33,7 +33,12 @@
 export default {
 	data() {
 		return {
-			user: {}
+			user: {},
+			userDto: {
+				id: null,
+				avatar: null,
+			},
+			
 		};
 	},
 	created() {
@@ -43,13 +48,42 @@ export default {
 		});
 	},
 	methods: {
+		getImage(url) {
+			return 'http://images.weserv.nl/?url=' + url;
+		},
+
 		toSignIn() {
-			alert('asd'); 
 			this.$route.push('/sign');
 		},
-		changeAvatar() {
-			// this.axios.post('http://localhost:8080/api/avatar').then(res => {});
-		}
+		changeAvatar(e) {
+			var reader = new FileReader();
+			let fileData = this.$refs.InputFile.files[0];
+			reader.readAsDataURL(fileData);
+			let _this = this;
+			// 使用formapi打包
+			let formData = new FormData();
+			formData.append('file', fileData);
+			
+			this.axios({
+				method: 'post',
+				url: this.GLOBAL.baseUrl + '/testuploadimg',
+				data: formData
+			}).then(res => {
+				this.user.avatar = res.data.data;
+				this.userDto.avatar = res.data.data;
+				this.userDto.id = this.user.id
+				this.axios({
+					method: 'put',
+					url: this.GLOBAL.baseUrl + '/user/userAvatar',
+					data: JSON.stringify(this.userDto),
+					headers: {
+						'Content-Type': 'application/json'
+					},
+				}).then(res => {
+					alert('修改成功')
+				});
+			})
+		},
 	},
 	computed: {}
 };
@@ -64,15 +98,15 @@ export default {
 	height: 100%;
 	background-color: #000066;
 	cursor: pointer;
+	opacity: 0;
 }
 .file-box {
 	position: relative;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 100;
-	opacity: 1;
+	top: -100px;
+	width: 200px;
+	height: 200px;
+	background-color: #000088;
+	opacity: 0;
 }
 .a:hover {
 	font-size: 30px;
@@ -129,8 +163,17 @@ export default {
 	height: 200px;
 	cursor: pointer;
 }
-img {
+.img {
+	margin-top: -200px;
+	width: 100%;
+	height: 100%;
+}
+.img img {
+	position: relative;
+	top: 100px;
 	border-radius: 20px;
+	width: 100%;
+	height: 100%;
 }
 img:hover {
 	animation: mymove 2s infinite;
@@ -163,5 +206,4 @@ img:hover {
 .fontcolor-dark {
 	color: gold;
 }
-
 </style>
