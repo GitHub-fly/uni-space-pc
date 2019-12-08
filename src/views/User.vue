@@ -103,7 +103,6 @@ export default {
 				}
 			});
 		},
-
 		update() {
 			this.status = false;
 		}
@@ -193,5 +192,25 @@ label:hover {
 	height: 18%;
 	margin-bottom: 20px;
 	border-bottom: 2px solid gray;
+}
+/* 阿里图标 */
+@font-face {
+	font-family: 'iconfont';
+	/* project id 1550259 */
+	src: url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.eot');
+	src: url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.eot?#iefix') format('embedded-opentype'),
+		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.woff2') format('woff2'),
+		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.woff') format('woff'),
+		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.ttf') format('truetype'),
+		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.svg#iconfont') format('svg');
+}
+
+.iconfont {
+	font-family: "iconfont" !important;
+	font-size: 16px;
+	font-style: normal;
+	-webkit-font-smoothing: antialiased;
+	-webkit-text-stroke-width: 0.2px;
+	-moz-osx-font-smoothing: grayscale;
 }
 </style>

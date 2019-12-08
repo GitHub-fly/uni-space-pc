@@ -1,68 +1,111 @@
 <template>
 	<div class="big-container">
+
 		<div class="container">
+			<!-- 注册页面 -->
 			<div class="form-container sign-up-container" v-if="selected===0">
-				<h1>register</h1>
-				<span>电子邮箱注册</span>
+				<h1>注册</h1>
+
 				<div class="blank">
 					<label class="alert">{{mobileTip}}</label>
 				</div>
 				<input type="text" placeholder="手机号" v-model="userDto.mobile" @input="checkPhone()">
-				<input type="password" placeholder="密码" v-model="userDto.password">
+				<input type="password" placeholder="密码" v-model="userDto.password" @input="checkpassword()">
 				<div class="row">
 					<input type="text" placeholder="验证码" style="width: 65%;" v-model="usercode">
-					<a @click="getcode" style="cursor: pointer;">获取验证码</a>
+					<a @click="getcode" style="cursor: pointer;" :disabled="codeDisabled">{{codemsg}}</a>
 				</div>
-				<button @click="toregister" :disabled="status">注册</button>
+				<button @click="toregister">注册</button>
 			</div>
+			<!-- 图片验证码登录 -->
 			<div class="form-container sign-in-container" v-if="selected===1">
-				<h1>login</h1>
-				<a @click="mobilelogin" style="cursor: pointer;">或用手机号登录</a>
-				<input type="text" placeholder="账号" v-model="userDto.mobile">
-				<input type="password" placeholder="密码" v-model="userDto.password">
+				<h1>登录</h1>
+				<label class="alert">{{mobileTip}}</label>
+				<!-- <i class="iconfont hy-icon-pos-dia" style="color: #4cafe9;">&#xe7ba;</i> -->
+				<a @click="addlogin" class="hy-nopassword-text">免密登录</a>
+				<!-- <i class="iconfont hy-icon-arrows">&#xe61f;</i> -->
+				<input type="text" placeholder="账号" v-model="userDto.mobile"  @input="checkPhone()">
+				<input type="password" placeholder="密码" v-model="userDto.password" @input="checkpassword()">
 				<div class="code-box">
 					<input type="text" placeholder="验证码" v-model="usercode" style="width: 70%;">
 					<img class="verify" @click.prevent="refresh" ref="codeImg" />
 				</div>
-				<button @click="signIn">登录</button>
+				<button @click="signIn()">登录</button>
+				<a @click="forgetpassword" class="hy-sign-forget">忘记密码</a>
+				<div class="hy-icon-pos">
+					<i class="iconfont " style="color: #4cafe9;">&#xe6ca;</i>
+					<i class="iconfont " style="color: #e71f19">&#xe666;</i>
+					<i class="iconfont " style="color:#24db5a">&#xe620;</i>
+				</div>
 			</div>
-
+			<!-- 免密登录页 -->
 			<div class="form-container sign-in-container" v-if="selected===2">
-				<h1>login</h1>
+				<h1>免密登录</h1>
 				<div class="blank">
-					<label class="alert">{{mobileTip}}</label>
+					<label class="alert" v-if="!mobilecode">{{mobileTip}}</label>
 				</div>
 				<input type="text" placeholder="手机号" v-model="userDto.mobile" @input="checkPhone()">
 				<div class="row">
 					<input type="text" placeholder="验证码" style="width: 70%;" v-model="usercode">
-					<span @click="getcode" style="cursor: pointer;">获取验证码</span>
+					<span @click="getcode" style="cursor: pointer;">{{codemsg}}</span>
 				</div>
 				<button @click="avoidlogin">登录</button>
 			</div>
+			<!-- 忘记密码页 -->
+			<div class="form-container sign-up-container" v-if="selected===3">
+				<h1>找回密码</h1>
+				<div class="blank">
+					<label class="alert">{{mobileTip}}</label>
+				</div>
+				<input type="text" placeholder="手机号" v-model="userDto.mobile" @input="checkPhone()">
+				<input type="password" placeholder="新密码" v-model="userDto.password" @input="checkpassword()">
+				<div class="row">
+					<input type="text" placeholder="验证码" style="width: 65%;" v-model="usercode">
+					<a @click="getcode" style="cursor: pointer;">{{codemsg}}</a>
+				</div>
+				<button @click="tofix">申请修改</button>
+			</div>
+
 
 			<div class="overlay-container">
 				<div class="overlay">
+
+					<!-- 注册页面 -->
 					<div class="overlay-panel overlay-left" v-if="selected===0">
 						<h1>欢迎回来</h1>
-						<p>与我们保持联系请登录您的个人信息</p>
+						<p>渴望与你进行心与心的沟通</p>
 						<button class="ghost" @click="changelogin">登录</button>
 					</div>
-
+					<!-- 图片验证码登录页面 -->
 					<div class="overlay-panel overlay-right" v-if="selected===1">
 						<h1>欢迎光临</h1>
-						<p>输入您的个人资料，并与我们一起开始旅程</p>
+						<p>期待你真正加入我们的那天</p>
 						<button class="ghost" @click="changelogin">注册</button>
 					</div>
-
+					<!-- 免密登录页 -->
 					<div class="overlay-panel overlay-right" v-if="selected===2">
-						<h1>免密登录</h1>
-						<p>与我们保持联系请登录您的个人信息</p>
+						<h1>欢迎回来</h1>
+						<p>旨在提供高质量服务</p>
+						<button class="ghost" @click="changelogin">返回</button>
+					</div>
+					<!-- 忘记密码页 -->
+					<div class="overlay-panel overlay-left" v-if="selected===3">
+						<h1>没关系</h1>
+						<p>我们会一直陪着你</p>
 						<button class="ghost" @click="changelogin">返回</button>
 					</div>
 				</div>
 			</div>
 
 		</div>
+
+		<div class="mask" v-show="maskjudge">
+			<div class="mask-box">
+				{{tipmsg}}
+			</div>
+		</div>
+
+
 	</div>
 </template>
 
@@ -77,95 +120,144 @@
 				code: '',
 				usercode: null,
 				selected: 1,
-				judgemobile: false,
 				codeimage: '',
-				status: false,
-				mobileTip: ''
+				mobileTip: '',
+				codemsg: '获取验证码',
+				timer: null,
+				countdown: 10,
+				codeDisabled: false,
+				maskjudge: false,
+				tipmsg: '',
+				
+				masktime: null,
+				maskcountdown: 3,
+				status:false,
+				mobilecode:false
 			};
 		},
-		created() {},
+		created() {
+
+		},
 		mounted() {
 			this.refresh();
 		},
 		methods: {
 			signIn() {
-				if (this.code == this.usercode) {
-					this.axios({
-						method: 'post',
-						url: this.GLOBAL.baseUrl + '/user/sign_in',
-						data: {
-							name: this.userDto.mobile,
-							password: this.userDto.password,
-						},
-					}).then(res => {
-						console.log(res.data.data);
-						if (res.data.msg == "成功") {
-							this.$router.push({
-								path:  '/',
-								query: {
-									id: res.data.data.id
+				if(this.mobilecode===true){
+					if (this.userDto.password.length > 5) {
+						let _this = this;
+						if (this.code == this.usercode) {
+							this.axios({
+								method: 'post',
+								url: this.GLOBAL.baseUrl + '/user/sign_in',
+								data: {
+									name: this.userDto.mobile,
+									password: this.userDto.password,
+								},
+							}).then(res => {
+								if (res.data.msg == "成功") {
+									// this.tipmsg = "登录成功";
+									// this.getmask();
+									alert("登录成功");
+									this.$router.push({
+										path: '/',
+										query: {
+											id: res.data.data.id
+										}
+									})
+								} else {
+									this.tipmsg = res.data.msg;
+									this.getmask();
 								}
-							})
-							alert("登录成功");
+							});
 						} else {
-							alert("密码错误")
+							this.tipmsg = "验证码错误";
+							this.getmask();
 						}
-					});
-				} else {
-					alert("验证码错误");
+					} else {
+						this.tipmsg = "密码最少6位数";
+						this.getmask();
+					}
+				}else{
+					this.tipmsg = "手机号输入错误";
+					this.getmask();
 				}
 			},
 			checkPhone() {
 				var phone = this.userDto.mobile;
 				if (!(/^1[3456789]\d{9}$/.test(phone))) {
+					this.mobilecode=false;
 					this.mobileTip = "手机格式不正确";
-					this.status = true;
-					return false;
 				} else {
+					this.mobilecode=true;
 					this.mobileTip = '';
-					this.status = false;
 				}
 			},
 			avoidlogin() {
-				alert("进入函数")
-				if (this.usercode == this.code) {
-					this.axios({
-						method: 'post',
-						url: this.GLOBAL.baseUrl + '/user/sign_in',
-						data: {
-							name: this.userDto.mobile,
-							verifyCode: this.usercode
-						},
-					}).then(res => {
-						console.log(res.data)
-						if (res.data.msg === "成功") {
-							alert("登录成功");
-						} else {
-							alert("密码错误")
-						}
-					})
-				} else {
-					alert("验证码错误");
+				if(this.mobilecode===true){
+					if (this.usercode == this.code) {
+						this.axios({
+							method: 'post',
+							url: this.GLOBAL.baseUrl + '/user/sign_in',
+							data: {
+								name: this.userDto.mobile,
+								verifyCode: this.usercode
+							},
+						}).then(res => {
+							if (res.data.msg === "成功") {
+								this.tipmsg = "登录成功";
+								this.getmask();
+							} else {
+								this.tipmsg = res.data.msg;
+								this.getmask();
+							}
+						})
+					} else {
+						this.tipmsg = "验证码错误";
+						this.getmask();
+					}
 				}
+				else{
+					this.tipmsg = "手机号错误";
+					this.getmask();
+				}
+				
+
 			},
 			toregister() {
-				if (this.code === this.usercode) {
-					this.axios({
-						method: 'post',
-						url: 'http://localhost:8080/api/user/sign_up',
-						data: {
-							"name": this.userDto.mobile,
-							"password": this.userDto.password,
-							"verifyCode": this.usercode
-						}
-					}).then(res => {
-						if (res.data.msg === "成功") {
-							alert("注册成功")
-						}
-					})
-				} else {
-					alert("验证码输入错误");
+				if(this.mobilecode===true){ 
+					if(this.userDto.password>5){
+							this.axios({
+								method: 'post',
+								url: 'http://localhost:8080/api/user/sign_up',
+								data: {
+									"name": this.userDto.mobile,
+									"password": this.userDto.password,
+									"verifyCode": this.usercode
+								}
+							}).then(res => {
+								console.log(res.data)
+								if (res.data.msg === "成功") {
+									this.tipmsg = "注册成功";
+									this.getmask();
+								}else{
+									this.tipmsg = res.data.msg;
+									this.getmask();
+								}
+							})
+						
+					}else{
+						this.tipmsg = "密码最少6位";
+						this.getmask();
+					}
 				}
+				else{
+					this.tipmsg = "手机号错误";
+					this.getmask();
+				}
+				this.userDto.password='';
+				this.userDto.mobile='';
+				this.mobilecode=false;
 			},
 			refresh() {
 				let _this = this;
@@ -177,22 +269,51 @@
 				})
 			},
 			getcode() {
-				alert("发送验证码")
-				let _this = this;
-				this.axios.post('http://localhost:8080/api/sms?mobile=' + this.userDto.mobile)
-					.then(function(response) {
-						_this.code = response.data.data;
-					})
+				if((this.selected===2&&this.mobilecode===true)||this.codeDisabled===true){
+					if (!this.timer) {
+						this.timer = setInterval(() => {
+							if (this.countdown > 0 && this.countdown <= 10) {
+								this.codeDisabled = true;
+								this.countdown--;
+								if (this.countdown != 0) {
+									this.codemsg = "重新发送(" + this.countdown + ")";
+								} else {
+									clearInterval(this.timer);
+									this.codemsg = "获取验证码";
+									this.countdown = 10;
+									this.timer = null;
+									this.codeDisabled = false;
+								}
+							}
+						}, 1000)
+						this.tipmsg = "验证码发送成功";
+						this.getmask();
+						let _this = this;
+						this.axios.post('http://localhost:8080/api/sms?mobile=' + this.userDto.mobile)
+							.then(function(response) {
+								_this.code = response.data.data;
+							})
+					}
+				}
+				else{
+					this.tipmsg = "信息不完整";
+					this.getmask();
+				}	
 			},
 			changelogin() {
+				this.userDto.password='';
+				this.userDto.mobile+'';
+				this.mobilecode=false;
+				
+				if (this.selected == 2) {
+					this.selected = 1;
+				}
 				if (this.selected == 1) {
 					this.selected = 0;
 				} else {
 					this.selected = 1;
 				}
-				if (this.selected == 2) {
-					this.selected = 1;
-				}
+
 				this.code = '';
 				this.usercode = null;
 				this.userDto.password = '';
@@ -200,7 +321,7 @@
 				this.refresh();
 				this.mobileTip = '';
 			},
-			mobilelogin() {
+			addlogin() {
 				if (this.selected == 1) {
 					this.selected = 2;
 				}
@@ -208,16 +329,158 @@
 				this.usercode = null;
 				this.userDto.password = '';
 				this.userDto.mobile = '';
-
-
+			},
+			forgetpassword() {
+				if (this.selected == 1) {
+					this.selected = 3;
+				}
+				this.code = '';
+				this.usercode = null;
+				this.userDto.password = '';
+				this.userDto.mobile = '';
+			},
+			getmask() {
+				if (!this.masktime) {
+					this.masktime = setInterval(() => {
+						if (this.maskcountdown > 0 && this.maskcountdown <= 3) {
+							this.maskjudge = true;
+							this.maskcountdown--;
+							if (this.maskcountdown == 0) {
+								clearInterval(this.masktime);
+								this.masktime = null;
+								this.maskjudge = false;
+								this.maskcountdown = 3;
+								this.tipmsg = "";
+							}
+						}
+					}, 500)
+				}
+			},
+			tofix() {
+				if(this.mobilecode===true){
+					if(this.userDto.password.length>5){
+						if (this.code = this.usercode) {
+							this.axios({
+								method: 'put',
+								url: this.GLOBAL.baseUrl + '/user/userPassword',
+								data: {
+									name: this.userDto.mobile,
+									password: this.userDto.password,
+									verifyCode: this.usercode
+								}
+							}).then(res => {
+								if (res.data.msg == "成功") {
+									this.tipmsg = "修改成功";
+									this.getmask();
+								} else {
+									this.tipmsg = res.data.msg;
+									this.getmask();
+								}
+							})
+						
+						} else {
+							this.tipmsg = "验证码输入错误";
+							this.getmask();
+						}
+					}else{
+						this.tipmsg = "密码最少6位数";
+						this.getmask();
+					}
+					
+				}
+				else{
+					this.tipmsg = "手机号错误";
+					this.getmask();
+				}
+				
+			},
+			checkpassword(){
+				if((this.userDto.password>5&&this.mobilecode===true)){
+					this.codeDisabled=true;
+				}
 			}
-
+			
 		}
 
 	}
 </script>
 
 <style scoped>
+	.iconfont {
+		font-family: "iconfont" !important;
+		font-style: normal;
+		-webkit-font-smoothing: antialiased;
+		-webkit-text-stroke-width: 0.2px;
+		-moz-osx-font-smoothing: grayscale;
+		cursor: pointer;
+		font-size: 24px;
+	}
+
+	.hy-icon-arrows {
+		position: absolute;
+		top: 3%;
+		right: 5%;
+		font-size: 80px;
+	}
+
+	.hy-nopassword-text {
+		cursor: pointer;
+		position: absolute;
+		top: 5%;
+		right: 10%;
+		/* border-bottom: 2px solid black; */
+		/* text-decoration:blink; */
+		color: #0000EE;
+	}
+
+
+	.hy-sign-forget {
+		cursor: pointer;
+		position: absolute;
+		right: 10%;
+		bottom: 10%;
+		color: #0000EE;
+	}
+
+	.hy-icon-pos-dia {
+		position: absolute;
+		right: 5%;
+		top: 35%;
+	}
+
+	.hy-icon-pos {
+		width: 45%;
+		position: absolute;
+		bottom: 5%;
+		display: flex;
+		justify-content: space-around;
+	}
+
+	.mask {
+		width: 100%;
+		height: 100%;
+		display: flex;
+		background-color: #757575;
+		opacity: 0.7;
+		justify-content: center;
+		align-items: center;
+		text-align: center;
+		position: relative;
+	}
+
+	.mask-box {
+		width: 10%;
+		height: 10%;
+		border-radius: 5%;
+		background-color: white;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		position: absolute;
+		z-index: 2;
+		top: 10%;
+	}
+
 	.code-box {
 		display: flex;
 		justify-content: space-between;
@@ -242,8 +505,9 @@
 		justify-content: center;
 		align-items: center;
 		height: 100vh;
-		background-image: url(../assets/img/img1.png);
+		background-image: url(../assets/img/123.jpg);
 		background-size: cover;
+
 	}
 
 	h1 {
@@ -293,6 +557,7 @@
 		max-width: 100%;
 		min-height: 480px;
 		opacity: 0.8;
+		/* z-index: 1; */
 	}
 
 	.form-container {
@@ -304,7 +569,12 @@
 		justify-content: center;
 		align-items: center;
 		text-align: center;
+		position: absolute;
+		top: 0;
+		height: 100%;
+		transition: all 0.6s ease-in-out;
 		z-index: 1;
+
 	}
 
 	.social-container {
@@ -338,8 +608,9 @@
 		color: #fff;
 		font-size: 12px;
 		font-weight: bold;
-		padding: 12px 45px;
+		padding: 8px 35px;
 		letter-spacing: 1px;
+		margin: 5%;
 	}
 
 	input[type=text] {
@@ -383,17 +654,10 @@
 		background-color: #ff4b2b
 	}
 
-	.form-container {
-		position: absolute;
-		top: 0;
-		height: 100%;
-		transition: all 0.6s ease-in-out;
-	}
 
 	.sign-in-container {
 		left: 0;
 		width: 50%;
-
 	}
 
 	.sign-up-container {
@@ -437,5 +701,16 @@
 	.overlay-right {
 		position: relative;
 		left: 50%;
+	}
+
+	@font-face {
+		font-family: 'iconfont';
+		/* project id 1551082 */
+		src: url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.eot');
+		src: url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.eot?#iefix') format('embedded-opentype'),
+			url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.woff2') format('woff2'),
+			url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.woff') format('woff'),
+			url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.ttf') format('truetype'),
+			url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.svg#iconfont') format('svg');
 	}
 </style>

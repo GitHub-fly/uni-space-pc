@@ -7,6 +7,7 @@ import Mylog from '@/views/Mylog.vue'
 import Publish from '@/views/Publish.vue'
 import Photo from '@/views/Photo.vue'
 import User from '@/views/User.vue'
+import Retrieve from '@/views/Retrieve.vue'
 
 Vue.use(VueRouter)
 
@@ -39,11 +40,16 @@ const routes = [
 				path:'user',
 				component:User
 			}
+			
 		]
 	},
 	{
 		path: '/sign',
 		component: Sign
+	},
+	{
+		path:'/retrieve',
+		component:Retrieve
 	}
 
 ]
