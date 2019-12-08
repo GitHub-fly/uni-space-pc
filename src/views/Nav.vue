@@ -11,7 +11,12 @@
 			<div class="banner-bar ba-xy-e ba-xx-a">
 				<div class="avatar ba-xx-c ba-xy-c">
 					<p class="fontcolor-dark" @click="toSignIn()" v-if="user === null">去登陆~</p>
-					<div class="img" v-else @click="changeAvatar()"><img :src="user.avatar" alt="测试头像" /></div>
+					<div class="img" v-else>
+						<img :src="user.avatar" alt="测试头像" />
+						<div class="file-box">
+							<!-- <input type="file" title="更改头像" id="file" @change="changeAvatar()" /> -->
+						</div>
+					</div>
 				</div>
 				<div class="nav ba-xx-a ba-xy-c">
 					<router-link to="/dynamic" class="a">动态</router-link>
@@ -32,18 +37,18 @@ export default {
 		};
 	},
 	created() {
-		var userId = this.$route.query.id
+		var userId = this.$route.query.id;
 		this.axios.post('http://localhost:8080/api/user/userid/?id=' + userId).then(res => {
 			this.user = res.data.data;
 		});
 	},
 	methods: {
 		toSignIn() {
-			alert('asd')
-			this.$route.push('/sign')
+			alert('asd'); 
+			this.$route.push('/sign');
 		},
 		changeAvatar() {
-			
+			// this.axios.post('http://localhost:8080/api/avatar').then(res => {});
 		}
 	},
 	computed: {}
@@ -51,6 +56,24 @@ export default {
 </script>
 
 <style scoped>
+#file {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: #000066;
+	cursor: pointer;
+}
+.file-box {
+	position: relative;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	z-index: 100;
+	opacity: 1;
+}
 .a:hover {
 	font-size: 30px;
 }
@@ -106,11 +129,12 @@ export default {
 	height: 200px;
 	cursor: pointer;
 }
-
+img {
+	border-radius: 20px;
+}
 img:hover {
 	animation: mymove 2s infinite;
 }
-
 @keyframes mymove {
 	50% {
 		border-top-left-radius: 50%;
@@ -140,7 +164,4 @@ img:hover {
 	color: gold;
 }
 
-img {
-	border-radius: 20px;
-}
 </style>

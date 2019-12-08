@@ -165,10 +165,11 @@ label:hover {
 
 .info {
 	width: 100%;
+	height: 30px;
 	display: flex;
 	align-items: center;
 	margin-bottom: 2%;
-	/* background-color: lemonchiffon; */
+	background-color: lemonchiffon;
 }
 
 .ba-col-10 {
