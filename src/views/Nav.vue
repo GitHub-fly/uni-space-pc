@@ -1,209 +1,365 @@
 <template>
 	<div>
-		<div class="banner black-theme ba-yy-b">
-			<div class="banner-tool ba-xy-c ba-xx-e">
-				<div class="spinner"></div>
-				<i class="iconfont mar">&#xe610;</i>
-				<i class="iconfont mar">&#xe654;</i>
-				<i class="iconfont mar">&#xe786;</i>
+		<v-bottom-navigation :value="activeBtn" grow color="teal">
+			<div class="hy-nav-top">
+				<div class="hy-nav-top-left">
+					图标
+					UNI-SPACE
+				</div>
+
+				<div class="hy-nav-top-right">
+
+					<v-btn style="height: 100%;">
+						<span>Recents</span>
+						<v-icon>mdi-history</v-icon>
+					</v-btn>
+
+					<v-menu offset-y>
+						<template v-slot:activator="{ on }">
+							<v-btn v-on="on" style="height: 100%;">
+								<span>Favorites</span>
+								<v-icon>mdi-heart</v-icon>
+							</v-btn>
+						</template>
+
+						<v-list>
+							<v-list-item @click="tohome()">
+								<v-list-item-title>个人主页</v-list-item-title>
+							</v-list-item>
+
+							<v-list-item @click="changemessage()">
+								<v-list-item-title>信息修改</v-list-item-title>
+							</v-list-item>
+
+							<v-list-item @click="changeencrypted()">
+								<v-list-item-title>密码修改</v-list-item-title>
+							</v-list-item>
+
+							<v-list-item>
+								<v-list-item-title>设置</v-list-item-title>
+							</v-list-item>
+
+							<v-list-item @click="toexit()">
+								<v-list-item-title>退出</v-list-item-title>
+							</v-list-item>
+						</v-list>
+
+					</v-menu>
+
+					<v-btn @click.stop="drawer = !drawer" style="height: 100%;">
+						<span>friends</span>
+						<v-icon medium>mdi-account-multiple</v-icon>
+					</v-btn>
+				</div>
 			</div>
+		</v-bottom-navigation>
 
-			<div class="banner-bar ba-xy-e ba-xx-a">
-				<div class="avatar ba-xx-c ba-xy-c">
-					<p class="fontcolor-dark" @click="toSignIn()" v-if="user === null">去登陆~</p>
 
-					<div class="img" v-else>
-						<img :src="user.avatar" alt="测试头像" />
-						<div class="file-box"><input type="file" title="更改头像" id="file" @change="changeAvatar($event)" accept=".jpg,.gif,.png,.bmp" 
-						ref="InputFile" name="files" /></div>
+		<v-navigation-drawer v-model="drawer" temporary absolute right width="25%">
+			<v-card max-width="450" class="mx-auto">
+				<v-toolbar flat>
+					<v-btn icon @click="showFriendsBox()" small>
+						<v-icon medium>mdi-account</v-icon>
+					</v-btn>
+					<v-btn icon @click="showInfoFriendBox()" small>
+						<v-icon>!</v-icon>
+					</v-btn>
+					<v-btn icon @click="showAddFriendBox()" small>
+						<v-icon>mdi-plus-circle</v-icon>
+					</v-btn>
+					<!-- 空白填充 -->
+					<v-spacer></v-spacer>
+					<!-- 输入框 -->
+					<div class="xxq-input-wrap" v-if="inputStatus">
+						<input type="text" placeholder="请输入..." v-model="keyWords" @input="searchFriends()" />
+						<v-btn icon small>
+							<v-icon left>mdi-magnify</v-icon>
+						</v-btn>
 					</div>
+				</v-toolbar>
+				<!-- 分割线 -->
+				<v-divider></v-divider>
+
+				<template>
+					<div class="xxq-titleDiv">
+						<v-subheader v-text="tabText"></v-subheader>
+						<v-btn icon v-if="tabText === '我的好友'">
+							<v-icon left @click="showDeleteIcon()">✘</v-icon>
+						</v-btn>
+					</div>
+				</template>
+
+
+				<div class="myFriendsBox">
+					<v-list three-line>
+						<template v-for="(item, index) in myFriends">
+							<v-divider inset="true" :key="item.nickname"></v-divider>
+							<v-list-item :key="index">
+								<v-list-item-avatar @click="toPersion(item.id)">
+									<v-img :src="item.avatar"></v-img>
+								</v-list-item-avatar>
+								<v-list-item-content>
+									<v-list-item-title>
+										<div class="xxq-titleDiv">
+											<span>{{ item.nickname }}</span>
+											<v-btn icon small v-if="tabText === '添加好友'">
+												<v-icon @click="addFriend(item.id)">+</v-icon>
+											</v-btn>
+											<v-btn icon small v-if="delteteBtnStatus">
+												<v-icon small @click="deleteFriend(item.id)">✘</v-icon>
+											</v-btn>
+											<div class="applicationBox" v-if="tabText === '好友请求'">
+												<v-btn icon small>
+													<v-icon @click="reject(item.id)">✘</v-icon>
+												</v-btn>
+												<v-btn icon small>
+													<v-icon @click="aggreee(item.id)">✔</v-icon>
+												</v-btn>
+											</div>
+										</div>
+									</v-list-item-title>
+									<v-list-item-subtitle v-html="item.introduction"></v-list-item-subtitle>
+								</v-list-item-content>
+							</v-list-item>
+						</template>
+					</v-list>
 				</div>
-				<div class="nav ba-xx-a ba-xy-c">
-					<router-link to="/dynamic" class="a">动态</router-link>
-					<router-link to="/photo">相册</router-link>
-					<router-link to="/mylog">我的日志</router-link>
-				</div>
-			</div>
-		</div>
-		<router-view class="container" />
+			</v-card>
+		</v-navigation-drawer>
+		<router-view />
 	</div>
+
 </template>
 
 <script>
-export default {
-	data() {
-		return {
-			user: {},
-			userDto: {
-				id: null,
-				avatar: null,
+	export default {
+		data() {
+			return {
+				activeBtn: 1,
+				drawer: null,
+				draweradd: null,
+				tabText: '我的好友',
+				keyWords: null,
+				inputStatus: true,
+				delteteBtnStatus: false,
+				messages: [{
+					title: 'Home',
+					icon: 'mdi-dashboard'
+				}, {
+					title: 'About',
+					icon: 'mdi-question_answer'
+				}],
+				myFriends: [],
+				items: {
+					header: 'MyFriends'
+				},
+				friendDto: {
+					fromId: 1,
+					keyWords: '',
+					toId: null,
+				}
+			}
+		},
+		methods: {
+			changeencrypted() {
+				this.$router.push({
+					name: 'retrieve',
+					params: {
+						userId: 2
+					}
+				})
 			},
-			
-		};
-	},
-	created() {
-		var userId = this.$route.query.id;
-		this.axios.post('http://localhost:8080/api/user/userid/?id=' + userId).then(res => {
-			this.user = res.data.data;
-		});
-	},
-	methods: {
-		getImage(url) {
-			return 'http://images.weserv.nl/?url=' + url;
+			changemessage() {
+				this.$router.push({
+					name: 'user',
+					params: {
+						userId: 2
+					}
+				})
+			},
+			tohome() {
+				this.$router.push('personal/' + JSON.parse(localStorage.getItem('user')).id)
+			},
+			toexit() {
+				this.$router.push({
+					name: 'sign',
+					params: {}
+				})
+			},
+
+			// 好友模块（抽屉）
+			showFriendsBox() {
+						this.inputStatus = true;
+						this.keyWords = '';
+						this.friendDto.keyWords = this.keyWords;
+						this.friends(this.friendDto);
+						this.tabText = '我的好友';
+					},
+					showInfoFriendBox() {
+						this.myFriends = [];
+						this.inputStatus = false;
+						this.tabText = '好友请求';
+						// 调用好友请求接口
+						this.axios({
+							method: 'post',
+							url: this.GLOBAL.baseUrl + '/friend/application',
+							data: JSON.stringify(this.friendDto),
+							headers:{
+								'Content-Type': 'application/json'
+							}
+						}).then(res => {
+							this.myFriends = res.data.data;
+						})
+					},
+					// 添加好友按钮动作监听
+					showAddFriendBox() {
+						this.keyWords = '';
+						this.inputStatus = true;
+						this.tabText = '添加好友';
+						this.myFriends = [];
+					},
+					// 搜索框的输入监听事件
+					searchFriends() {
+						this.friendDto.keyWords = this.keyWords;
+						if (this.tabText == '添加好友') {
+							this.axios({
+								method: 'post',
+								url: this.GLOBAL.baseUrl + '/friend/keywords',
+								data: JSON.stringify(this.friendDto),
+								headers: {
+									'Content-Type': 'application/json'
+								}
+							}).then(res => {
+								this.myFriends = res.data.data;
+							});
+						} else {
+							this.friends(this.friendDto);
+						}
+					},
+					// 初始化myFriends数据的方法
+					friends(friendDto) {
+						this.axios({
+							method: 'post',
+							url: this.GLOBAL.baseUrl + '/friend/keyword',
+							data: JSON.stringify(friendDto),
+							headers: {
+								'Content-Type': 'application/json'
+							}
+						}).then(res => {
+							this.myFriends = res.data.data;
+						});
+					},
+					// 添加好友按钮的动作监听
+					addFriend(id) {
+						this.friendDto.toId = id;
+						this.axios({
+							method: 'post',
+							url: this.GLOBAL.baseUrl + '/friend/friend',
+							data: JSON.stringify(this.friendDto),
+							headers: {
+								'Content-Type': 'application/json'
+							}
+						}).then(res => {
+							alert(res.data.msg)
+						});
+					},
+					// 跳转到好友中心页面的方法
+					toPersion(id) {
+						this.$router.push('/personal/' + id)
+					},
+					// 同意添加好友的方法
+					aggreee(id) {
+						this.friendDto.toId = id;
+						this.axios({
+							method: 'put',
+							url: this.GLOBAL.baseUrl + '/friend/confirm',
+							data: JSON.stringify(this.friendDto),
+							headers: {
+								'Content-Type': 'application/json'
+							}
+						}).then(res => {
+							this.showInfoFriendBox();
+						});
+					},
+					// 拒绝添加好友的方法
+					reject(id) {
+						this.friendDto.toId = id;
+						this.axios({
+							method: 'delete',
+							url: this.GLOBAL.baseUrl + '/friend/reject',
+							data: JSON.stringify(this.friendDto),
+							headers: {
+								'Content-Type': 'application/json'
+							}
+						}).then(res => {
+							this.showInfoFriendBox();
+						});
+					},
+					// 删除好友的方法
+					deleteFriend(id) {
+						this.friendDto.toId = id;
+						this.axios({
+							method: 'delete',
+							url: this.GLOBAL.baseUrl + '/friend/friend',
+							data: JSON.stringify(this.friendDto),
+							headers: {
+								'Content-Type': 'application/json'
+							}
+						}).then(res => {
+							this.showFriendsBox();
+							alert('好友已被删除')
+						});
+					},
+					showDeleteIcon() {
+						this.delteteBtnStatus = !this.delteteBtnStatus;
+					}
 		},
 
-		toSignIn() {
-			this.$route.push('/sign');
-		},
-		changeAvatar(e) {
-			var reader = new FileReader();
-			let fileData = this.$refs.InputFile.files[0];
-			reader.readAsDataURL(fileData);
-			let _this = this;
-			// 使用formapi打包
-			let formData = new FormData();
-			formData.append('file', fileData);
-			
-			this.axios({
-				method: 'post',
-				url: this.GLOBAL.baseUrl + '/testuploadimg',
-				data: formData
-			}).then(res => {
-				this.user.avatar = res.data.data;
-				this.userDto.avatar = res.data.data;
-				this.userDto.id = this.user.id
-				this.axios({
-					method: 'put',
-					url: this.GLOBAL.baseUrl + '/user/userAvatar',
-					data: JSON.stringify(this.userDto),
-					headers: {
-						'Content-Type': 'application/json'
-					},
-				}).then(res => {
-					alert('修改成功')
-				});
-			})
-		},
-	},
-	computed: {}
-};
+
+
+		created() {
+			// alert(this.$route.id)
+			this.friends(this.friendDto);
+		}
+	}
 </script>
 
 <style scoped>
-#file {
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: #000066;
-	cursor: pointer;
-	opacity: 0;
-}
-.file-box {
-	position: relative;
-	top: -100px;
-	width: 200px;
-	height: 200px;
-	background-color: #000088;
-	opacity: 0;
-}
-.a:hover {
-	font-size: 30px;
-}
-
-@font-face {
-	font-family: 'iconfont'; /* project id 1541989 */
-	src: url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.eot');
-	src: url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.woff2') format('woff2'),
-		url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.woff') format('woff'), url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.ttf') format('truetype'),
-		url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.svg#iconfont') format('svg');
-}
-
-.iconfont {
-	font-family: 'iconfont' !important;
-	font-size: 36px;
-	font-style: normal;
-	color: #ffffff;
-	cursor: pointer;
-	-webkit-font-smoothing: antialiased;
-	-webkit-text-stroke-width: 0.2px;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-.mar {
-	margin-left: 1%;
-}
-
-.banner {
-	width: 100%;
-	height: 550px;
-}
-
-.banner-tool {
-	position: sticky;
-	top: 0;
-	width: 100%;
-	height: 10%;
-	padding: 20px 20px;
-	border: 1px solid white;
-	opacity: 1;
-	z-index: 100;
-	background-color: #000000;
-}
-
-.banner-bar {
-	width: 100%;
-	height: 40%;
-	/* border: 1px solid white; */
-}
-
-.avatar {
-	width: 200px;
-	height: 200px;
-	cursor: pointer;
-}
-.img {
-	margin-top: -200px;
-	width: 100%;
-	height: 100%;
-}
-.img img {
-	position: relative;
-	top: 100px;
-	border-radius: 20px;
-	width: 100%;
-	height: 100%;
-}
-img:hover {
-	animation: mymove 2s infinite;
-}
-@keyframes mymove {
-	50% {
-		border-top-left-radius: 50%;
+	.hy-nav-top {
+		/* display: flex; */
 	}
-	50% {
-		border-top-right-radius: 50%;
-	}
-	50% {
-		border-bottom-left-radius: 50%;
-	}
-	50% {
-		border-bottom-right-radius: 50%;
-	}
-}
 
-.nav {
-	width: 50%;
-	height: 40%;
-	/* border: 1px solid white; */
-}
+	.hy-nav-top-right {
+		position: absolute;
+		display: flex;
+		right: 0;
+		/* bottom:-2%; */
+		/* background-color: red; */
+		height: 100%;
+	}
 
-.container {
-	background-color: rgb(55, 62, 67);
-}
+	.hy-nav-top-left {
+		display: flex;
+		position: absolute;
+		left: 10%;
+		bottom: 30%;
+	}
 
-.fontcolor-dark {
-	color: gold;
-}
+	.xxq-input-wrap {
+		display: flex;
+		height: 50%;
+		width: 60%;
+		border: 1px solid gray;
+		border-radius: 3%;
+	}
+
+	.xxq-titleDiv {
+		display: flex;
+		justify-content: space-between;
+	}
+
+	.xxq-myFriendsBox {
+		height: 608px;
+		overflow: auto;
+	}
 </style>

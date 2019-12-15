@@ -1,126 +1,183 @@
 <template>
-	<div class="hy-user-large ba-xx-c">
-		<div class="ba-col-2"></div>
-
-		<div class="ba-col-8 hy-user-container">
-			<div class="ba-col-1"></div>
-			<div class="ba-col-10">
-				<div class="info" @mouseover="showFunction()" @mouseleave="hideFunction()">
-					<h1 class="title">昵称</h1>
-					<div class="value">
-						<input type="text" class="input" :disabled="status" v-model="user.nickname" v-if="showInput" />
-						<span v-else class="content">{{ user.nickname }}</span>
-						<i class="iconfont" @click="saveNickname()" v-if="showSave">&#xea6e;保存</i>
-						<i class="iconfont" @click="update()" v-if="showUpdate">&#xe600;修改</i>
-					</div>
-				</div>
-
-				<div class="info" @mouseover="showFunctionGender()" @mouseleave="hideFunctionGender()">
-					<h1 class="title">性别</h1>
-					<div class="value">
-						<div class="radio" v-if="showRadio">
-							<label for="" style="margin-right: 30px;">
-								<input name="gender" type="radio" value="男" />
-								男
-							</label>
-							<label for="" style="margin-right: 30px;">
-								<input name="gender" type="radio" value="女" />
-								女
-							</label>
-						</div>
-
-						<span class="content" v-else>{{ user.gender }}</span>
-
-						<i class="iconfont" @click="saveGender()" v-if="showSaveGender">&#xea6e;保存</i>
-						<i class="iconfont" @click="updateGender()" v-if="showUpdateGender">&#xe600;修改</i>
-					</div>
-				</div>
-
-				<div class="info" @mouseover="showFunctionIntro()" @mouseleave="hideFunctionIntro()">
-					<h1 class="title">简介</h1>
-					<div class="value">
-						<!-- <input type="text" class="input" v-model="user.introduction" v-if="showInputIntro" /> -->
-						<textarea id="textarea" v-if="showInputIntro" rows="5" :value="user.introduction"></textarea>
-						<span class="content-intro" v-else>{{ user.introduction.substring(0, 13) }}</span>
-						<i class="iconfont" @click="saveIntro()" v-if="showSaveIntro">&#xea6e;保存</i>
-						<i class="iconfont" @click="updateIntro()" v-if="showUpdateIntro">&#xe600;修改</i>
-					</div>
-				</div>
-
-				<div class="info" @mouseover="showFunctionAddress()" @mouseleave="hideFunctionAddress()">
-					<h1 class="title">居住地</h1>
-					<div class="value">
-						<input type="text" class="input" v-model="user.address" v-if="showInputAddress" />
-						<span v-else class="content">{{ user.address }}</span>
-						<i class="iconfont" @click="saveAddress()" v-if="showSaveAddress">&#xea6e;保存</i>
-						<i class="iconfont" @click="updateAddress()" v-if="showUpdateAddress">&#xe600;修改</i>
-					</div>
-				</div>
-
-				<div class="info">
-					<h1 class="title">手机号</h1>
-					<div class="value">
-						<span class="content">{{ user.mobile }}</span>
-					</div>
-				</div>
-
-				<div class="info" @mouseover="showFunctionEmail()" @mouseleave="hideFunctionEmail()">
-					<h1 class="title">邮箱</h1>
-					<div class="value">
-						<input type="email" class="input" v-model="user.email" v-if="showInputEmail"  />
-						<span v-else class="content">{{ user.email }}</span>
-						<i class="iconfont" @click="saveEmail()" v-if="showSaveEmail">&#xea6e;保存</i>
-						<i class="iconfont" @click="updateEmail()" v-if="showUpdateEmail">&#xe600;修改</i>
-					</div>
-				</div>
-
-				<div class="info" @mouseover="showFunctionAccount()" @mouseleave="hideFunctionAccount()">
-					<h1 class="title">账号</h1>
-					<div class="value">
-						<input type="text" class="input" v-model="user.account" v-if="showInputAccount" />
-						<span v-else class="content">{{ user.account }}</span>
-						<i class="iconfont" @click="saveAccount()" v-if="showSaveAccount">&#xea6e;保存</i>
-						<i class="iconfont" @click="updateAccount()" v-if="showUpdateAccount">&#xe600;修改</i>
-					</div>
-				</div>
-
-				<div class="info" @mouseover="showFunctionBirthday()" @mouseleave="hideFunctionBirthday()">
-					<h1 class="title">生日</h1>
-					<div class="value">
-						<div v-if="showInputBirthday" class="selectBox">
-							<select name="year" id="year" @change="changeDays()">
-								<option :value="index + 1960" v-for="(item, index) in 60" :key="index">{{ item + 1959 }}</option>
-							</select>
-							<select name="month" id="month" @change="changeDays()">
-								<option :value="index + 1" v-for="(item, index) in 12" :key="index">{{ item }}</option>
-							</select>
-							<select name="day" id="day">
-								<option :value="index" v-for="(item, index) in days" :key="index">{{ item }}</option>
-							</select>
-						</div>
-						<span class="content" v-else>{{ user.birthady }}</span>
-						<i class="iconfont" @click="saveBirthday()" v-if="showSaveBirthday">&#xea6e;保存</i>
-						<i class="iconfont" @click="updateBirthday()" v-if="showUpdateBirthday">&#xe600;修改</i>
-					</div>
-				</div>
-
-				<div class="info" @mouseover="showFunctionConstellation()" @mouseleave="hideFunctionConstellation()">
-					<h1 class="title">星座</h1>
-					<div class="value">
-						<select name="" id="constellation" v-if="showInputConstellation">
-							<option :value="item" v-for="(item, index) in constellationList" :key="index">{{ item }}</option>
-						</select>
-						<span class="content" v-else>{{ user.constellation }}</span>
-						<i class="iconfont" @click="saveConstellation()" v-if="showSaveConstellation">&#xea6e;保存</i>
-						<i class="iconfont" @click="updateConstellation()" v-if="showUpdateConstellation">&#xe600;修改</i>
-					</div>
-				</div>
-			</div>
-			<div class="function"></div>
+	
+	<div class="hy-index-large">
+		<div class="hy-index-left ba-col-1 ">
+			<v-card height="400" width="100%" class="mx-auto">
+				<v-list-item>
+					<v-list-item-content>
+						<v-list-item-title class="title">
+							Application
+						</v-list-item-title>
+						<v-list-item-subtitle>
+							subtext
+						</v-list-item-subtitle>
+					</v-list-item-content>
+				</v-list-item>
+	
+				<v-list dense nav>
+					<v-list-item  to="/index">
+						<v-list-item-icon>
+							<v-icon>mdi-home</v-icon>
+						</v-list-item-icon>
+						<v-list-item-content>
+							<v-list-item-title>
+							主页
+							</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
+					
+					<v-list-item link>
+						<v-list-item-icon>
+							<v-icon>mdi-image</v-icon>
+						</v-list-item-icon>
+						<v-list-item-content>
+							<v-list-item-title>照片</v-list-item-title>
+						</v-list-item-content>	
+					</v-list-item>
+					
+					<v-list-item link>
+						<v-list-item-icon>
+							<v-icon>mdi-widgets</v-icon>
+						</v-list-item-icon>
+						<v-list-item-content>
+							<v-list-item-title>应用</v-list-item-title>
+						</v-list-item-content>
+					</v-list-item>
+					
+				</v-list>
+			</v-card>
 		</div>
-
-		<div class="ba-col-2"></div>
+	
+		<div class="hy-index-mid ba-col-9">
+			
+			<div class="hy-user-large ba-xx-c">
+				<div class="ba-col-2"></div>
+				<div class="ba-col-8 hy-user-container">
+					<div class="ba-col-1"></div>
+					<div class="ba-col-10">
+						
+						
+						<div class="hy-user-info" @mouseover="showFunction()" @mouseleave="hideFunction()">
+							<h1 class="title">昵称</h1>
+							<div class="value">
+								<input type="text" class="input" :disabled="status" v-model="user.nickname" v-if="showInput" />
+								<span v-else class="content">{{ user.nickname }}</span>
+								<i class="iconfont" @click="saveNickname()" v-if="showSave">&#xea6e;保存</i>
+								<i class="iconfont" @click="update()" v-if="showUpdate">&#xe600;修改</i>
+							</div>
+						</div>
+			
+						<div class="hy-user-info" @mouseover="showFunctionGender()" @mouseleave="hideFunctionGender()">
+							<h1 class="title">性别</h1>
+							<div class="value">
+								<div class="radio" v-if="showRadio">
+									<label for="" style="margin-right: 30px;">
+										<input name="gender" type="radio" value="男" />
+										男
+									</label>
+									<label for="" style="margin-right: 30px;">
+										<input name="gender" type="radio" value="女" />
+										女
+									</label>
+								</div>
+			
+								<span class="content" v-else>{{ user.gender }}</span>
+			
+								<i class="iconfont" @click="saveGender()" v-if="showSaveGender">&#xea6e;保存</i>
+								<i class="iconfont" @click="updateGender()" v-if="showUpdateGender">&#xe600;修改</i>
+							</div>
+						</div>
+			
+						<div class="hy-user-info" @mouseover="showFunctionIntro()" @mouseleave="hideFunctionIntro()">
+							<h1 class="title">简介</h1>
+							<div class="value">
+								<!-- <input type="text" class="input" v-model="user.introduction" v-if="showInputIntro" /> -->
+								<textarea id="textarea" v-if="showInputIntro" rows="5" :value="user.introduction"></textarea>
+								<span class="content-intro" v-else>{{ user.introduction.substring(0, 13) }}</span>
+								<i class="iconfont" @click="saveIntro()" v-if="showSaveIntro">&#xea6e;保存</i>
+								<i class="iconfont" @click="updateIntro()" v-if="showUpdateIntro">&#xe600;修改</i>
+							</div>
+						</div>
+			
+						<div class="hy-user-info" @mouseover="showFunctionAddress()" @mouseleave="hideFunctionAddress()">
+							<h1 class="title">居住地</h1>
+							<div class="value">
+								<input type="text" class="input" v-model="user.address" v-if="showInputAddress" />
+								<span v-else class="content">{{ user.address }}</span>
+								<i class="iconfont" @click="saveAddress()" v-if="showSaveAddress">&#xea6e;保存</i>
+								<i class="iconfont" @click="updateAddress()" v-if="showUpdateAddress">&#xe600;修改</i>
+							</div>
+						</div>
+			
+						<div class="hy-user-info">
+							<h1 class="title">手机号</h1>
+							<div class="value">
+								<span class="content">{{ user.mobile }}</span>
+							</div>
+						</div>
+			
+						<div class="hy-user-info" @mouseover="showFunctionEmail()" @mouseleave="hideFunctionEmail()">
+							<h1 class="title">邮箱</h1>
+							<div class="value">
+								<input type="email" class="input" v-model="user.email" v-if="showInputEmail"  />
+								<span v-else class="content">{{ user.email }}</span>
+								<i class="iconfont" @click="saveEmail()" v-if="showSaveEmail">&#xea6e;保存</i>
+								<i class="iconfont" @click="updateEmail()" v-if="showUpdateEmail">&#xe600;修改</i>
+							</div>
+						</div>
+			
+						<div class="hy-user-info" @mouseover="showFunctionAccount()" @mouseleave="hideFunctionAccount()">
+							<h1 class="title">账号</h1>
+							<div class="value">
+								<input type="text" class="input" v-model="user.account" v-if="showInputAccount" />
+								<span v-else class="content">{{ user.account }}</span>
+								<i class="iconfont" @click="saveAccount()" v-if="showSaveAccount">&#xea6e;保存</i>
+								<i class="iconfont" @click="updateAccount()" v-if="showUpdateAccount">&#xe600;修改</i>
+							</div>
+						</div>
+			
+						<div class="hy-user-info" @mouseover="showFunctionBirthday()" @mouseleave="hideFunctionBirthday()">
+							<h1 class="title">生日</h1>
+							<div class="value">
+								<div v-if="showInputBirthday" class="selectBox">
+									<select name="year" id="year" @change="changeDays()">
+										<option :value="index + 1960" v-for="(item, index) in 60" :key="index">{{ item + 1959 }}</option>
+									</select>
+									<select name="month" id="month" @change="changeDays()">
+										<option :value="index + 1" v-for="(item, index) in 12" :key="index">{{ item }}</option>
+									</select>
+									<select name="day" id="day">
+										<option :value="index" v-for="(item, index) in days" :key="index">{{ item }}</option>
+									</select>
+								</div>
+								<span class="content" v-else>{{ user.birthady }}</span>
+								<i class="iconfont" @click="saveBirthday()" v-if="showSaveBirthday">&#xea6e;保存</i>
+								<i class="iconfont" @click="updateBirthday()" v-if="showUpdateBirthday">&#xe600;修改</i>
+							</div>
+						</div>
+			
+						<div class="hy-user-info" @mouseover="showFunctionConstellation()" @mouseleave="hideFunctionConstellation()">
+							<h1 class="title">星座</h1>
+							<div class="value">
+								<select name="" id="constellation" v-if="showInputConstellation">
+									<option :value="item" v-for="(item, index) in constellationList" :key="index">{{ item }}</option>
+								</select>
+								<span class="content" v-else>{{ user.constellation }}</span>
+								<i class="iconfont" @click="saveConstellation()" v-if="showSaveConstellation">&#xea6e;保存</i>
+								<i class="iconfont" @click="updateConstellation()" v-if="showUpdateConstellation">&#xe600;修改</i>
+							</div>
+						</div>
+					</div>
+					<div class="function"></div>
+				
+				</div>
+			
+				<div class="ba-col-2"></div>
+			</div>
+			
 	</div>
+	</div>
+
 </template>
 
 <script>
@@ -185,7 +242,7 @@ export default {
 
 	created() {
 		var userId = this.$route.query.id;
-		this.axios.post('http://localhost:8080/api/user/userid/?id=' + userId).then(res => {
+		this.axios.post(this.GLOBAL.baseUrl+'/user/userid/?id=' + userId).then(res => {
 			this.user = res.data.data;
 		});
 	},
@@ -201,6 +258,7 @@ export default {
 				}
 			}).then(res => {});
 		},
+
 		update() {
 			this.showInput = true;
 			this.status = false;
@@ -433,9 +491,9 @@ input {
 	align-items: center;
 }
 
-.info {
+.hy-user-info {
 	width: 100%;
-	height: 75px;
+	height: 45px;
 	display: flex;
 	align-items: center;
 	margin-bottom: 5%;
@@ -454,7 +512,7 @@ input {
 }
 .hy-user-container {
 	margin-top: 1%;
-	background-color: white;
+	/* background-color: white; */
 	display: flex;
 }
 .hy-user-block-row {
@@ -463,24 +521,24 @@ input {
 	margin-bottom: 20px;
 	border-bottom: 2px solid gray;
 }
-/* 阿里图标 */
-@font-face {
-	font-family: 'iconfont';
-	/* project id 1550259 */
-	src: url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.eot');
-	src: url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.eot?#iefix') format('embedded-opentype'),
-		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.woff2') format('woff2'),
-		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.woff') format('woff'),
-		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.ttf') format('truetype'),
-		url('//at.alicdn.com/t/font_1550259_vl8sk3ac3p.svg#iconfont') format('svg');
-}
+.hy-index-large {
+		width: 100%;
+		height: 800px;
+		display: flex;
+	}
 
-.iconfont {
-	font-family: "iconfont" !important;
-	font-size: 16px;
-	font-style: normal;
-	-webkit-font-smoothing: antialiased;
-	-webkit-text-stroke-width: 0.2px;
-	-moz-osx-font-smoothing: grayscale;
-}
+	.hy-index-left {
+		background-color: white;
+		padding-top: 1%;
+	}
+
+	.hy-index-mid {
+		/* background-color: red; */
+		display: flex;
+		flex-wrap: wrap;
+	}
+
+	.hy-index-rigth {
+		background-color: white;
+	}
 </style>

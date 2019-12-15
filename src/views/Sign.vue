@@ -5,16 +5,17 @@
 			<!-- 注册页面 -->
 			<div class="form-container sign-up-container" v-if="selected===0">
 				<h1>注册</h1>
-
 				<div class="blank">
 					<label class="alert">{{mobileTip}}</label>
 				</div>
 				<input type="text" placeholder="手机号" v-model="userDto.mobile" @input="checkPhone()">
-				<input type="password" placeholder="密码" v-model="userDto.password" @input="checkpassword()">
-				<div class="row">
+				<!-- <input type="password" placeholder="密码" v-model="userDto.password" @input="checkpassword()"> -->
+				<div>
 					<input type="text" placeholder="验证码" style="width: 65%;" v-model="usercode">
 					<a @click="getcode" style="cursor: pointer;" :disabled="codeDisabled">{{codemsg}}</a>
 				</div>
+					
+				
 				<button @click="toregister">注册</button>
 			</div>
 			<!-- 图片验证码登录 -->
@@ -45,7 +46,7 @@
 					<label class="alert" v-if="!mobilecode">{{mobileTip}}</label>
 				</div>
 				<input type="text" placeholder="手机号" v-model="userDto.mobile" @input="checkPhone()">
-				<div class="row">
+				<div>
 					<input type="text" placeholder="验证码" style="width: 70%;" v-model="usercode">
 					<span @click="getcode" style="cursor: pointer;">{{codemsg}}</span>
 				</div>
@@ -59,7 +60,7 @@
 				</div>
 				<input type="text" placeholder="手机号" v-model="userDto.mobile" @input="checkPhone()">
 				<input type="password" placeholder="新密码" v-model="userDto.password" @input="checkpassword()">
-				<div class="row">
+				<div>
 					<input type="text" placeholder="验证码" style="width: 65%;" v-model="usercode">
 					<a @click="getcode" style="cursor: pointer;">{{codemsg}}</a>
 				</div>
@@ -149,10 +150,12 @@
 						if (this.code == this.usercode) {
 							this.axios({
 								method: 'post',
-								url: this.GLOBAL.baseUrl + '/user/sign_in',
+								url: this.GLOBAL.baseUrl + '/user/signin',
 								data: {
-									name: this.userDto.mobile,
-									password: this.userDto.password,
+									// name: this.userDto.mobile,
+									// password: this.userDto.password,
+									equalsString: this.userDto.mobile,
+									password: this.userDto.password
 								},
 							}).then(res => {
 								if (res.data.msg == "成功") {
@@ -165,6 +168,7 @@
 											id: res.data.data.id
 										}
 									})
+									localStorage.setItem('user', JSON.stringify(res.data.data));
 								} else {
 									this.tipmsg = res.data.msg;
 									this.getmask();
@@ -204,9 +208,11 @@
 								verifyCode: this.usercode
 							},
 						}).then(res => {
+							
 							if (res.data.msg === "成功") {
 								this.tipmsg = "登录成功";
 								this.getmask();
+								
 							} else {
 								this.tipmsg = res.data.msg;
 								this.getmask();
@@ -229,11 +235,10 @@
 					if(this.userDto.password>5){
 							this.axios({
 								method: 'post',
-								url: 'http://localhost:8080/api/user/sign_up',
+								url: this.GLOBAL.baseUrl + '/user/signup',
 								data: {
-									"name": this.userDto.mobile,
-									"password": this.userDto.password,
-									"verifyCode": this.usercode
+									equalsString: this.userDto.mobile,
+									keyWords: this.usercode
 								}
 							}).then(res => {
 								console.log(res.data)
@@ -245,7 +250,6 @@
 									this.getmask();
 								}
 							})
-						
 					}else{
 						this.tipmsg = "密码最少6位";
 						this.getmask();
@@ -261,7 +265,7 @@
 			},
 			refresh() {
 				let _this = this;
-				this.axios.get('http://localhost:8080/api/code').then(res => {
+				this.axios.get(this.GLOBAL.baseUrl + '/code').then(res => {
 					_this.code = res.data.data.code;
 					var img = this.$refs.codeImg;
 					// let url = window.URL.createObjectURL(res.data);
@@ -289,8 +293,9 @@
 						this.tipmsg = "验证码发送成功";
 						this.getmask();
 						let _this = this;
-						this.axios.post('http://localhost:8080/api/sms?mobile=' + this.userDto.mobile)
+						this.axios.post(this.GLOBAL.baseUrl + '/sms?mobile=' + this.userDto.mobile)
 							.then(function(response) {
+								console.log(response.data.data)
 								_this.code = response.data.data;
 							})
 					}
@@ -703,9 +708,8 @@
 		left: 50%;
 	}
 
-	@font-face {
+	@font-face{
 		font-family: 'iconfont';
-		/* project id 1551082 */
 		src: url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.eot');
 		src: url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.eot?#iefix') format('embedded-opentype'),
 			url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.woff2') format('woff2'),

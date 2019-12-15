@@ -1,85 +1,176 @@
 <template>
-	<div>
-		<div class="banner black-theme ba-yy-b">
-			<div class="banner-tool ba-xy-c ba-xx-e">
-				<div class="spinner"></div>
-				<i class="iconfont mar">&#xe610;</i>
-				<i class="iconfont mar">&#xe654;</i>
-				<i class="iconfont mar">&#xe786;</i>
-			</div>
-		</div>
-		<div class="container">
-			<h1>个人中心</h1>
-			<h2>dfihgoirjp</h2>
-			<div class="cardd">dgreg</div>
-			<div class="card"></div>
-			<div class="bc-box"></div>
-		</div>
-	</div>
+	<v-container>
+		<v-row>
+			<v-expansion-panels popout>
+				<v-expansion-panel v-for="(message, i) in messages" :key="i" hide-actions>
+					<v-expansion-panel-header ripple>
+						<v-row align="center" class="spacer" no-gutters>
+							<v-col cols="4" sm="2" md="1">
+								<v-avatar size="80px">
+									<img v-if="user.avatar" :alt="user.nickname" :src="user.avatar" />
+									<v-icon v-else :color="message.color" v-text="message.icon"></v-icon>
+								</v-avatar>
+							</v-col>
+
+							<v-col class="hidden-xs-only" sm="5" md="4" justify="center">
+								<strong v-html="user.nickname"></strong>
+								<br />
+								<br />
+								<span v-if="user.constellation" class="grey--text">&nbsp;({{ user.constellation }})</span>
+							</v-col>
+
+							<v-col class="text-no-wrap" cols="5" sm="3"><strong v-html="message.title"></strong></v-col>
+
+							<v-col class="grey--text text-truncate hidden-sm-and-down">&mdash; 文章数 {{ user.journalSum }}</v-col>
+						</v-row>
+					</v-expansion-panel-header>
+
+					<v-expansion-panel-content>
+						<v-divider></v-divider>
+						<v-card-text v-text="user.introduction"></v-card-text>
+					</v-expansion-panel-content>
+				</v-expansion-panel>
+			</v-expansion-panels>
+		</v-row>
+
+		<v-row>
+			<v-col cols="12">
+				<v-card class="mx-auto" max-width="100%">
+					<v-img class="white--text align-end" height="200px" :src="getImage(journals[0].thumbnail)"><v-card-title class="grey--text" v-text="journals[0].title"></v-card-title></v-img>
+
+					<v-card-subtitle class="pb-0">{{ journals[0].createTime }}</v-card-subtitle>
+
+					<v-card-text class="text--primary">
+						<div>Whitehaven Beach</div>
+
+						<div>Whitsunday Island, Whitsunday Islands</div>
+					</v-card-text>
+
+					<v-card-actions>
+						<v-btn color="orange" text>xxx人喜欢</v-btn>
+
+						<v-btn color="orange" text>xxx人浏览</v-btn>
+
+						<v-spacer></v-spacer>
+
+						<v-btn icon><v-icon>mdi-heart</v-icon></v-btn>
+
+						<v-btn icon><v-icon>mdi-bookmark</v-icon></v-btn>
+
+						<v-btn icon><v-icon>mdi-share-variant</v-icon></v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-col>
+		</v-row>
+
+		<v-row>
+			<v-col v-for="card in journals.slice(1)" :key="card.title" cols="4">
+				<v-card :elevation="hover ? 12 : 2" class="mx-auto" max-width="100%">
+					<v-img class="white--text align-end" height="200px" :src="getImage(card.thumbnail)"><v-card-title v-text="card.title"></v-card-title></v-img>
+
+					<v-card-subtitle class="pb-0">{{ card.createTime }}</v-card-subtitle>
+
+					<v-card-text class="text--primary">
+						<div>Whitehaven Beach</div>
+
+						<div>Whitsunday Island, Whitsunday Islands</div>
+					</v-card-text>
+
+					<v-card-actions>
+						<v-btn color="orange" text>xxx人喜欢</v-btn>
+
+						<v-btn color="orange" text>xxx人浏览</v-btn>
+
+						<v-spacer></v-spacer>
+
+						<v-btn icon><v-icon>mdi-heart</v-icon></v-btn>
+
+						<v-btn icon><v-icon>mdi-bookmark</v-icon></v-btn>
+
+						<v-btn icon><v-icon>mdi-share-variant</v-icon></v-btn>
+					</v-card-actions>
+				</v-card>
+			</v-col>
+		</v-row>
+	</v-container>
 </template>
 
-<script></script>
+<script>
+export default {
+	data: () => ({
+		user: {},
+		messages: [
+			{
+				num: '文章数23',
+				icon: 'NUI',
+				color: '#e06c61'
+			}
+		],
+		journals: [],
+		cards: [
+			// { title: '', src: 'https://cdn.vuetifyjs.com/images/cards/house.jpg', flex: 12 },
+			// { title: 'Favorite road trips', src: 'https://cdn.vuetifyjs.com/images/cards/road.jpg', flex: 4 },
+			// { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 4 },
+			// { title: 'Best airlines', src: 'https://cdn.vuetifyjs.com/images/cards/plane.jpg', flex: 4 }
+		]
+		// lorem: '喜欢桉树叶。此处「桉树叶」是指代某个人。 ...'
+	}),
+
+	created() {
+		// 获取网页地址url
+		var query = window.location.href;
+		// 锁定到最后一个"/"的位置
+		var begin = query.lastIndexOf('/') + 1;
+		// 取出地址中最后的id值
+		var userId = query.substring(begin);
+		// 获取该好友的基本信息
+		this.axios({
+			method: 'post',
+			url: this.GLOBAL.baseUrl + '/user/id',
+			data: JSON.stringify({
+				id: userId
+			}),
+			headers: {
+				'Content-Type': 'application/json'
+			}
+		}).then(res => {
+			this.user = res.data.data;
+		});
+		// 获取该好友的日志信息
+		this.getUserJournals(userId);
+	},
+
+	methods: {
+		getUserJournals(id) {
+			this.axios({
+				method: 'post',
+				url: this.GLOBAL.baseUrl + '/friend/journal/key',
+				data: JSON.stringify({
+					fromId: id
+				}),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(res => {
+				this.journals = res.data.data;
+			});
+		},
+		// 图片缓存的方法
+		getImage(url) {
+			return 'http://images.weserv.nl/?url=' + url;
+		}
+	},
+
+	computed: {}
+};
+</script>
 
 <style scoped>
-@font-face {
-	font-family: 'iconfont'; /* project id 1541989 */
-	src: url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.eot');
-	src: url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.woff2') format('woff2'),
-		url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.woff') format('woff'), url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.ttf') format('truetype'),
-		url('//at.alicdn.com/t/font_1541989_u845z1d6iyb.svg#iconfont') format('svg');
+.personal-page {
+	width: 80%;
 }
 
-.iconfont {
-	font-family: 'iconfont' !important;
-	font-size: 36px;
-	font-style: normal;
-	color: #ffffff;
-	cursor: pointer;
-	-webkit-font-smoothing: antialiased;
-	-webkit-text-stroke-width: 0.2px;
-	-moz-osx-font-smoothing: grayscale;
-}
-
-.banner {
-	width: 100%;
-	height: 58px;
-}
-
-.banner-tool {
-	position: sticky;
-	top: 0;
-	width: 100%;
-	height: 96%;
-	padding: 20px 20px;
-	border: 1px solid white;
-}
-
-.container {
-	position: relative;
-	background-color: rgb(55, 62, 67);
-	z-index: -10;
-}
-
-.bc-box {
-	position: absolute;
-	top: 0;
-	left: 10%;
-	width: 75%;
-	background-color: #7d8f9b;
-	opacity: 0.5;
-	z-index: -5;
-}
-
-.card {
-	width: 50%;
-	height: 200px;
-	margin: 0 auto;
-	background-color: #03a9f4;
-}
-
-.cardd {
-	width: 100%;
-	height: 300px;
-	background-color: #42b983;
+span {
+	display: block;
 }
 </style>

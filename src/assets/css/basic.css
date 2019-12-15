@@ -42,9 +42,11 @@ img {
 }
 
 .ba-col-10 {
-	flex: 1 1 83.33%
+	flex: 1 1 83.33%;
 }
-
+.ba-col-9{
+	flex:1 1 75%
+}
 .ba-col-8 {
 	flex: 1 1 66%;
 	border-radius: 3px;

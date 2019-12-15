@@ -1,5 +1,5 @@
 <script>
-const baseUrl = 'http://116.62.227.32:8080/api'
+const baseUrl = 'http://k27q175631.wicp.vip:42104/api'
 const token = ''
 export default {
 	baseUrl,
