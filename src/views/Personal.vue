@@ -36,7 +36,9 @@
 		<v-row>
 			<v-col cols="12">
 				<v-card class="mx-auto" max-width="100%">
-					<v-img class="white--text align-end" height="200px" :src="getImage(journals[0].thumbnail)"><v-card-title class="grey--text" v-text="journals[0].title"></v-card-title></v-img>
+					<v-img class="#353535--text align-end" height="200px" :src="getImage(journals[0].thumbnail)">
+						<v-card-title v-text="journals[0].title"></v-card-title>
+					</v-img>
 
 					<v-card-subtitle class="pb-0">{{ journals[0].createTime }}</v-card-subtitle>
 
@@ -47,9 +49,9 @@
 					</v-card-text>
 
 					<v-card-actions>
-						<v-btn color="orange" text>xxx人喜欢</v-btn>
+						<v-btn color="orange" text>{{ journals[0].likes }} 人喜欢</v-btn>
 
-						<v-btn color="orange" text>xxx人浏览</v-btn>
+						<v-btn color="orange" text>{{ journals[0].comments }} 人浏览</v-btn>
 
 						<v-spacer></v-spacer>
 
@@ -77,9 +79,9 @@
 					</v-card-text>
 
 					<v-card-actions>
-						<v-btn color="orange" text>xxx人喜欢</v-btn>
+						<v-btn color="orange" text>{{ card.likes }} 人喜欢</v-btn>
 
-						<v-btn color="orange" text>xxx人浏览</v-btn>
+						<v-btn color="orange" text>{{ card.comments }} 人浏览</v-btn>
 
 						<v-spacer></v-spacer>
 
