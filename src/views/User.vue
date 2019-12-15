@@ -1,62 +1,39 @@
 <template>
-	
 	<div class="hy-index-large">
 		<div class="hy-index-left ba-col-1 ">
 			<v-card height="400" width="100%" class="mx-auto">
 				<v-list-item>
 					<v-list-item-content>
-						<v-list-item-title class="title">
-							Application
-						</v-list-item-title>
-						<v-list-item-subtitle>
-							subtext
-						</v-list-item-subtitle>
+						<v-list-item-title class="title">Application</v-list-item-title>
+						<v-list-item-subtitle>subtext</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
-	
+
 				<v-list dense nav>
-					<v-list-item  to="/index">
-						<v-list-item-icon>
-							<v-icon>mdi-home</v-icon>
-						</v-list-item-icon>
-						<v-list-item-content>
-							<v-list-item-title>
-							主页
-							</v-list-item-title>
-						</v-list-item-content>
+					<v-list-item to="/index">
+						<v-list-item-icon><v-icon>mdi-home</v-icon></v-list-item-icon>
+						<v-list-item-content><v-list-item-title>主页</v-list-item-title></v-list-item-content>
 					</v-list-item>
-					
+
 					<v-list-item link>
-						<v-list-item-icon>
-							<v-icon>mdi-image</v-icon>
-						</v-list-item-icon>
-						<v-list-item-content>
-							<v-list-item-title>照片</v-list-item-title>
-						</v-list-item-content>	
+						<v-list-item-icon><v-icon>mdi-image</v-icon></v-list-item-icon>
+						<v-list-item-content><v-list-item-title>照片</v-list-item-title></v-list-item-content>
 					</v-list-item>
-					
+
 					<v-list-item link>
-						<v-list-item-icon>
-							<v-icon>mdi-widgets</v-icon>
-						</v-list-item-icon>
-						<v-list-item-content>
-							<v-list-item-title>应用</v-list-item-title>
-						</v-list-item-content>
+						<v-list-item-icon><v-icon>mdi-widgets</v-icon></v-list-item-icon>
+						<v-list-item-content><v-list-item-title>应用</v-list-item-title></v-list-item-content>
 					</v-list-item>
-					
 				</v-list>
 			</v-card>
 		</div>
-	
+
 		<div class="hy-index-mid ba-col-9">
-			
 			<div class="hy-user-large ba-xx-c">
 				<div class="ba-col-2"></div>
 				<div class="ba-col-8 hy-user-container">
 					<div class="ba-col-1"></div>
 					<div class="ba-col-10">
-						
-						
 						<div class="hy-user-info" @mouseover="showFunction()" @mouseleave="hideFunction()">
 							<h1 class="title">昵称</h1>
 							<div class="value">
@@ -66,7 +43,7 @@
 								<i class="iconfont" @click="update()" v-if="showUpdate">&#xe600;修改</i>
 							</div>
 						</div>
-			
+
 						<div class="hy-user-info" @mouseover="showFunctionGender()" @mouseleave="hideFunctionGender()">
 							<h1 class="title">性别</h1>
 							<div class="value">
@@ -80,14 +57,14 @@
 										女
 									</label>
 								</div>
-			
+
 								<span class="content" v-else>{{ user.gender }}</span>
-			
+
 								<i class="iconfont" @click="saveGender()" v-if="showSaveGender">&#xea6e;保存</i>
 								<i class="iconfont" @click="updateGender()" v-if="showUpdateGender">&#xe600;修改</i>
 							</div>
 						</div>
-			
+
 						<div class="hy-user-info" @mouseover="showFunctionIntro()" @mouseleave="hideFunctionIntro()">
 							<h1 class="title">简介</h1>
 							<div class="value">
@@ -98,7 +75,7 @@
 								<i class="iconfont" @click="updateIntro()" v-if="showUpdateIntro">&#xe600;修改</i>
 							</div>
 						</div>
-			
+
 						<div class="hy-user-info" @mouseover="showFunctionAddress()" @mouseleave="hideFunctionAddress()">
 							<h1 class="title">居住地</h1>
 							<div class="value">
@@ -108,24 +85,24 @@
 								<i class="iconfont" @click="updateAddress()" v-if="showUpdateAddress">&#xe600;修改</i>
 							</div>
 						</div>
-			
+
 						<div class="hy-user-info">
 							<h1 class="title">手机号</h1>
 							<div class="value">
 								<span class="content">{{ user.mobile }}</span>
 							</div>
 						</div>
-			
+
 						<div class="hy-user-info" @mouseover="showFunctionEmail()" @mouseleave="hideFunctionEmail()">
 							<h1 class="title">邮箱</h1>
 							<div class="value">
-								<input type="email" class="input" v-model="user.email" v-if="showInputEmail"  />
+								<input type="email" class="input" v-model="user.email" v-if="showInputEmail" />
 								<span v-else class="content">{{ user.email }}</span>
 								<i class="iconfont" @click="saveEmail()" v-if="showSaveEmail">&#xea6e;保存</i>
 								<i class="iconfont" @click="updateEmail()" v-if="showUpdateEmail">&#xe600;修改</i>
 							</div>
 						</div>
-			
+
 						<div class="hy-user-info" @mouseover="showFunctionAccount()" @mouseleave="hideFunctionAccount()">
 							<h1 class="title">账号</h1>
 							<div class="value">
@@ -135,7 +112,7 @@
 								<i class="iconfont" @click="updateAccount()" v-if="showUpdateAccount">&#xe600;修改</i>
 							</div>
 						</div>
-			
+
 						<div class="hy-user-info" @mouseover="showFunctionBirthday()" @mouseleave="hideFunctionBirthday()">
 							<h1 class="title">生日</h1>
 							<div class="value">
@@ -155,7 +132,7 @@
 								<i class="iconfont" @click="updateBirthday()" v-if="showUpdateBirthday">&#xe600;修改</i>
 							</div>
 						</div>
-			
+
 						<div class="hy-user-info" @mouseover="showFunctionConstellation()" @mouseleave="hideFunctionConstellation()">
 							<h1 class="title">星座</h1>
 							<div class="value">
@@ -169,15 +146,12 @@
 						</div>
 					</div>
 					<div class="function"></div>
-				
 				</div>
-			
+
 				<div class="ba-col-2"></div>
 			</div>
-			
+		</div>
 	</div>
-	</div>
-
 </template>
 
 <script>
@@ -194,7 +168,7 @@ export default {
 				gender: '',
 				introduction: '',
 				constellation: '',
-				birthady: '',
+				birthady: ''
 			},
 			status: true,
 			showInput: false,
@@ -242,7 +216,7 @@ export default {
 
 	created() {
 		var userId = this.$route.query.id;
-		this.axios.post(this.GLOBAL.baseUrl+'/user/userid/?id=' + userId).then(res => {
+		this.axios.post(this.GLOBAL.baseUrl + '/user/userid/?id=' + userId).then(res => {
 			this.user = res.data.data;
 		});
 	},
@@ -522,23 +496,23 @@ input {
 	border-bottom: 2px solid gray;
 }
 .hy-index-large {
-		width: 100%;
-		height: 800px;
-		display: flex;
-	}
+	width: 100%;
+	height: 800px;
+	display: flex;
+}
 
-	.hy-index-left {
-		background-color: white;
-		padding-top: 1%;
-	}
+.hy-index-left {
+	background-color: white;
+	padding-top: 1%;
+}
 
-	.hy-index-mid {
-		/* background-color: red; */
-		display: flex;
-		flex-wrap: wrap;
-	}
+.hy-index-mid {
+	/* background-color: red; */
+	display: flex;
+	flex-wrap: wrap;
+}
 
-	.hy-index-rigth {
-		background-color: white;
-	}
+.hy-index-rigth {
+	background-color: white;
+}
 </style>

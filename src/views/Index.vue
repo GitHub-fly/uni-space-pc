@@ -12,12 +12,16 @@
 						</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
+				
+				
+				v-toolbar-title-icon
+				
 
 				<v-list dense nav>
 					<v-list-item to="/index">
-						<v-list-item-icon>
+						<v-list-item>
 							<v-icon>mdi-home</v-icon>
-						</v-list-item-icon>
+						</v-list-item>
 						<v-list-item-content>
 							<v-list-item-title>
 								主页
@@ -26,18 +30,18 @@
 					</v-list-item>
 
 					<v-list-item link>
-						<v-list-item-icon>
+						<v-list-item>
 							<v-icon>mdi-image</v-icon>
-						</v-list-item-icon>
+						</v-list-item>
 						<v-list-item-content>
 							<v-list-item-title>照片</v-list-item-title>
 						</v-list-item-content>
 					</v-list-item>
 
 					<v-list-item link>
-						<v-list-item-icon>
+						<v-list-item>
 							<v-icon>mdi-widgets</v-icon>
-						</v-list-item-icon>
+						</v-list-item>
 						<v-list-item-content>
 							<v-list-item-title>应用</v-list-item-title>
 						</v-list-item-content>
@@ -121,9 +125,9 @@
 		<div class="hy-index-rigth ba-col-2 ">
 			<v-card max-width="450" class="mx-auto">
 				<v-toolbar flat>
-					<v-toolbar-title-icon>
+					<v-toolbar-title>
 						<v-icon left>mdi-account-multiple</v-icon> 推荐好友
-					</v-toolbar-title-icon>
+					</v-toolbar-title>
 					<v-spacer></v-spacer>
 					<!-- 将来进行推荐好友换一批操作 -->
 					<!-- <v-btn icon @clic><v-icon>mdi-magnify</v-icon></v-btn> -->
@@ -134,7 +138,7 @@
 						<v-subheader v-text="item.header"></v-subheader>
 					</template>
 					<template v-for="(item, index) in recommendFriends.slice(0, 6)">
-						<v-divider inset="true" :key="index"></v-divider>
+						<!-- <v-divider :key="item.id"></v-divider> -->
 						<v-list-item :key="index">
 							<v-list-item-avatar>
 								<v-img :src="item.avatar"></v-img>

@@ -5,8 +5,8 @@ import router from './router'
 import axios from 'axios'
 import VueAxios from 'vue-axios'
 import global_ from './util/Global.vue'
-
-import vuetify from './plugins/vuetify'
+//引入vuetify
+import vuetify from '@/plugins/vuetify' // path to vuetify export
 import Vuetify from 'vuetify/lib'
 import colors from 'vuetify/lib/util/colors'
 
