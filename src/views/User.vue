@@ -150,7 +150,7 @@
 										<option :value="index" v-for="(item, index) in days" :key="index">{{ item }}</option>
 									</select>
 								</div>
-								<span class="content" v-else>{{ user.birthady }}</span>
+								<span class="content" v-else>{{ user.birthday }}</span>
 								<i class="iconfont" @click="saveBirthday()" v-if="showSaveBirthday">&#xea6e;保存</i>
 								<i class="iconfont" @click="updateBirthday()" v-if="showUpdateBirthday">&#xe600;修改</i>
 							</div>
