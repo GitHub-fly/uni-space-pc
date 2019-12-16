@@ -167,19 +167,16 @@ export default {
 			user: {
 				id: null,
 				mobile: '',
-				account: '',
-				
-				password: '',
+				// account: '',
 				verifyCode: '',
-				
 				nickname: '',
-				email: '',
+				// email: '',
 				avatar: '',
 				address: '',
 				gender: '',
 				introduction: '',
 				constellation: '',
-				birthady: ''
+				birthday: ''
 			},
 			status: true,
 			showInput: false,
@@ -273,9 +270,10 @@ export default {
 		},
 
 		save() {
+			this.user.id = JSON.parse(localStorage.getItem('user')).id;
 			this.axios({
 				method: 'put',
-				url: this.GLOBAL.baseUrl + '/user/userData',
+				url: this.GLOBAL.baseUrl + '/user/data',
 				data: JSON.stringify(this.user),
 				headers: {
 					'Content-Type': 'application/json'
@@ -480,8 +478,6 @@ export default {
 	opacity: 0.5;
 }
 
-
-
 .avatar {
 	width: 200px;
 	height: 200px;
@@ -501,7 +497,6 @@ img:hover {
 	animation: mymove 2s infinite;
 }
 
-
 select {
 	margin-right: 20px;
 	height: 30px;
@@ -514,28 +509,22 @@ textarea {
 	width: 75%;
 }
 .content-intro {
-	font-family: '楷体';
-	font-size: 30px;
+	/* font-family: '楷体'; */
+	font-size: 18px;
 }
 .iconfont {
 	margin-right: 10px;
 }
 .content {
-	font-family: '楷体';
-	font-size: 30px;
+	/* font-family: '楷体'; */
+	font-size: 18px;
 }
 .title {
 	font-size: 30px;
 	width: 15%;
 }
-h1,
-input {
-	font-family: '楷体';
-	color: #000000;
-}
 .input {
 	outline: none;
-	font-size: 25px;
 	border-radius: 20px;
 	border: 1px solid gray;
 	padding-left: 20px;
