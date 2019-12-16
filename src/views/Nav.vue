@@ -61,7 +61,7 @@
 				<template>
 					<div class="xxq-titleDiv">
 						<v-subheader v-text="tabText"></v-subheader>
-						<v-btn icon v-if="tabText === '我的好友'"><v-icon left @click="showDeleteIcon()">✘</v-icon></v-btn>
+						<v-btn icon v-if="tabText === '我的好友'"><v-icon left @click="showDeleteIcon()">mdi-delete</v-icon></v-btn>
 					</div>
 				</template>
 
@@ -75,9 +75,9 @@
 										<div class="xxq-titleDiv">
 											<span>{{ item.nickname }}</span>
 											<v-btn icon small v-if="tabText === '添加好友'"><v-icon @click="addFriend(item.id)">+</v-icon></v-btn>
-											<v-btn icon small v-if="delteteBtnStatus"><v-icon small @click="deleteFriend(item.id)">✘</v-icon></v-btn>
+											<v-btn icon small v-if="delteteBtnStatus"><v-icon small @click="deleteFriend(item.id)">mdi-minus</v-icon></v-btn>
 											<div class="applicationBox" v-if="tabText === '好友请求'">
-												<v-btn icon small><v-icon @click="reject(item.id)">✘</v-icon></v-btn>
+												<v-btn icon small><v-icon @click="reject(item.id)">mdi-minus</v-icon></v-btn>
 												<v-btn icon small><v-icon @click="aggreee(item.id)">✔</v-icon></v-btn>
 											</div>
 										</div>
@@ -165,6 +165,7 @@ export default {
 			this.myFriends = [];
 			this.inputStatus = false;
 			this.tabText = '好友请求';
+			this.delteteBtnStatus = false;
 			// 调用好友请求接口
 			this.axios({
 				method: 'post',
@@ -226,7 +227,7 @@ export default {
 					'Content-Type': 'application/json'
 				}
 			}).then(res => {
-				alert(res.data.msg);
+				alert('好友请求已' + res.data.msg + '发送');
 			});
 		},
 		// 跳转到好友中心页面的方法

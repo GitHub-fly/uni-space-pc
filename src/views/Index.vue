@@ -13,10 +13,6 @@
 					</v-list-item-content>
 				</v-list-item>
 				
-				
-				v-toolbar-title-icon
-				
-
 				<v-list dense nav>
 					<v-list-item to="/index">
 						<v-list-item>
@@ -140,11 +136,20 @@
 					<template v-for="(item, index) in recommendFriends.slice(0, 6)">
 						<!-- <v-divider :key="item.id"></v-divider> -->
 						<v-list-item :key="index">
+							
+							
 							<v-list-item-avatar>
 								<v-img :src="item.avatar"></v-img>
 							</v-list-item-avatar>
+							
+							
 							<v-list-item-content>
-								<v-list-item-title v-html="item.nickname"></v-list-item-title>
+								<v-list-item-title>
+									<div class="xxq-titleDiv">
+										<span>{{ item.nickname }}</span>
+										<v-btn icon small><v-icon @click="addFriend(item.id)">+</v-icon></v-btn>
+									</div>
+								</v-list-item-title>
 								<v-list-item-subtitle v-html="item.introduction"></v-list-item-subtitle>
 							</v-list-item-content>
 						</v-list-item>
@@ -208,19 +213,11 @@
 				})
 			},
 			journaldetail(a) {
-				// this.$router.push('/user')
 				this.$router.push({
 					name: 'journaldetail',
 					params: {
 						journalId: a
 					},
-					// query传参方法:
-					// {
-					// 	path:'journaldetail',
-					// 	query:{
-					// 		id:a
-					// 	}
-					// }
 				})
 			},
 			getmylog(userid) {
@@ -239,6 +236,7 @@
 					}
 				})
 			},
+			// 获取推荐好友的方法
 			getfriend() {
 				this.axios({
 					method: 'post',
@@ -249,10 +247,24 @@
 					}
 				}).then(res => {
 					this.recommendFriends = res.data.data;
-
 				});
 			},
-
+			// 添加好友按钮的动作监听
+			addFriend(id) {
+				this.friendDto.toId = id;
+				this.axios({
+					method: 'post',
+					url: this.GLOBAL.baseUrl + '/friend/friend',
+					data: JSON.stringify(this.friendDto),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(res => {
+					alert('好友请求已' + res.data.msg + '发送');
+					// 重新加载推荐好友
+					this.getfriend();
+				});
+			},
 			// 滚动条监听方法
 			scrollDs() {
 				//变量scrollTop是滚动条滚动时，距离顶部的距离
@@ -299,6 +311,11 @@
 </script>
 
 <style>
+	
+	.xxq-titleDiv {
+		display: flex;
+		justify-content: space-between;
+	}
 	.hy-index-large {
 		width: 100%;
 		height: 800px;
