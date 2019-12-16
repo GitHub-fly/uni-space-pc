@@ -30,9 +30,17 @@
 
 		<div class="hy-index-mid ba-col-9">
 			<div class="hy-user-large ba-xx-c">
-				<div class="ba-col-2"></div>
+				<div class="ba-col-1">
+					<div class="avatar">
+						<div class="img">
+							<img :src="user.avatar" alt="测试头像" />
+							<div class="file-box">
+								<input type="file" title="更改头像" id="file" @change="changeAvatar($event)" accept=".jpg,.gif,.png,.bmp" ref="InputFile" name="files" />
+							</div>
+						</div>
+					</div>
+				</div>
 				<div class="ba-col-8 hy-user-container">
-					<div class="ba-col-1"></div>
 					<div class="ba-col-10">
 						<div class="hy-user-info" @mouseover="showFunction()" @mouseleave="hideFunction()">
 							<h1 class="title">昵称</h1>
@@ -147,8 +155,6 @@
 					</div>
 					<div class="function"></div>
 				</div>
-
-				<div class="ba-col-2"></div>
 			</div>
 		</div>
 	</div>
@@ -159,8 +165,13 @@ export default {
 	data() {
 		return {
 			user: {
+				id: null,
 				mobile: '',
 				account: '',
+				
+				password: '',
+				verifyCode: '',
+				
 				nickname: '',
 				email: '',
 				avatar: '',
@@ -215,13 +226,52 @@ export default {
 	},
 
 	created() {
-		var userId = this.$route.query.id;
-		this.axios.post(this.GLOBAL.baseUrl + '/user/userid/?id=' + userId).then(res => {
+		this.axios({
+			method: 'post',
+			url: this.GLOBAL.baseUrl + '/user/id',
+			data: {
+				id: JSON.parse(localStorage.getItem('user')).id
+			},
+			headers:{
+				'Content-Type': 'application/json'
+			}
+		}).then(res => {
 			this.user = res.data.data;
-		});
+		})
 	},
 
 	methods: {
+		// 更改头像的方法
+		changeAvatar(e) {
+			var reader = new FileReader();
+			let fileData = this.$refs.InputFile.files[0];
+			reader.readAsDataURL(fileData);
+			let _this = this;
+			// 使用formapi打包
+			let formData = new FormData();
+			formData.append('file', fileData);
+
+			this.axios({
+				method: 'post',
+				url: this.GLOBAL.baseUrl + '/img',
+				data: formData
+			}).then(res => {
+				this.user.avatar = res.data.data;
+				this.user.avatar = res.data.data;
+				this.user.id = this.user.id;
+				this.axios({
+					method: 'put',
+					url: this.GLOBAL.baseUrl + '/user/avatar',
+					data: JSON.stringify(this.user),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(res => {
+					alert('修改成功');
+				});
+			});
+		},
+
 		save() {
 			this.axios({
 				method: 'put',
@@ -413,6 +463,45 @@ export default {
 * {
 	transition: all 1s ease 0s;
 }
+#file {
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	cursor: pointer;
+	opacity: 0;
+}
+.file-box {
+	position: relative;
+	margin-top: -200px;
+	width: 200px;
+	height: 200px;
+	opacity: 0.5;
+}
+
+
+
+.avatar {
+	width: 200px;
+	height: 200px;
+	cursor: pointer;
+}
+.img {
+	width: 100%;
+	height: 100%;
+}
+.img img {
+	position: relative;
+	border-radius: 20px;
+	width: 100%;
+	height: 100%;
+}
+img:hover {
+	animation: mymove 2s infinite;
+}
+
+
 select {
 	margin-right: 20px;
 	height: 30px;
@@ -437,7 +526,7 @@ textarea {
 }
 .title {
 	font-size: 30px;
-	width: 20%;
+	width: 15%;
 }
 h1,
 input {
@@ -460,7 +549,6 @@ input {
 }
 .value {
 	width: 90%;
-	margin-left: 20%;
 	display: flex;
 	align-items: center;
 }
@@ -473,7 +561,6 @@ input {
 	margin-bottom: 5%;
 	border-bottom: 1px solid lightgray;
 }
-
 .ba-col-10 {
 	padding: 30px 10px 10px 10px;
 	display: flex;
@@ -486,7 +573,6 @@ input {
 }
 .hy-user-container {
 	margin-top: 1%;
-	/* background-color: white; */
 	display: flex;
 }
 .hy-user-block-row {
@@ -507,7 +593,6 @@ input {
 }
 
 .hy-index-mid {
-	/* background-color: red; */
 	display: flex;
 	flex-wrap: wrap;
 }
