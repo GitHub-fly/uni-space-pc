@@ -129,8 +129,7 @@
 						<v-icon left>mdi-account-multiple</v-icon> 推荐好友
 					</v-toolbar-title>
 					<v-spacer></v-spacer>
-					<!-- 将来进行推荐好友换一批操作 -->
-					<!-- <v-btn icon @clic><v-icon>mdi-magnify</v-icon></v-btn> -->
+					
 				</v-toolbar>
 
 				<v-list three-line>
