@@ -4,85 +4,97 @@ import Nav from '@/views/Nav.vue'
 import Sign from '@/views/Sign.vue'
 import Mylog from '@/views/Mylog.vue'
 import Publish from '@/views/Publish.vue'
+import PhotoAlbum from '@/views/PhotoAlbum.vue'
 import Photo from '@/views/Photo.vue'
 import User from '@/views/User.vue'
 import Retrieve from '@/views/Retrieve.vue'
 import Friend from '@/views/Friend.vue'
 import Friendask from '@/views/Friendask.vue'
 import Index from '@/views/Index.vue'
-import JournalDetail  from  '@/views/JournalDetail.vue'
+import JournalDetail from '@/views/JournalDetail.vue'
+import Journal from '@/views/Journal.vue'
 import test from '@/views/test.vue'
 import Personal from '@/views/Personal.vue'
+import Music from '@/views/Music.vue'
+
 Vue.use(VueRouter)
 
-const routes = [
-	{
+const routes = [{
 		path: '/',
 		component: Nav,
-		children: [
-			{
+		children: [{
 				path: '/',
 				redirect: 'index'
 			},
 			{
-				path:'index',
-				component:Index
+				path: 'index',
+				component: Index,
+				children: [{
+						path: '/index',
+						redirect: '/index/journal'
+					},
+					{
+						path: '/index/journal',
+						component: Journal
+					},
+					{
+						path: '/index/photoAlbum',
+						component: PhotoAlbum
+					},
+					{
+						path: '/index/photo/:id',
+						component: Photo
+					},
+					{
+						path: 'user',
+						name: 'user',
+						component: User
+					},
+					{
+						path: '/index/music',
+						name: 'music',
+						component: Music
+					},
+					{
+						path: '/index/mylog',
+						name: '/index/mylog',
+						component: Mylog
+					},
+					{
+						path: '/index/journal/detail/:id',
+						component: JournalDetail
+					},
+					{
+						path: '/index/retrieve',
+						name: 'retrieve',
+						component: Retrieve
+					},
+					{
+						path: '/index/publish',
+						component: Publish
+					},
+				]
 			},
 			{
-				path:'journaldetail',
-				name:'journaldetail',
-				component:JournalDetail
+				path: 'personal/:id',
+				component: Personal
 			},
 			{
-				path:'retrieve',
-				name:'retrieve',
-				component:Retrieve
+				path: 'friend',
+				component: Friend
 			},
 			{
-				path: 'mylog',
-				name:'mylog',
-				component: Mylog
+				path: 'friendask',
+				component: Friendask
 			},
-			{
-				path:'personal/:id',
-				name:'personal',
-				component:Personal
-			},
-			{
-				path: 'publish',
-				component: Publish
-			},
-			{
-				path: 'photo',
-				name:'photo',
-				component: Photo
-			},
-			{
-				path:'user',
-				name:'user',
-				component:User
-			},
-			{
-				path:'friend',
-				component:Friend
-			},
-			{
-				path:'friendask',
-				component:Friendask
-			}
 			
 		]
 	},
 	{
 		path: '/sign',
-		name:'sign',
+		name: 'sign',
 		component: Sign
-	},
-	{
-		path:'/test',
-		component:test
 	}
-
 ]
 
 const router = new VueRouter({

@@ -1,103 +1,130 @@
 <template>
 	<div>
-		<v-bottom-navigation :value="activeBtn" grow color="teal">
-			<div class="hy-nav-top">
-				<div class="hy-nav-top-left">图标 UNI-SPACE</div>
+		<div>
+			<v-bottom-navigation :value="activeBtn" grow color="teal">
+				<div class="hy-nav-top">
+					<div class="hy-nav-top-left">
+						<v-btn height="100%" width="35%" to="/"><v-img width="75%" height="100%" src="../assets/img/ic_launcher.png" @click="toIndex()"></v-img></v-btn>
+						<div height="100%" class="title" style="cursor: default;">UNI-SPACE</div>
+					</div>
 
-				<div class="hy-nav-top-right">
-					<v-btn style="height: 100%;">
-						<span>Recents</span>
-						<v-icon>mdi-history</v-icon>
-					</v-btn>
+					<div class="hy-nav-top-right">
+						<v-spacer @click="play()" height="100%px" class="px">
+							<!-- <aplayer
+								class="rideo"
+								:autoplay="true"
+								:float="true"
+								:mini="true"
+								:music="{
+									title: this.name,
+									artist: this.singer,
+									src: this.src,
+									lrc: '[00:00.00]lrc here\n[00:01.00]aplayer'
+								}"
+							></aplayer>
+						 -->
+						</v-spacer>
 
-					<v-menu offset-y>
-						<template v-slot:activator="{ on }">
-							<v-btn v-on="on" style="height: 100%;">
-								<span>Favorites</span>
-								<v-icon>mdi-heart</v-icon>
-							</v-btn>
-						</template>
+						<v-btn style="height: 100%;"></v-btn>
 
-						<v-list>
-							<v-list-item @click="tohome()"><v-list-item-title>个人主页</v-list-item-title></v-list-item>
+						<v-btn style="height: 100%;">
+							<v-avatar color="teal" size="48"><img :src="user.avatar" /></v-avatar>
+						</v-btn>
+						<v-btn style="height: 100%;"><i @click="layout()" class="iconfont">&#xe65b;</i></v-btn>
 
-							<v-list-item @click="changemessage()"><v-list-item-title>信息修改</v-list-item-title></v-list-item>
+						<v-btn style="height: 100%;"><v-icon>mdi-heart</v-icon></v-btn>
 
-							<v-list-item @click="changeencrypted()"><v-list-item-title>密码修改</v-list-item-title></v-list-item>
+						<v-menu offset-y>
+							<template v-slot:activator="{ on }">
+								<v-btn v-on="on" style="height: 100%;"><i class="iconfont">&#xe722;</i></v-btn>
+							</template>
 
-							<v-list-item><v-list-item-title>设置</v-list-item-title></v-list-item>
+							<v-list>
+								<v-list-item @click="tohome()"><v-list-item-title>个人主页</v-list-item-title></v-list-item>
 
-							<v-list-item @click="toexit()"><v-list-item-title>退出</v-list-item-title></v-list-item>
-						</v-list>
+								<v-list-item @click="changemessage()"><v-list-item-title>信息修改</v-list-item-title></v-list-item>
 
-						inset
-					</v-menu>
+								<v-list-item @click="changeencrypted()"><v-list-item-title>密码修改</v-list-item-title></v-list-item>
 
-					<v-btn @click.stop="drawer = !drawer" style="height: 100%;">
-						<span>friends</span>
-						<v-icon medium>mdi-account-multiple</v-icon>
-					</v-btn>
+								<v-list-item><v-list-item-title>设置</v-list-item-title></v-list-item>
+
+								<v-list-item @click="toexit()"><v-list-item-title>退出</v-list-item-title></v-list-item>
+							</v-list>
+						</v-menu>
+
+						<v-btn @click.stop="drawer = !drawer" style="height: 100%;"><v-icon medium>mdi-account-multiple</v-icon></v-btn>
+					</div>
 				</div>
-			</div>
-		</v-bottom-navigation>
+			</v-bottom-navigation>
 
-		<v-navigation-drawer v-model="drawer" temporary absolute right width="25%">
-			<v-card max-width="450" class="mx-auto">
-				<v-toolbar flat>
-					<v-btn icon @click="showFriendsBox()" small><v-icon medium>mdi-account</v-icon></v-btn>
-					<v-btn icon @click="showInfoFriendBox()" small><v-icon>!</v-icon></v-btn>
-					<v-btn icon @click="showAddFriendBox()" small><v-icon>mdi-plus-circle</v-icon></v-btn>
-					<!-- 空白填充 -->
-					<v-spacer></v-spacer>
-					<!-- 输入框 -->
-					<div class="xxq-input-wrap" v-if="inputStatus">
-						<input type="text" placeholder="请输入..." v-model="keyWords" @input="searchFriends()" />
-						<v-btn icon small><v-icon left>mdi-magnify</v-icon></v-btn>
-					</div>
-				</v-toolbar>
-				<!-- 分割线 -->
-				<v-divider></v-divider>
+			<v-navigation-drawer v-model="drawer" temporary absolute right width="25%">
+				<v-card max-width="450" class="mx-auto">
+					<v-toolbar flat>
+						<v-btn icon @click="showFriendsBox()" small><v-icon medium>mdi-account</v-icon></v-btn>
+						<v-btn icon @click="showInfoFriendBox()" small><i class="iconfont">&#xe601;</i></v-btn>
+						<v-btn icon @click="showAddFriendBox()" small><v-icon>mdi-plus-circle</v-icon></v-btn>
+						<!-- 空白填充 -->
+						<v-spacer></v-spacer>
+						<!-- 输入框 -->
+						<div class="xxq-input-wrap" v-if="inputStatus">
+							<input type="text" placeholder="请输入..." v-model="keyWords" @input="searchFriends()" />
+							<v-btn icon small><v-icon left>mdi-magnify</v-icon></v-btn>
+						</div>
+					</v-toolbar>
+					<!-- 分割线 -->
+					<v-divider></v-divider>
 
-				<template>
-					<div class="xxq-titleDiv">
-						<v-subheader v-text="tabText"></v-subheader>
-						<v-btn icon v-if="tabText === '我的好友'"><v-icon left @click="showDeleteIcon()">✘</v-icon></v-btn>
-					</div>
-				</template>
+					<template>
+						<div class="xxq-titleDiv">
+							<v-subheader v-text="tabText"></v-subheader>
+							<v-btn icon v-if="tabText === '我的好友'"><v-icon left @click="showDeleteIcon()">mdi-delete</v-icon></v-btn>
+						</div>
+					</template>
 
-				<div class="myFriendsBox">
-					<v-list three-line>
-						<template v-for="(item, index) in myFriends">
-							<v-list-item :key="index">
-								<v-list-item-avatar @click="toPersion(item.id)"><v-img :src="item.avatar"></v-img></v-list-item-avatar>
-								<v-list-item-content>
-									<v-list-item-title>
-										<div class="xxq-titleDiv">
-											<span>{{ item.nickname }}</span>
-											<v-btn icon small v-if="tabText === '添加好友'"><v-icon @click="addFriend(item.id)">+</v-icon></v-btn>
-											<v-btn icon small v-if="delteteBtnStatus"><v-icon small @click="deleteFriend(item.id)">✘</v-icon></v-btn>
-											<div class="applicationBox" v-if="tabText === '好友请求'">
-												<v-btn icon small><v-icon @click="reject(item.id)">✘</v-icon></v-btn>
-												<v-btn icon small><v-icon @click="aggreee(item.id)">✔</v-icon></v-btn>
+					<div class="myFriendsBox">
+						<v-list three-line>
+							<template v-for="(item, index) in myFriends">
+								<v-list-item :key="index">
+									<v-list-item-avatar @click="toPersion(item.id)" style="cursor: pointer;"><v-img :src="item.avatar"></v-img></v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title>
+											<div class="xxq-titleDiv">
+												<span>{{ item.nickname }}</span>
+												<v-btn icon small v-if="tabText === '添加好友'"><v-icon @click="addFriend(item.id)">+</v-icon></v-btn>
+												<v-btn icon small v-if="delteteBtnStatus"><v-icon small @click="deleteFriend(item.id)">mdi-minus</v-icon></v-btn>
+												<div class="applicationBox" v-if="tabText === '好友请求'">
+													<v-btn icon small><i class="iconfont" @click="aggreee(item.id)">&#xe7cd;</i></v-btn>
+													<v-btn icon small><i class="iconfont" @click="reject(item.id)">&#xe65a;</i></v-btn>
+												</div>
 											</div>
-										</div>
-									</v-list-item-title>
-									<v-list-item-subtitle v-html="item.introduction"></v-list-item-subtitle>
-								</v-list-item-content>
-							</v-list-item>
-						</template>
-					</v-list>
-				</div>
-			</v-card>
-		</v-navigation-drawer>
-		<router-view />
+										</v-list-item-title>
+										<v-list-item-subtitle v-html="item.introduction"></v-list-item-subtitle>
+									</v-list-item-content>
+								</v-list-item>
+							</template>
+						</v-list>
+					</div>
+				</v-card>
+			</v-navigation-drawer>
+		</div>
+
+		<router-view class="routerView" />
 	</div>
 </template>
 
 <script>
+import Aplayer from 'vue-aplayer';
 export default {
+	components: {
+		Aplayer
+	},
 	data() {
 		return {
+			musics: [],
+			musicList: [],
+			singer: '',
+			name: '',
+			src: '',
 			activeBtn: 1,
 			drawer: null,
 			draweradd: null,
@@ -105,6 +132,7 @@ export default {
 			keyWords: null,
 			inputStatus: true,
 			delteteBtnStatus: false,
+			user: null,
 			messages: [
 				{
 					title: 'Home',
@@ -120,39 +148,46 @@ export default {
 				header: 'MyFriends'
 			},
 			friendDto: {
-				fromId: 1,
+				fromId: JSON.parse(localStorage.getItem('user')).id,
 				keyWords: '',
 				toId: null
 			}
 		};
 	},
 	methods: {
+		toIndex() {
+			this.$router.push('/');
+		},
 		changeencrypted() {
 			this.$router.push({
 				name: 'retrieve',
 				params: {
-					userId: 2
+					userId: JSON.parse(localStorage.getItem('user')).id
 				}
 			});
 		},
 		changemessage() {
 			this.$router.push({
+				path: '/index/user',
 				name: 'user',
 				params: {
-					userId: 2
+					userId: JSON.parse(localStorage.getItem('user')).id
 				}
 			});
 		},
 		tohome() {
-			this.$router.push('personal/' + JSON.parse(localStorage.getItem('user')).id);
+			this.$router.push('/personal/' + JSON.parse(localStorage.getItem('user')).id);
 		},
+		/**
+		 * 退出的方法
+		 */
 		toexit() {
 			this.$router.push({
 				name: 'sign',
 				params: {}
 			});
+			localStorage.clear();
 		},
-
 		// 好友模块（抽屉）
 		showFriendsBox() {
 			this.inputStatus = true;
@@ -165,6 +200,7 @@ export default {
 			this.myFriends = [];
 			this.inputStatus = false;
 			this.tabText = '好友请求';
+			this.delteteBtnStatus = false;
 			// 调用好友请求接口
 			this.axios({
 				method: 'post',
@@ -226,7 +262,7 @@ export default {
 					'Content-Type': 'application/json'
 				}
 			}).then(res => {
-				alert(res.data.msg);
+				alert('好友请求已' + res.data.msg + '发送');
 			});
 		},
 		// 跳转到好友中心页面的方法
@@ -278,17 +314,52 @@ export default {
 		},
 		showDeleteIcon() {
 			this.delteteBtnStatus = !this.delteteBtnStatus;
+		},
+		// 音乐播放方法
+		play() {
+			this.axios({
+				method: 'post',
+				url: this.GLOBAL.baseUrl + '/music/detail',
+				data: JSON.stringify({
+					userId: this.user.id
+				}),
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(res => {
+				this.musics = res.data.data.data;
+				console.log(this.musics);
+				var index = this.musics.length - 1;
+				this.singer = this.musics[index].singer;
+				this.name = this.musics[index].name;
+				this.src = this.musics[index].content;
+			});
 		}
 	},
 
 	created() {
-		// alert(this.$route.id)
 		this.friends(this.friendDto);
+		this.user = JSON.parse(localStorage.getItem('user'));
+		this.play();
 	}
 };
 </script>
 
 <style scoped>
+	
+	.rideoBox {
+		background-color: #000088;
+	}
+	
+.rideo {
+	width: 100%;
+	height: 100%;
+	background-color: #000066;
+}
+
+.routerView {
+	margin-top: 2%;
+}
 .hy-nav-top {
 	/* display: flex; */
 }
@@ -301,14 +372,14 @@ export default {
 	/* background-color: red; */
 	height: 100%;
 }
-
 .hy-nav-top-left {
 	display: flex;
+	align-items: center;
 	position: absolute;
+	width: 18%;
+	height: 100%;
 	left: 10%;
-	bottom: 30%;
 }
-
 .xxq-input-wrap {
 	display: flex;
 	height: 50%;

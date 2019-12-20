@@ -9,10 +9,11 @@ import global_ from './util/Global.vue'
 import vuetify from '@/plugins/vuetify' // path to vuetify export
 import Vuetify from 'vuetify/lib'
 import colors from 'vuetify/lib/util/colors'
-
+// 引入音乐组件
+import vueAplayer from 'vue-aplayer'
 
 //让vue使用axios
-Vue.use(VueAxios,axios)
+Vue.use(VueAxios, axios, vueAplayer)
 Vue.prototype.GLOBAL = global_
 
 Vue.config.productionTip = false
@@ -20,7 +21,7 @@ Vue.config.productionTip = false
 Vue.use(Vuetify)
 
 new Vue({
-  router,
-  vuetify,
-  render: h => h(App)
+	router,
+	vuetify,
+	render: h => h(App)
 }).$mount('#app')
