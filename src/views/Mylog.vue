@@ -48,8 +48,6 @@ export default {
 	},
 	methods: {
 		getjournal() {
-			var _this = this;
-			this.userId = this.$route.params.userId;
 			this.axios({
 				method: 'post',
 				url: this.GLOBAL.baseUrl + '/journal/user/data',
@@ -58,7 +56,7 @@ export default {
 				}
 			}).then(res => {
 				console.log(res.data.data);
-				_this.myjournal = res.data.data;
+				this.myjournal = res.data.data;
 			});
 		},
 		journaldetail(a) {
@@ -78,6 +76,12 @@ export default {
 		}
 	},
 	created() {
+		// 获取网页地址url
+		var query = window.location.href;
+		// 锁定到最后一个“/”的位置
+		var begin = query.lastIndexOf('/') + 1;
+		// 取出地址中最后的id值
+		this.userId = query.substring(begin);
 		this.getjournal();
 		this.getmorejournal();
 	},

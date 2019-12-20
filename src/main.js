@@ -6,7 +6,7 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 import global_ from './util/Global.vue'
 //引入vuetify
-import vuetify from '@/plugins/vuetify' // path to vuetify export
+import vuetify from '@/plugins/vuetify'
 import Vuetify from 'vuetify/lib'
 import colors from 'vuetify/lib/util/colors'
 // 引入音乐组件

@@ -43,7 +43,7 @@
 									<!-- {{journal.content | filterFun}} -->
 								</v-card-text>
 
-								<v-card-actions><v-btn text color="deep-purple accent-4" absolute bottom right @click="journaldetail(journal)">查看详细信息</v-btn></v-card-actions>
+								<v-card-actions><v-btn text color="deep-purple accent-4" absolute bottom right @click="journaldetail(journal.id)">查看详细信息</v-btn></v-card-actions>
 								<v-btn @click="changeColor(index)" class="ma-2" text icon><v-icon :style="{ color: color[index] ? 'red' : '' }">mdi-heart</v-icon></v-btn>
 								<p class="font-weight-regular">({{ likes[index] }})</p>
 								<v-btn class="ma-2" text icon><v-icon color="black ">mdi-message-text</v-icon></v-btn>
@@ -236,22 +236,17 @@ export default {
 				// console.log(this.color);
 			});
 		},
-		journaldetail(a) {
-			this.$router.push({
-				name: 'journaldetail',
-				params: {
-					journalId: a
-				}
-			});
+		journaldetail(id) {
+			this.$router.push('/index/journal/detail/' + id);
 		},
 		getmylog(userid) {
 			this.$router.push({
+				path: '/index/mylog/' + userid,
 				/**
 				 * 路由传参注意事项：
 				 * 使用的是params方法:用name、params搭配
 				 * 若使用的是query方法:用path、query搭配(注：query传递时，路径上会出现“？”)
 				 */
-				name: '/index/mylog',
 				params: {
 					userId: userid
 				}

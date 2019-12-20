@@ -4,13 +4,13 @@
 			<v-bottom-navigation :value="activeBtn" grow color="teal">
 				<div class="hy-nav-top">
 					<div class="hy-nav-top-left">
-						<v-btn height="100%" width="35%" to="/"><v-img width="75%" height="100%" src="../assets/img/ic_launcher.png" @click="toIndex()"></v-img></v-btn>
+						<v-btn height="100%" width="50%" to="/"><v-img width="60%" height="100%" src="../assets/img/ic_launcher.png"></v-img></v-btn>
 						<div height="100%" class="title" style="cursor: default;">UNI-SPACE</div>
 					</div>
 
 					<div class="hy-nav-top-right">
-						<v-spacer @click="play()" height="100%px" class="px">
-							<!-- <aplayer
+						<v-spacer @click="play()" class="rideoDiv">
+							<aplayer
 								class="rideo"
 								:autoplay="true"
 								:float="true"
@@ -22,18 +22,13 @@
 									lrc: '[00:00.00]lrc here\n[00:01.00]aplayer'
 								}"
 							></aplayer>
-						 -->
 						</v-spacer>
-
-						<v-btn style="height: 100%;"></v-btn>
 
 						<v-btn style="height: 100%;">
 							<v-avatar color="teal" size="48"><img :src="user.avatar" /></v-avatar>
 						</v-btn>
 						<v-btn style="height: 100%;"><i @click="layout()" class="iconfont">&#xe65b;</i></v-btn>
-
 						<v-btn style="height: 100%;"><v-icon>mdi-heart</v-icon></v-btn>
-
 						<v-menu offset-y>
 							<template v-slot:activator="{ on }">
 								<v-btn v-on="on" style="height: 100%;"><i class="iconfont">&#xe722;</i></v-btn>
@@ -51,7 +46,6 @@
 								<v-list-item @click="toexit()"><v-list-item-title>退出</v-list-item-title></v-list-item>
 							</v-list>
 						</v-menu>
-
 						<v-btn @click.stop="drawer = !drawer" style="height: 100%;"><v-icon medium>mdi-account-multiple</v-icon></v-btn>
 					</div>
 				</div>
@@ -155,9 +149,6 @@ export default {
 		};
 	},
 	methods: {
-		toIndex() {
-			this.$router.push('/');
-		},
 		changeencrypted() {
 			this.$router.push({
 				name: 'retrieve',
@@ -346,39 +337,36 @@ export default {
 </script>
 
 <style scoped>
-	
-	.rideoBox {
-		background-color: #000088;
-	}
-	
 .rideo {
+	position: absolute;
+	top: -14px;
 	width: 100%;
-	height: 100%;
-	background-color: #000066;
+	height: 116%;
+}
+.rideoDiv {
+	position: relative;
+	margin-right: 100px;
 }
 
 .routerView {
 	margin-top: 2%;
 }
 .hy-nav-top {
-	/* display: flex; */
+	display: flex;
+	width: 100%;
+	padding-left: 10%;
+	justify-content: space-between;
 }
 
 .hy-nav-top-right {
-	position: absolute;
 	display: flex;
-	right: 0;
-	/* bottom:-2%; */
-	/* background-color: red; */
 	height: 100%;
 }
 .hy-nav-top-left {
 	display: flex;
+	justify-content: space-between;
+	width: 15%;
 	align-items: center;
-	position: absolute;
-	width: 18%;
-	height: 100%;
-	left: 10%;
 }
 .xxq-input-wrap {
 	display: flex;

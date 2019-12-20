@@ -137,7 +137,6 @@ export default {
 		this.getDetail(journalId);
 		console.log(this.jorural);
 		
-		
 		this.getmorejournal();
 		this.getuser();
 	},

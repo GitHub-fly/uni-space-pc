@@ -56,8 +56,7 @@ const routes = [{
 						component: Music
 					},
 					{
-						path: '/index/mylog',
-						name: '/index/mylog',
+						path: '/index/mylog/:id',
 						component: Mylog
 					},
 					{
