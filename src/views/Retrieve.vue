@@ -23,9 +23,26 @@
 					<v-card class="mb-12" height="150px" max-width="80%">
 						<div class="hy-retrieve-box">
 							<v-form ref="form" v-model="valid" lazy-validation>
-								<v-text-field :counter="10" label="密码" required v-model="password"></v-text-field>
-
-								<v-text-field :counter="10" label="新密码" required v-model="newpasssword"></v-text-field>
+								<v-text-field
+									v-model="password"
+									:append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+									:rules="[rules.required, rules.min]"
+									:type="show1 ? 'text' : 'password'"
+									name="input-10-1"
+									label="新密码"
+									counter
+									@click:append="show1 = !show1"
+								></v-text-field>
+								<v-text-field
+									v-model="newpasssword"
+									:append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
+									:rules="[rules.required, rules.min]"
+									:type="show1 ? 'text' : 'password'"
+									name="input-10-1"
+									label="请确认密码"
+									counter
+									@click:append="show1 = !show1"
+								></v-text-field>
 							</v-form>
 						</div>
 					</v-card>
@@ -52,31 +69,42 @@ export default {
 			password: '',
 			newpasssword: '',
 			question: '',
-			answer: ''
+			answer: '',
+			show1: false,
+			rules: {
+				min: v => v.length >= 6 || '密码至少6位',
+				emailMatch: () => "The email and password you entered don't match"
+			}
 		};
 	},
 	methods: {
 		firststep() {
-			if (this.useranswer === '2') {
+			if (this.useranswer == this.answer) {
 				this.e6 = 2;
-				this.useranswer = '';
 			} else {
 				alert('密码错误');
 			}
 		},
 		secondstep() {
-			alert('进函数');
 			if (this.password === this.newpasssword) {
 				this.axios({
 					method: 'put',
 					url: this.GLOBAL.baseUrl + '/user/security',
 					data: {
-						id: '11',
+						id: JSON.parse(localStorage.getItem('user')).id,
 						password: this.password
 					}
 				}).then(res => {
 					alert('修改成功');
 					this.e6 = 3;
+					this.useranswer = '';
+					this.password = '';
+					this.newpasssword = '';
+					localStorage.clear();
+					this.$router.push({
+						name: 'sign',
+						params: {}
+					});
 				});
 			} else {
 				alert('两次输入密码不一致');
@@ -93,7 +121,7 @@ export default {
 				url: this.GLOBAL.baseUrl + '/security/search',
 				data: {
 					photoAlbumId: 0,
-					userId: JSON.parse(localStorage.getItem('user')).id,
+					userId: JSON.parse(localStorage.getItem('user')).id
 				}
 			}).then(res => {
 				this.question = res.data.data.question;

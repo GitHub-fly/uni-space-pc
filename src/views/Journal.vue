@@ -29,7 +29,7 @@
 									<v-sheet :color="colors[i]" height="100%">
 										<v-row class="fill-height" align="center" justify="center">
 											<div class="display-3" style="width: 100%;height: 100%;">
-												<img style="width:100%;height: 100%;display: flex;align-content: center;" :src="journal.thumbnail" alt="" />
+												<img style="width:100%; height: 100%; display: flex; align-content: center;" :src="journal.thumbnail" alt="" />
 											</div>
 										</v-row>
 									</v-sheet>

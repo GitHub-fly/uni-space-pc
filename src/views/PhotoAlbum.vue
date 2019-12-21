@@ -195,7 +195,7 @@ export default {
 			console.log(imgSize);
 			var _this = this; // this指向问题，所以在外面先定义
 			// 比如上传头像限制10M大小，这里获取的大小单位是b
-			if (imgSize <= 100 * 1024) {
+			if (imgSize <= 1024 * 1024) {
 				this.formData.append('file', file);
 				// 合格
 				_this.errorStr = '';

@@ -1,11 +1,12 @@
 <template>
-	<div>
+	<div id="allcolor">
 		<div>
-			<v-bottom-navigation :value="activeBtn" grow color="orange lignten-2" height="70px">
+			<v-bottom-navigation :value="activeBtn" id="navcolor" height="70px">
 				<div class="hy-nav-top">
 					<div class="hy-nav-top-left">
-						<v-btn height="100%" width="50%" to="/"><v-img width="60%" height="100%" src="../assets/img/ic_launcher.png"></v-img></v-btn>
-						<div height="100%" class="title red--text" style="cursor: default;">UNI-SPACE</div>
+						<v-btn @click="change()" class="title" height="100%" width="30%">Skin</v-btn>
+						<v-btn height="100%" width="35%" to="/"><v-img width="70%" height="100%" src="../assets/img/ic_launcher.png"></v-img></v-btn>
+						<div height="100%" class="red--text title" style="cursor: default;">UNI-SPACE</div>
 					</div>
 
 					<div class="hy-nav-top-right">
@@ -32,12 +33,14 @@
 							</template>
 							<span>{{ user.nickname }}</span>
 						</v-tooltip>
-						
+
 						<v-tooltip bottom>
 							<template v-slot:activator="{ on }">
 								<!-- <v-btn v-on="on" style="height: 100%;"><i @click="toexit()" class="iconfont icon">&#xe65b;</i></v-btn> -->
 								<!-- <v-btn v-on="on" style="height: 100%;"><i class="iconfont icon">&#xe65b;</i></v-btn> -->
-								<v-btn v-on="on" style="height: 100%;"><svg class="iconf-Christmas-exit" aria-hidden="true" @click="toexit()"><use xlink:href="#icon-dangao"></use></svg></v-btn>
+								<v-btn v-on="on" style="height: 100%;">
+									<svg class="iconf-Christmas-exit" aria-hidden="true" @click="toexit()"><use xlink:href="#icon-dangao"></use></svg>
+								</v-btn>
 							</template>
 							<span>退出</span>
 						</v-tooltip>
@@ -45,7 +48,9 @@
 						<v-tooltip bottom>
 							<template v-slot:activator="{ on }">
 								<!-- <v-btn v-on="on" style="height: 100%;"><i @click="toPublish()" class="iconfont icon">&#xe7c9;</i></v-btn> -->
-								<v-btn v-on="on" style="height: 100%;"><svg class="iconf-Christmas" aria-hidden="true" @click="toPublish()"><use xlink:href="#icon-xinfeng"></use></svg></v-btn>
+								<v-btn v-on="on" style="height: 100%;">
+									<svg class="iconf-Christmas" aria-hidden="true" @click="toPublish()"><use xlink:href="#icon-xinfeng"></use></svg>
+								</v-btn>
 							</template>
 							<span>发表日志</span>
 						</v-tooltip>
@@ -53,7 +58,9 @@
 						<v-tooltip bottom>
 							<template v-slot:activator="{ on }">
 								<!-- <v-btn v-on="on" @click.stop="drawer = !drawer" style="height: 100%;"><i class="iconfont iconFriends">&#xe62f;</i></v-btn> -->
-								<v-btn v-on="on" @click.stop="drawer = !drawer" style="height: 100%;"><svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-xueren"></use></svg></v-btn>
+								<v-btn v-on="on" @click.stop="drawer = !drawer" style="height: 100%;">
+									<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-xueren"></use></svg>
+								</v-btn>
 							</template>
 							<span>好友列表</span>
 						</v-tooltip>
@@ -61,7 +68,9 @@
 						<v-menu offset-y>
 							<template v-slot:activator="{ on }">
 								<!-- <v-btn v-on="on" style="height: 100%;"><i class="iconfont icon">&#xe722;</i></v-btn> -->
-								<v-btn v-on="on" style="height: 100%;"><svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-xuehua"></use></svg></v-btn>
+								<v-btn v-on="on" style="height: 100%;">
+									<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-xuehua"></use></svg>
+								</v-btn>
 							</template>
 
 							<v-list>
@@ -87,31 +96,37 @@
 					<v-toolbar flat>
 						<!-- 默认皮肤的图标 -->
 						<!-- <v-btn icon @click="showFriendsBox()" small><v-icon medium>mdi-account</v-icon></v-btn>
-						<v-btn icon @click="showInfoFriendBox()" small><i class="iconfont">&#xe601;</i></v-btn>
-						<v-btn icon @click="showAddFriendBox()" small><v-icon>mdi-plus-circle</v-icon></v-btn> -->
-						
+									<v-btn icon @click="showInfoFriendBox()" small><i class="iconfont">&#xe601;</i></v-btn>
+									<v-btn icon @click="showAddFriendBox()" small><v-icon>mdi-plus-circle</v-icon></v-btn> -->
+
 						<!-- 圣诞主题图标 -->
 						<v-tooltip bottom>
 							<template v-slot:activator="{ on }">
-								<v-btn icon v-on="on" @click="showFriendsBox()"><svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-jiangbingren"></use></svg></v-btn>
+								<v-btn icon v-on="on" @click="showFriendsBox()">
+									<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-jiangbingren"></use></svg>
+								</v-btn>
 							</template>
 							<span>好友</span>
 						</v-tooltip>
-						
+
 						<v-tooltip bottom>
 							<template v-slot:activator="{ on }">
-								<v-btn icon v-on="on" @click="showInfoFriendBox()"><svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-lingdang1"></use></svg></v-btn>
+								<v-btn icon v-on="on" @click="showInfoFriendBox()">
+									<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-lingdang1"></use></svg>
+								</v-btn>
 							</template>
 							<span>好友请求</span>
 						</v-tooltip>
-						
+
 						<v-tooltip bottom>
 							<template v-slot:activator="{ on }">
-								<v-btn icon v-on="on" @click="showAddFriendBox()"><svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-shengdanhuahuan"></use></svg></v-btn>
+								<v-btn icon v-on="on" @click="showAddFriendBox()">
+									<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-shengdanhuahuan"></use></svg>
+								</v-btn>
 							</template>
 							<span>添加好友</span>
 						</v-tooltip>
-						
+
 						<!-- 空白填充 -->
 						<v-spacer></v-spacer>
 						<!-- 添加好友/搜索好友的输入框 -->
@@ -169,6 +184,25 @@ export default {
 	},
 	data() {
 		return {
+			morecolor: [
+				'#e91e63',
+				'#f8bbd0',
+				'#ce93d8',
+				'#8e24aa',
+				'#2196f3',
+				'#3f51b5',
+				'#5e35b1',
+				'#5c6bc0',
+				'#303f9f',
+				'#8c9eff',
+				'#00bcd4',
+				'#f44336',
+				'#ffebee',
+				'#ff8f00',
+				'#f57f17',
+				'#ffea00'
+			],
+			colorindex: 0,
 			musics: [],
 			musicList: [],
 			singer: '',
@@ -182,6 +216,16 @@ export default {
 			inputStatus: true,
 			delteteBtnStatus: false,
 			user: null,
+			messages: [
+				{
+					title: 'Home',
+					icon: 'mdi-dashboard'
+				},
+				{
+					title: 'About',
+					icon: 'mdi-question_answer'
+				}
+			],
 			myFriends: [],
 			items: {
 				header: 'MyFriends'
@@ -373,6 +417,17 @@ export default {
 				this.name = this.musics[index].name;
 				this.src = this.musics[index].content;
 			});
+		},
+		// 随机切换背景色
+		change() {
+			var allcolor = document.getElementById('allcolor');
+			allcolor.style.backgroundColor = this.morecolor[this.colorindex + 1];
+			var navcolor = document.getElementById('navcolor');
+			navcolor.style.backgroundColor = this.morecolor[this.colorindex];
+			this.colorindex += 1;
+			if (this.colorindex == this.morecolor.length) {
+				this.colorindex = 0;
+			}
 		}
 	},
 
@@ -408,7 +463,7 @@ export default {
 .hy-nav-top {
 	display: flex;
 	width: 100%;
-	padding-left: 10%;
+	padding-left: 3%;
 	justify-content: space-between;
 }
 
@@ -419,7 +474,7 @@ export default {
 .hy-nav-top-left {
 	display: flex;
 	justify-content: space-between;
-	width: 15%;
+	width: 20%;
 	align-items: center;
 }
 .xxq-input-wrap {
@@ -439,7 +494,6 @@ export default {
 	height: 608px;
 	overflow: auto;
 }
-
 
 .iconf-Christmas-exit {
 	width: 40px;

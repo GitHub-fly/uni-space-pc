@@ -18,7 +18,7 @@
 						<v-list-item-content><v-list-item-title>主页</v-list-item-title></v-list-item-content>
 					</v-list-item>
 
-					<v-list-item to="/index/photoAlbum">
+					<v-list-item @click="toAlbum()">
 						<!-- <v-list-item-icon><v-icon>mdi-image</v-icon></v-list-item-icon> -->
 						<v-list-item-icon>
 							<svg class="iconf" aria-hidden="true"><use xlink:href="#icon-xueqiao"></use></svg>

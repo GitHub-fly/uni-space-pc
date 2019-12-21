@@ -11,12 +11,12 @@
 								<v-card-title class="headline">相册名: {{ photoAlbum.name }}</v-card-title>
 								<v-card-subtitle class="subtitle-1">简介: {{ photoAlbum.introduction }}</v-card-subtitle>
 								<div>
-									<v-btn v-if="createBtnStatus()" text class="title addBtn">
+									<v-btn v-show="btnStatus" text class="title addBtn">
 										<input type="file" class="file" ref="uploadPhotos" multiple accept="image/*" @change="upload($event)" />
 										添加图片
 									</v-btn>
-									<v-btn v-if="createBtnStatus()" text class="title" @click="showChoice()">{{ text }}</v-btn>
-									<v-btn v-if="createBtnStatus()" text class="title" @click="say()">更多</v-btn>
+									<v-btn v-show="btnStatus" text class="title" @click="showChoice()">{{ text }}</v-btn>
+									<v-btn v-show="btnStatus" text class="title" @click="say()">更多</v-btn>
 								</div>
 							</div>
 						</v-row>
@@ -47,6 +47,13 @@
 export default {
 	data() {
 		return {
+			// 当前登录者id
+			userId: JSON.parse(localStorage.getItem('user')).id,
+			// 通过指定的相册id寻找对应的主人id
+			hostId: null,
+			// 判断按钮是否出现的参数
+			btnStatus: false,
+			
 			albumId: null,
 			show: false,
 			photoAlbum: null,
@@ -176,15 +183,28 @@ export default {
 						url: this.urls[i]
 					});
 				}
+				alert('图片上传成功')
 			});
 		},
-		// 判断批量删除、添加图片按钮是否出现（是否为当前登录者空间）
-		createBtnStatus() {
-			if (this.userId == JSON.parse(localStorage.getItem('user')).id) {
-				return true;
-			} else {
-				return false;
-			}
+		// 通过相册id判断是否与当前登录者id相同
+		isShow() {
+			this.axios({
+				method: 'post',
+				url: this.GLOBAL.baseUrl + '/photoalbum/album',
+				data: {
+					id: this.albumId
+				},
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(res => {
+				this.hostId = res.data.data.userId;
+				if (this.userId == this.hostId) {
+					this.btnStatus = true;
+				} else {
+					this.btnStatus = false;
+				}
+			})
 		},
 	},
 	created() {
@@ -215,6 +235,7 @@ export default {
 			console.log('初始化时flags[]的内容为：' + JSON.stringify(this.flags));
 			console.log('初始化时photosIdList[]的内容为：' + JSON.stringify(this.photosIdList));
 		});
+		this.isShow();
 	}
 };
 </script>
