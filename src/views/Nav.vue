@@ -1,7 +1,7 @@
 <template>
 	<div>
 		<div>
-			<v-bottom-navigation :value="activeBtn" grow color="teal">
+			<v-bottom-navigation :value="activeBtn" grow color="teal" height="70px">
 				<div class="hy-nav-top">
 					<div class="hy-nav-top-left">
 						<v-btn height="100%" width="50%" to="/"><v-img width="60%" height="100%" src="../assets/img/ic_launcher.png"></v-img></v-btn>
@@ -24,18 +24,45 @@
 							></aplayer>
 						</v-spacer>
 
-						<v-btn style="height: 100%;">
-							<v-avatar color="teal" size="48"><img :src="user.avatar" /></v-avatar>
-						</v-btn>
-						<v-btn style="height: 100%;"><i @click="layout()" class="iconfont">&#xe65b;</i></v-btn>
-						<v-btn style="height: 100%;"><v-icon>mdi-heart</v-icon></v-btn>
+						<v-tooltip bottom>
+							<template v-slot:activator="{ on }">
+								<v-btn v-on="on" style="height: 100%;">
+									<v-avatar color="teal" size="48" @click="toHome()"><img :src="user.avatar" /></v-avatar>
+								</v-btn>
+							</template>
+							<span>{{ user.nickname }}</span>
+						</v-tooltip>
+						
+						<v-tooltip bottom>
+							<template v-slot:activator="{ on }">
+								
+								<v-btn v-on="on" style="height: 100%;"><i @click="toexit()" class="iconfont icon">&#xe65b;</i></v-btn>
+								<!-- <v-btn v-on="on" style="height: 100%;"><i class="iconfont icon">&#xe65b;</i></v-btn> -->
+							</template>
+							<span>退出</span>
+						</v-tooltip>
+
+						<v-tooltip bottom>
+							<template v-slot:activator="{ on }">
+								<v-btn v-on="on" style="height: 100%;"><i @click="toPublish()" class="iconfont icon">&#xe7c9;</i></v-btn>
+							</template>
+							<span>发表日志</span>
+						</v-tooltip>
+
+						<v-tooltip bottom>
+							<template v-slot:activator="{ on }">
+								<v-btn v-on="on" @click.stop="drawer = !drawer" style="height: 100%;"><i class="iconfont iconFriends">&#xe62f;</i></v-btn>
+							</template>
+							<span>好友列表</span>
+						</v-tooltip>
+
 						<v-menu offset-y>
 							<template v-slot:activator="{ on }">
-								<v-btn v-on="on" style="height: 100%;"><i class="iconfont">&#xe722;</i></v-btn>
+								<v-btn v-on="on" style="height: 100%;"><i class="iconfont icon">&#xe722;</i></v-btn>
 							</template>
 
 							<v-list>
-								<v-list-item @click="tohome()"><v-list-item-title>个人主页</v-list-item-title></v-list-item>
+								<v-list-item @click="toHome()"><v-list-item-title>个人主页</v-list-item-title></v-list-item>
 
 								<v-list-item @click="changemessage()"><v-list-item-title>信息修改</v-list-item-title></v-list-item>
 
@@ -46,7 +73,6 @@
 								<v-list-item @click="toexit()"><v-list-item-title>退出</v-list-item-title></v-list-item>
 							</v-list>
 						</v-menu>
-						<v-btn @click.stop="drawer = !drawer" style="height: 100%;"><v-icon medium>mdi-account-multiple</v-icon></v-btn>
 					</div>
 				</div>
 			</v-bottom-navigation>
@@ -166,8 +192,11 @@ export default {
 				}
 			});
 		},
-		tohome() {
+		toHome() {
 			this.$router.push('/personal/' + JSON.parse(localStorage.getItem('user')).id);
+		},
+		toPublish() {
+			this.$router.push('/index/publish');
 		},
 		/**
 		 * 退出的方法
@@ -337,11 +366,17 @@ export default {
 </script>
 
 <style scoped>
+.iconFriends {
+	font-size: 26px;
+}
+.icon {
+	font-size: 30px;
+}
 .rideo {
 	position: absolute;
-	top: -14px;
 	width: 100%;
-	height: 116%;
+	height: 88%;
+	border-radius: 5px;
 }
 .rideoDiv {
 	position: relative;

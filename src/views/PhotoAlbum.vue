@@ -5,7 +5,7 @@
 				<!-- persistent 点击对话框外部不能使其关闭 -->
 				<v-dialog v-model="dialog" persistent max-width="600px">
 					<template v-slot:activator="{ on }">
-						<v-btn color="pink" dark v-on="on" class="createBtn">创建相册</v-btn>
+						<v-btn v-show="createBtnStatus()" color="pink" dark v-on="on" class="createBtn">创建相册</v-btn>
 					</template>
 					<v-card>
 						<v-card-title><span class="headline">New album</span></v-card-title>
@@ -57,7 +57,7 @@
 							<v-img :src="album.cover" height="200px"></v-img>
 							<v-card-title>
 								<!-- 相册名称区域 -->
-								<v-btn :to="{ path: '/index/photo/' + album.id }" text class="title" v-show="editFlags[index] === false">{{ album.name }}</v-btn>
+								<v-btn @click="toPhoto(album)" text class="title" v-show="editFlags[index] === false">{{ album.name }}</v-btn>
 								<input type="text" v-model="album.name" style="border: 1px solid lavender;" v-show="editFlags[index] === true" />
 							</v-card-title>
 							<v-card-subtitle>{{ album.createTime }}</v-card-subtitle>
@@ -68,7 +68,7 @@
 							</v-card-subtitle>
 							<!-- 可编辑区 -->
 							<v-card-subtitle v-show="editFlags[index] === true">
-								<textarea cols="50" rows="3" v-model="album.introduction" style="border: 1px solid lavender;"></textarea>
+								<textarea cols="42" rows="3" v-model="album.introduction" style="border: 1px solid lavender;"></textarea>
 							</v-card-subtitle>
 							<v-card-actions>
 								<v-spacer></v-spacer>
@@ -99,6 +99,7 @@
 export default {
 	data() {
 		return {
+			userId: null,
 			btnStatus: true,
 			dialog: false,
 			flags: [],
@@ -127,7 +128,6 @@ export default {
 			// splice(index, 1) --> 指从第index个开始（但不包括）删除一个数据
 			this.photoAlbums.splice(index, 1);
 			this.flags.splice(index, 1);
-
 			this.axios({
 				method: 'delete',
 				url: this.GLOBAL.baseUrl + '/photoalbum/dpa',
@@ -165,7 +165,6 @@ export default {
 			console.log(album.name);
 			// 先切换状态
 			this.handleEdit(index);
-			alert(this.errorStr);
 			// 调用接口更改数据信息
 			album.name = this.axios({
 				method: 'put',
@@ -256,15 +255,34 @@ export default {
 					});
 				});
 			}
+		},
+		// 跳转到相册详情页面
+		toPhoto(album) {
+			localStorage.setItem('photoAlbum', JSON.stringify(album));
+			this.$router.push('/index/photo/' + album.id);
+		},
+		// 判断创建按钮是否出现（是否为当前登录者空间）
+		createBtnStatus() {
+			if (this.userId == JSON.parse(localStorage.getItem('user')).id) {
+				return true;
+			} else {
+				return false;
+			}
 		}
 	},
 	created() {
+		// 获取网页地址url
+		var query = window.location.href;
+		// 锁定到最后一个"/"的位置
+		var begin = query.lastIndexOf('/') + 1;
+		// 取出地址中最后的id值
+		this.userId = query.substring(begin);
 		// 初始化相册数组
 		this.axios({
 			method: 'post',
 			url: this.GLOBAL.baseUrl + '/photoalbum/all',
 			data: {
-				id: JSON.parse(localStorage.getItem('user')).id
+				id: this.userId
 			},
 			headers: {
 				'Content-Type': 'application/json'

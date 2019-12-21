@@ -1,7 +1,7 @@
 <template>
 	<div class="hy-index-large">
 		<div class="hy-index-mid">
-			<v-card>
+			<v-card class="mb-4">
 				<v-card-text>
 					<p class="display-1 text--primary">{{ jorural.title }}</p>
 					<br />
@@ -11,8 +11,49 @@
 					<div class="text--primary"><div v-html="jorural.content" style="color: #000000;"></div></div>
 				</v-card-text>
 			</v-card>
+
+			<!-- 评论区 -->
+			<!-- 发表评论 -->
+			<template>
+				<div>
+					<v-card>
+						<v-card-title>请在下方评论</v-card-title>
+						<v-divider></v-divider>
+						<v-card class="d-flex flex-row-reverse mb-4 pa-4 pt-0" flat>
+							<v-card class="d-flex flex-column mb-6 justify-space-around" flat>
+								<v-btn text left large @click="add()">发表</v-btn>
+								<v-btn text left large color="error" @click="clear()">取消</v-btn>
+							</v-card>
+							<v-textarea name="input-7-1" hint="留下你的真实想法吧" placeholder="留下你的真实想法吧" v-model="content"></v-textarea>
+						</v-card>
+					</v-card>
+				</div>
+			</template>
+			<!-- 所有评论 -->
+			<v-card class="mb-4">
+				<v-list three-line>
+					<v-list-item-title class="headline ml-4">评论</v-list-item-title>
+					<v-divider></v-divider>
+					<template v-if="comments.length != 0" v-for="(item, index) in comments">
+						<v-list-item :key="index">
+							<v-list-item-avatar v-if="reviewer[index] != null" size="48"><v-img :src="reviewer[index].avatar"></v-img></v-list-item-avatar>
+							<v-list-item-content>
+								<v-list-item-title>
+									<span v-if="reviewer[index] != null">{{ reviewer[index].nickname }}</span>
+								</v-list-item-title>
+								<v-list-item-title>
+									<span>{{ item.content }}</span>
+								</v-list-item-title>
+								<v-list-item-subtitle v-html="item.createTime"></v-list-item-subtitle>
+							</v-list-item-content>
+						</v-list-item>
+					</template>
+					<v-card-title v-else>暂无评论</v-card-title>
+				</v-list>
+			</v-card>
 		</div>
 
+		<!-- 界面右侧 -->
 		<div class="hy-index-rigth">
 			<!-- 日志缩略图 -->
 			<v-card class="d-inline-block">
@@ -49,7 +90,7 @@
 				<div v-if="jou.content" v-html="jou.content.substring(0, 50) + '.....'"></div>
 				<v-card-actions>
 					<v-spacer></v-spacer>
-					<v-btn color="orange" text @click="journaldetail(jou)">查看详情</v-btn>
+					<v-btn color="orange" text @click="journaldetail(jou.id)">查看详情</v-btn>
 				</v-card-actions>
 			</v-card>
 		</div>
@@ -60,21 +101,79 @@
 export default {
 	data() {
 		return {
+			content: null,
+			end: 3,
 			jorural: [],
 			user: [],
 			manyjournal: [],
-			end: 3,
+			comments: [],
+			// 该日志的所有评论者
+			reviewer: []
 		};
 	},
 	methods: {
+		// 添加评论
+		add() {
+			if (this.content) {
+				this.axios({
+					method: 'post',
+					url: this.GLOBAL.baseUrl + '/comment/add',
+					data: JSON.stringify({
+						journalId: this.jorural.id,
+						userId: JSON.parse(localStorage.getItem('user')).id,
+						content: this.content
+					}),
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(res => {
+					// 评论内容
+					this.comments.push({
+						content: this.content
+					});
+					// 评论者数组
+					this.reviewer.push({
+						avatar: JSON.parse(localStorage.getItem('user')).avatar,
+						nickname: JSON.parse(localStorage.getItem('user')).nickname
+					});
+					console.log('评论成功');
+					this.content = '';
+				});
+			} else {
+				alert('请输入内容');
+			}
+		},
+		// 清除评论框内容
+		clear() {
+			this.content = '';
+		},
+		// 获取评论
+		getComments(journalId) {
+			this.axios({
+				method: 'post',
+				url: this.GLOBAL.baseUrl + '/comment/',
+				data: {
+					journalId: journalId
+				},
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(res => {
+				this.comments = res.data.data;
+				// 将接口中取到的所有用户id拿出来去调取"获取用户信息的接口方法"
+				for (var i = 0; i < this.comments.length; i++) {
+					this.getUserInformation(this.comments[i].userId);
+				}
+			});
+		},
 		// 获取此篇日志的详情
 		getDetail(id) {
 			this.axios({
 				method: 'post',
-				url: this.GLOBAL.baseUrl + '/journal/user/journaldetail/' + id,
+				url: this.GLOBAL.baseUrl + '/journal/user/journaldetail/' + id
 			}).then(res => {
 				this.jorural = res.data.data;
-			})
+			});
 		},
 		// 获取推荐日志数据
 		getmorejournal() {
@@ -89,7 +188,7 @@ export default {
 			});
 		},
 		// 获取该篇文章的主人信息
-		getuser() {
+		getUser() {
 			this.axios({
 				method: 'post',
 				url: this.GLOBAL.baseUrl + '/user/id',
@@ -104,7 +203,26 @@ export default {
 		tohome(id) {
 			this.$router.push('/personal/' + id);
 		},
-		
+		// 获取指定id用户的信息方法
+		getUserInformation(id) {
+			this.axios({
+				method: 'post',
+				url: this.GLOBAL.baseUrl + '/user/id',
+				data: {
+					id: id
+				},
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(res => {
+				this.reviewer.push(res.data.data);
+			});
+		},
+		// 进入日志详情页面
+		journaldetail(id) {
+			this.$router.push('/index/journal/detail/' + id);
+		},
+
 		// 滚动条监听方法
 		scrollDs() {
 			//变量scrollTop是滚动条滚动时，距离顶部的距离
@@ -125,21 +243,39 @@ export default {
 		loadMore() {
 			this.end += 5;
 		},
+		// 界面数据初始化方法
+		initData() {
+			// 获取网页地址url
+			var query = window.location.href;
+			// 锁定到最后一个“/”的位置
+			var begin = query.lastIndexOf('/') + 1;
+			// 取出地址中最后的id值
+			var journalId = query.substring(begin);
+			// 获取此日志的详情
+			this.getDetail(journalId);
+			// 获取更多推荐日志信息
+			this.getmorejournal();
+			// 获取日志主人信息
+			this.getUser();
+			// 获取该篇日志的评论数据
+			this.getComments(journalId);
+		}
 	},
 	created() {
-		// 获取网页地址url
-		var query = window.location.href;
-		// 锁定到最后一个“/”的位置
-		var begin = query.lastIndexOf('/') + 1;
-		// 取出地址中最后的id值
-		var journalId = query.substring(begin);
-		// 获取此日志的详情
-		this.getDetail(journalId);
-		console.log(this.jorural);
-		
-		this.getmorejournal();
-		this.getuser();
+		this.initData();
 	},
+
+	// 实时监听路由变化
+	watch: {
+		$route(to, from) {
+			//监听路由是否变化
+			if (this.$route.params.id) {
+				//判断id是否有值
+				this.initData();
+			}
+		}
+	},
+
 	mounted() {
 		window.addEventListener('scroll', this.scrollDs);
 	}

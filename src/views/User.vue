@@ -488,6 +488,7 @@ textarea {
 }
 .iconfont {
 	margin-right: 10px;
+	margin-left: 20px;
 }
 .content {
 	/* font-family: '楷体'; */

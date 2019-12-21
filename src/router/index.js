@@ -38,7 +38,7 @@ const routes = [{
 						component: Journal
 					},
 					{
-						path: '/index/photoAlbum',
+						path: '/index/photoAlbum/:id',
 						component: PhotoAlbum
 					},
 					{
@@ -82,11 +82,6 @@ const routes = [{
 				path: 'friend',
 				component: Friend
 			},
-			{
-				path: 'friendask',
-				component: Friendask
-			},
-			
 		]
 	},
 	{
