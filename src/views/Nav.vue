@@ -1,11 +1,11 @@
 <template>
 	<div>
 		<div>
-			<v-bottom-navigation :value="activeBtn" grow color="teal" height="70px">
+			<v-bottom-navigation :value="activeBtn" grow color="orange lignten-2" height="70px">
 				<div class="hy-nav-top">
 					<div class="hy-nav-top-left">
 						<v-btn height="100%" width="50%" to="/"><v-img width="60%" height="100%" src="../assets/img/ic_launcher.png"></v-img></v-btn>
-						<div height="100%" class="title" style="cursor: default;">UNI-SPACE</div>
+						<div height="100%" class="title red--text" style="cursor: default;">UNI-SPACE</div>
 					</div>
 
 					<div class="hy-nav-top-right">
@@ -35,30 +35,33 @@
 						
 						<v-tooltip bottom>
 							<template v-slot:activator="{ on }">
-								
-								<v-btn v-on="on" style="height: 100%;"><i @click="toexit()" class="iconfont icon">&#xe65b;</i></v-btn>
+								<!-- <v-btn v-on="on" style="height: 100%;"><i @click="toexit()" class="iconfont icon">&#xe65b;</i></v-btn> -->
 								<!-- <v-btn v-on="on" style="height: 100%;"><i class="iconfont icon">&#xe65b;</i></v-btn> -->
+								<v-btn v-on="on" style="height: 100%;"><svg class="iconf-Christmas-exit" aria-hidden="true" @click="toexit()"><use xlink:href="#icon-dangao"></use></svg></v-btn>
 							</template>
 							<span>退出</span>
 						</v-tooltip>
 
 						<v-tooltip bottom>
 							<template v-slot:activator="{ on }">
-								<v-btn v-on="on" style="height: 100%;"><i @click="toPublish()" class="iconfont icon">&#xe7c9;</i></v-btn>
+								<!-- <v-btn v-on="on" style="height: 100%;"><i @click="toPublish()" class="iconfont icon">&#xe7c9;</i></v-btn> -->
+								<v-btn v-on="on" style="height: 100%;"><svg class="iconf-Christmas" aria-hidden="true" @click="toPublish()"><use xlink:href="#icon-xinfeng"></use></svg></v-btn>
 							</template>
 							<span>发表日志</span>
 						</v-tooltip>
 
 						<v-tooltip bottom>
 							<template v-slot:activator="{ on }">
-								<v-btn v-on="on" @click.stop="drawer = !drawer" style="height: 100%;"><i class="iconfont iconFriends">&#xe62f;</i></v-btn>
+								<!-- <v-btn v-on="on" @click.stop="drawer = !drawer" style="height: 100%;"><i class="iconfont iconFriends">&#xe62f;</i></v-btn> -->
+								<v-btn v-on="on" @click.stop="drawer = !drawer" style="height: 100%;"><svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-xueren"></use></svg></v-btn>
 							</template>
 							<span>好友列表</span>
 						</v-tooltip>
 
 						<v-menu offset-y>
 							<template v-slot:activator="{ on }">
-								<v-btn v-on="on" style="height: 100%;"><i class="iconfont icon">&#xe722;</i></v-btn>
+								<!-- <v-btn v-on="on" style="height: 100%;"><i class="iconfont icon">&#xe722;</i></v-btn> -->
+								<v-btn v-on="on" style="height: 100%;"><svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-xuehua"></use></svg></v-btn>
 							</template>
 
 							<v-list>
@@ -77,15 +80,41 @@
 				</div>
 			</v-bottom-navigation>
 
+			<!-- 好友栏 -->
 			<v-navigation-drawer v-model="drawer" temporary absolute right width="25%">
 				<v-card max-width="450" class="mx-auto">
+					<!-- 好友栏的工具栏 -->
 					<v-toolbar flat>
-						<v-btn icon @click="showFriendsBox()" small><v-icon medium>mdi-account</v-icon></v-btn>
+						<!-- 默认皮肤的图标 -->
+						<!-- <v-btn icon @click="showFriendsBox()" small><v-icon medium>mdi-account</v-icon></v-btn>
 						<v-btn icon @click="showInfoFriendBox()" small><i class="iconfont">&#xe601;</i></v-btn>
-						<v-btn icon @click="showAddFriendBox()" small><v-icon>mdi-plus-circle</v-icon></v-btn>
+						<v-btn icon @click="showAddFriendBox()" small><v-icon>mdi-plus-circle</v-icon></v-btn> -->
+						
+						<!-- 圣诞主题图标 -->
+						<v-tooltip bottom>
+							<template v-slot:activator="{ on }">
+								<v-btn icon v-on="on" @click="showFriendsBox()"><svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-jiangbingren"></use></svg></v-btn>
+							</template>
+							<span>好友</span>
+						</v-tooltip>
+						
+						<v-tooltip bottom>
+							<template v-slot:activator="{ on }">
+								<v-btn icon v-on="on" @click="showInfoFriendBox()"><svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-lingdang1"></use></svg></v-btn>
+							</template>
+							<span>好友请求</span>
+						</v-tooltip>
+						
+						<v-tooltip bottom>
+							<template v-slot:activator="{ on }">
+								<v-btn icon v-on="on" @click="showAddFriendBox()"><svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-shengdanhuahuan"></use></svg></v-btn>
+							</template>
+							<span>添加好友</span>
+						</v-tooltip>
+						
 						<!-- 空白填充 -->
 						<v-spacer></v-spacer>
-						<!-- 输入框 -->
+						<!-- 添加好友/搜索好友的输入框 -->
 						<div class="xxq-input-wrap" v-if="inputStatus">
 							<input type="text" placeholder="请输入..." v-model="keyWords" @input="searchFriends()" />
 							<v-btn icon small><v-icon left>mdi-magnify</v-icon></v-btn>
@@ -153,16 +182,6 @@ export default {
 			inputStatus: true,
 			delteteBtnStatus: false,
 			user: null,
-			messages: [
-				{
-					title: 'Home',
-					icon: 'mdi-dashboard'
-				},
-				{
-					title: 'About',
-					icon: 'mdi-question_answer'
-				}
-			],
 			myFriends: [],
 			items: {
 				header: 'MyFriends'
@@ -419,5 +438,11 @@ export default {
 .xxq-myFriendsBox {
 	height: 608px;
 	overflow: auto;
+}
+
+
+.iconf-Christmas-exit {
+	width: 40px;
+	height: 40px;
 }
 </style>

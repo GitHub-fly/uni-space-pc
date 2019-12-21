@@ -24,11 +24,13 @@
 
 						<div class="hy-index-mid-slideshow">
 							<!-- 首页轮播图 -->
-							<v-carousel cycle height="200" hide-delimiter-background show-arrows-on-hover>
+							<v-carousel cycle height="240" hide-delimiter-background show-arrows-on-hover>
 								<v-carousel-item v-for="(slide, i) in slides" :key="i">
 									<v-sheet :color="colors[i]" height="100%">
 										<v-row class="fill-height" align="center" justify="center">
-											<div class="display-3">{{ slide }} Slide</div>
+											<div class="display-3" style="width: 100%;height: 100%;">
+												<img style="width:100%;height: 100%;display: flex;align-content: center;" :src="journal.thumbnail" alt="" />
+											</div>
 										</v-row>
 									</v-sheet>
 								</v-carousel-item>
@@ -43,14 +45,14 @@
 									<!-- {{journal.content | filterFun}} -->
 								</v-card-text>
 
-								<v-card-actions><v-btn text color="deep-purple accent-4" absolute bottom right @click="journaldetail(journal.id)">查看详细信息</v-btn></v-card-actions>
+								<v-card-actions>
+									<v-btn text color="deep-purple accent-4" absolute bottom right @click="journaldetail(journal.id)">查看详细信息</v-btn>
+								</v-card-actions>
 								<v-btn @click="changeColor(index)" class="ma-2" text icon><v-icon :style="{ color: color[index] ? 'red' : '' }">mdi-heart</v-icon></v-btn>
 								<p class="font-weight-regular">({{ likes[index] }})</p>
 								<v-btn class="ma-2" text icon><v-icon color="black ">mdi-message-text</v-icon></v-btn>
 								<p class="font-weight-regular">({{ journal.comments }})</p>
-								<v-btn class="ma-2" text icon>
-									<v-icon color="black ">mdi-arrow-up-bold-box-outline</v-icon>
-								</v-btn>
+								<v-btn class="ma-2" text icon><v-icon color="black ">mdi-arrow-up-bold-box-outline</v-icon></v-btn>
 								<p class="font-weight-regular">({{ journal.comments }})</p>
 							</v-card>
 						</div>
@@ -63,7 +65,8 @@
 			<v-card max-width="430">
 				<v-toolbar flat>
 					<v-toolbar-title>
-						<v-icon left>mdi-account-multiple</v-icon>
+						<!-- <v-icon left>mdi-account-multiple</v-icon> -->
+						<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-xueren"></use></svg>
 						推荐好友
 					</v-toolbar-title>
 					<v-spacer></v-spacer>
@@ -203,7 +206,7 @@ export default {
 				console.log('取消');
 			});
 		},
-		changeStatus(){
+		changeStatus() {
 			//获取日志列表之前完成更新点赞操作
 			for (var i = 0; i < this.color.length; i++) {
 				if (this.color[i]) {
@@ -325,7 +328,7 @@ export default {
 
 	mounted() {
 		window.addEventListener('scroll', this.scrollDs);
-		setInterval(this.changeStatus() , 360000000);
+		setInterval(this.changeStatus(), 360000000);
 		//每过10秒重新获取数据（应该时间更长）
 		// if (!this.timer) {
 		// 	this.timer = setInterval(() => {
