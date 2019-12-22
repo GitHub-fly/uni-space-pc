@@ -20,14 +20,15 @@ import Music from '@/views/Music.vue'
 Vue.use(VueRouter)
 
 const routes = [{
-		path: '/',
+		path: 'nav',
 		component: Nav,
-		children: [{
-				path: '/',
-				redirect: 'index'
+		children: [
+			{
+				path: '/nav',
+				redirect: '/index'
 			},
 			{
-				path: 'index',
+				path: '/index',
 				component: Index,
 				children: [{
 						path: '/index',
@@ -75,7 +76,7 @@ const routes = [{
 				]
 			},
 			{
-				path: 'personal/:id',
+				path: '/personal/:id',
 				component: Personal
 			},
 			{
@@ -85,7 +86,7 @@ const routes = [{
 		]
 	},
 	{
-		path: '/sign',
+		path: '/',
 		name: 'sign',
 		component: Sign
 	}

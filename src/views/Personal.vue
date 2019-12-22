@@ -45,7 +45,7 @@
 		<v-row v-if="journal != null">
 			<v-col cols="12">
 				<v-card class="mx-auto" max-width="100%">
-					<v-img class="white--text align-end" height="200px" :src="getImage(journal.thumbnail)"><v-card-title v-text="journal.title"></v-card-title></v-img>
+					<v-img class="white--text align-end" height="200px" :src="journal.thumbnail"><v-card-title v-text="journal.title"></v-card-title></v-img>
 
 					<v-card-subtitle class="pb-0">{{ journal.createTime }}</v-card-subtitle>
 
@@ -59,13 +59,8 @@
 						<v-spacer></v-spacer>
 						<v-btn icon @click="likes(journal.id)">
 							<v-icon>mdi-heart</v-icon>
-							<!-- <v-btn icon> -->
-							<!-- <v-icon color="gray" v-if="!colorStatus(journal.id)">mdi-heart</v-icon> -->
-							<!-- <v-icon color="red" v-if="colorStatus(journal.id)">mdi-heart</v-icon> -->
 						</v-btn>
-
 						<v-btn icon><v-icon>mdi-bookmark</v-icon></v-btn>
-
 						<v-btn icon><v-icon>mdi-share-variant</v-icon></v-btn>
 					</v-card-actions>
 				</v-card>
@@ -73,9 +68,9 @@
 		</v-row>
 		<!-- 剩下日志数据 -->
 		<v-row v-if="journals">
-			<v-col v-for="card in journals.slice(1)" :key="card.title" cols="4">
+			<v-col v-for="(card, index) in journals.slice(1)" :key="index" cols="4">
 				<v-card class="mx-auto" max-width="100%">
-					<v-img class="white--text align-end" height="200px" :src="getImage(card.thumbnail)"><v-card-title v-text="card.title"></v-card-title></v-img>
+					<v-img class="white--text align-end" height="200px" :src="card.thumbnail"><v-card-title v-text="card.title"></v-card-title></v-img>
 
 					<v-card-subtitle class="pb-0">{{ card.createTime }}</v-card-subtitle>
 
@@ -187,13 +182,6 @@ export default {
 				}
 			});
 		},
-		// 图片缓存的方法
-		getImage(url) {
-			return 'http://images.weserv.nl/?url=' + url;
-		},
-		
-	
-	
 	},
 	computed: {}
 };

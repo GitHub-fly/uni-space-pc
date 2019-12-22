@@ -3,12 +3,12 @@
 		<div class="hy-index-mid">
 			<v-card class="mb-4">
 				<v-card-text>
-					<p class="display-1 text--primary">{{ jorural.title }}</p>
+					<p class="display-1 text--primary">{{ journal.title }}</p>
 					<br />
-					<p>作者：{{ jorural.nickname }}</p>
+					<p>作者：{{ journal.nickname }}</p>
 					<br />
-					<p>发表日期：{{ jorural.createTime }}</p>
-					<div class="text--primary"><div v-html="jorural.content" style="color: #000000;"></div></div>
+					<p>发表日期：{{ journal.createTime }}</p>
+					<div class="text--primary"><div v-html="journal.content" style="color: #000000;"></div></div>
 				</v-card-text>
 			</v-card>
 
@@ -56,38 +56,36 @@
 		<!-- 界面右侧 -->
 		<div class="hy-index-rigth">
 			<!-- 日志缩略图 -->
-			<v-card class="d-inline-block">
-				<v-container>
-					<v-row justify="space-between">
-						<v-col cols="auto"><img :src="jorural.thumbnail" /></v-col>
-					</v-row>
-				</v-container>
+			<v-card class="mx-auto journalThumbnail">
+				<div class="img">
+					<img :src="journal.thumbnail" />
+				</div>
 			</v-card>
 
 			<!-- 日志详情页右侧作者信息栏 -->
-			<v-card class="mx-auto" max-width="100%" style="margin-top: 2%;" outlined :elevation="2">
+			<v-card class="mx-auto" width="100%" style="margin-top: 2%;" outlined :elevation="2">
 				<v-list-item three-line>
 					<v-list-item-content>
-						<v-list-item-title class="headline mb-1">{{ jorural.nickname }}</v-list-item-title>
-						<v-list-item-subtitle>{{ jorural.introduction }}</v-list-item-subtitle>
+						<v-list-item-title class="headline mb-1">{{ journal.nickname }}</v-list-item-title>
+						<v-list-item-subtitle>{{ journal.introduction }}</v-list-item-subtitle>
 					</v-list-item-content>
 
-					<v-list-item-avatar tile size="80" color="grey"><img :src="jorural.avatar" alt="" /></v-list-item-avatar>
+					<v-list-item-avatar tile size="80" color="grey"><img :src="journal.avatar" /></v-list-item-avatar>
 				</v-list-item>
 
 				<v-card-actions>
 					<v-spacer></v-spacer>
-					<v-btn text @click="tohome(user.id)">进入主页</v-btn>
+					<v-btn text @click="toHome(journal.userId)">进入主页</v-btn>
 				</v-card-actions>
 			</v-card>
 
 			<!-- 推荐日志信息展示 -->
-			<v-card class="mx-auto" max-width="100%" style="margin: 2%;" v-for="(jou, index) in manyjournal.slice(0, end)" :key="index">
+			<v-card class="mx-auto" width="100%" style="margin: 2%;" v-for="(jou, index) in manyjournal.slice(0, end)" :key="index">
 				<v-img v-if="jou.thumbnail" class="white--text align-end" height="200px" :src="jou.thumbnail">
 					<v-card-title>{{ jou.title }}</v-card-title>
 				</v-img>
 				<v-card-text class="text--primary"></v-card-text>
-				<div v-if="jou.content" v-html="jou.content.substring(0, 50) + '.....'"></div>
+				<div v-if="jou.content" v-html="jou.content.substring(0, 50) + '.....'" style="text-indent: 2em; margin-left: -25px; padding-right: 30px;"></div>
 				<v-card-actions>
 					<v-spacer></v-spacer>
 					<v-btn color="orange" text @click="journaldetail(jou.id)">查看详情</v-btn>
@@ -103,7 +101,7 @@ export default {
 		return {
 			content: null,
 			end: 3,
-			jorural: [],
+			journal: [],
 			user: [],
 			manyjournal: [],
 			comments: [],
@@ -119,7 +117,7 @@ export default {
 					method: 'post',
 					url: this.GLOBAL.baseUrl + '/comment/add',
 					data: JSON.stringify({
-						journalId: this.jorural.id,
+						journalId: this.journal.id,
 						userId: JSON.parse(localStorage.getItem('user')).id,
 						content: this.content
 					}),
@@ -128,7 +126,8 @@ export default {
 					}
 				}).then(res => {
 					// 评论内容
-					this.comments.push({
+					this.comments.splice(0, 0, {
+						createTime: new Date().toLocaleString(),
 						content: this.content
 					});
 					// 评论者数组
@@ -172,7 +171,7 @@ export default {
 				method: 'post',
 				url: this.GLOBAL.baseUrl + '/journal/user/journaldetail/' + id
 			}).then(res => {
-				this.jorural = res.data.data;
+				this.journal = res.data.data;
 			});
 		},
 		// 获取推荐日志数据
@@ -200,7 +199,7 @@ export default {
 			});
 		},
 		// 跳转个人中心页面
-		tohome(id) {
+		toHome(id) {
 			this.$router.push('/personal/' + id);
 		},
 		// 获取指定id用户的信息方法
@@ -215,7 +214,7 @@ export default {
 					'Content-Type': 'application/json'
 				}
 			}).then(res => {
-				this.reviewer.push(res.data.data);
+				this.reviewer.splice(0, 0, res.data.data);
 			});
 		},
 		// 进入日志详情页面
@@ -232,10 +231,6 @@ export default {
 			//变量scrollHeight是滚动条的总高度
 			var scrollHeight = document.documentElement.scrollHeight || document.body.scrollHeight;
 			//滚动条到底部的条件
-			// alert(scrollTop+"  "+scrollHeight+"="+windowHeight)
-			// if (scrollTop + scrollHeight >= windowHeight ) {
-			// 	this.loadMore();
-			// }
 			if (scrollTop + windowHeight + 3 >= scrollHeight) {
 				this.loadMore();
 			}
@@ -283,19 +278,32 @@ export default {
 </script>
 
 <style scoped>
+	.journalThumbnail {
+		width: 100%;
+		height: 350px;
+	}
+	.img, img {
+		border-radius: 3px;
+		height: 100%;
+		width: 100%;
+	}
+	
+	
+	
+	
 .hy-index-large {
 	width: 100%;
 	display: flex;
 	justify-content: space-between;
 }
 .hy-index-mid {
-	width: 73%;
+	width: 68%;
 }
 .hy-index-left {
 	padding-top: 1%;
 }
 
 .hy-index-rigth {
-	width: 25%;
+	width: 380px;
 }
 </style>

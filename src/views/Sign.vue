@@ -158,8 +158,6 @@
 								method: 'post',
 								url: this.GLOBAL.baseUrl + '/user/signin',
 								data: {
-									// name: this.userDto.mobile,
-									// password: this.userDto.password,
 									equalsString: this.userDto.mobile,
 									password: this.userDto.password
 								},
@@ -167,14 +165,7 @@
 								if (res.data.msg == "成功") {
 									this.tipmsg	 = "登录成功";
 									this.getmask();
-									// this.schedule=true;
-
-									this.$router.push({
-										path: '/',
-										query: {
-											id: res.data.data.id
-										}
-									})
+									this.$router.push('nav')
 									localStorage.setItem('user', JSON.stringify(res.data.data));
 								} else {
 									this.tipmsg = res.data.msg;
@@ -209,13 +200,12 @@
 					if (this.usercode == this.code) {
 						this.axios({
 							method: 'post',
-							url: this.GLOBAL.baseUrl + '/user/sign_in',
+							url: this.GLOBAL.baseUrl + '/user/signin',
 							data: {
 								name: this.userDto.mobile,
 								verifyCode: this.usercode
 							},
 						}).then(res => {
-
 							if (res.data.msg === "成功") {
 								this.tipmsg = "登录成功";
 								this.getmask()

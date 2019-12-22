@@ -5,7 +5,7 @@
 				<v-card>
 					<div class="hy-index-mid-row">
 						<!-- 首页用户信息 -->
-						<v-card class="mx-auto" max-width="96%" flat>
+						<v-card class="mx-auto" background-color max-width="96%" flat>
 							<v-list-item three-line>
 								<v-list-item-avatar tile size="80"><img :src="journal.avatar" alt="" /></v-list-item-avatar>
 
@@ -255,13 +255,8 @@ export default {
 				}
 			});
 		},
-		getmyphoto(userid) {
-			this.$router.push({
-				name: 'photo',
-				params: {
-					userId: userid
-				}
-			});
+		getmyphoto(userId) {
+			this.$router.push('/index/photoAlbum/' + userId);
 		},
 		// 获取推荐好友的方法
 		getfriend() {

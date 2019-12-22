@@ -6,6 +6,7 @@
 				<v-dialog v-model="dialog" persistent max-width="600px">
 					<template v-slot:activator="{ on }">
 						<v-btn v-show="createBtnStatus()" color="pink" dark v-on="on" class="createBtn">创建相册</v-btn>
+						<v-btn v-show="!createBtnStatus()" color="gray" dark class="createBtn">好友相册</v-btn>
 					</template>
 					<v-card>
 						<v-card-title><span class="headline">New album</span></v-card-title>

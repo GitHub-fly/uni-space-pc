@@ -5,7 +5,7 @@
 				<div class="hy-nav-top">
 					<div class="hy-nav-top-left">
 						<v-btn @click="change()" class="title" height="100%" width="30%">Skin</v-btn>
-						<v-btn height="100%" width="35%" to="/"><v-img width="70%" height="100%" src="../assets/img/ic_launcher.png"></v-img></v-btn>
+						<v-btn height="100%" width="35%" to="/"><v-img width="70%" height="100%" style="border-radius: 3px;" src="../assets/img/ic_launcher.png"></v-img></v-btn>
 						<div height="100%" class="red--text title" style="cursor: default;">UNI-SPACE</div>
 					</div>
 
