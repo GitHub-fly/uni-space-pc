@@ -5,7 +5,7 @@
 				<div class="hy-nav-top">
 					<div class="hy-nav-top-left">
 						<v-btn @click="change()" class="title" height="100%" width="30%">Skin</v-btn>
-						<v-btn height="100%" width="35%" to="/"><v-img width="70%" height="100%" style="border-radius: 3px;" src="../assets/img/ic_launcher.png"></v-img></v-btn>
+						<v-btn height="100%" width="35%" to="/nav"><v-img width="70%" height="100%" style="border-radius: 3px;" src="../assets/img/ic_launcher.png"></v-img></v-btn>
 						<div height="100%" class="red--text title" style="cursor: default;">UNI-SPACE</div>
 					</div>
 
@@ -96,8 +96,8 @@
 					<v-toolbar flat>
 						<!-- 默认皮肤的图标 -->
 						<!-- <v-btn icon @click="showFriendsBox()" small><v-icon medium>mdi-account</v-icon></v-btn>
-									<v-btn icon @click="showInfoFriendBox()" small><i class="iconfont">&#xe601;</i></v-btn>
-									<v-btn icon @click="showAddFriendBox()" small><v-icon>mdi-plus-circle</v-icon></v-btn> -->
+							<v-btn icon @click="showInfoFriendBox()" small><i class="iconfont">&#xe601;</i></v-btn>
+							<v-btn icon @click="showAddFriendBox()" small><v-icon>mdi-plus-circle</v-icon></v-btn> -->
 
 						<!-- 圣诞主题图标 -->
 						<v-tooltip bottom>
@@ -135,27 +135,36 @@
 							<v-btn icon small><v-icon left>mdi-magnify</v-icon></v-btn>
 						</div>
 					</v-toolbar>
+
 					<!-- 分割线 -->
 					<v-divider></v-divider>
 
 					<template>
 						<div class="xxq-titleDiv">
 							<v-subheader v-text="tabText"></v-subheader>
-							<v-btn icon v-if="tabText === '我的好友'"><v-icon left @click="showDeleteIcon()">mdi-delete</v-icon></v-btn>
+							<v-spacer></v-spacer>
+							<v-btn icon v-if="tabText === '我的好友'">
+								<svg class="iconf-medium" aria-hidden="true" @click="showPermissionIcon()"><use xlink:href="#icon-quanxianmiyao"></use></svg>
+							</v-btn>
+							<v-btn icon v-if="tabText === '我的好友'"><v-icon @click="showDeleteIcon()">mdi-delete</v-icon></v-btn>
 						</div>
 					</template>
 
+					<!-- 列表区域 -->
 					<div class="myFriendsBox">
 						<v-list three-line>
 							<template v-for="(item, index) in myFriends">
 								<v-list-item :key="index">
-									<v-list-item-avatar @click="toPersion(item.id)" style="cursor: pointer;"><v-img :src="item.avatar"></v-img></v-list-item-avatar>
+									<v-list-item-avatar @click="toPersion(item.id,index)" style="cursor: pointer;"><v-img :src="item.avatar"></v-img></v-list-item-avatar>
 									<v-list-item-content>
 										<v-list-item-title>
 											<div class="xxq-titleDiv">
 												<span>{{ item.nickname }}</span>
 												<v-btn icon small v-if="tabText === '添加好友'"><v-icon @click="addFriend(item.id)">+</v-icon></v-btn>
 												<v-btn icon small v-if="delteteBtnStatus"><v-icon small @click="deleteFriend(item.id)">mdi-minus</v-icon></v-btn>
+												<v-chip @click="changeRight(index)" v-if="permissionBtnStatusShow" class="white px-0" fluid>
+													<v-switch  v-model="rightShow[index]" ></v-switch>
+												</v-chip>
 												<div class="applicationBox" v-if="tabText === '好友请求'">
 													<v-btn icon small><i class="iconfont" @click="aggreee(item.id)">&#xe7cd;</i></v-btn>
 													<v-btn icon small><i class="iconfont" @click="reject(item.id)">&#xe65a;</i></v-btn>
@@ -215,6 +224,8 @@ export default {
 			keyWords: null,
 			inputStatus: true,
 			delteteBtnStatus: false,
+			permissionBtnStatus: false,
+			permissionBtnStatusShow: false,
 			user: null,
 			messages: [
 				{
@@ -227,6 +238,7 @@ export default {
 				}
 			],
 			myFriends: [],
+			rightShow: [],
 			items: {
 				header: 'MyFriends'
 			},
@@ -238,6 +250,40 @@ export default {
 		};
 	},
 	methods: {
+		// 改变访问权限值（1/0）
+		changeRight(index) {
+			if (this.rightShow[index] == true) {
+				this.axios({
+					method: 'PUT',
+					url: this.GLOBAL.baseUrl + '/friend/collection',
+					data: {
+						collectionFlag: 1,
+						fromId: this.friendDto.fromId,
+						toId: this.myFriends[index].id
+					},
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(res => {
+					console.log('已取消屏蔽' + this.myFriends[index].nickname);
+				});
+			} else {
+				this.axios({
+					method: 'PUT',
+					url: this.GLOBAL.baseUrl + '/friend/collection',
+					data: {
+						collectionFlag: 0,
+						fromId: this.friendDto.fromId,
+						toId: this.myFriends[index].id
+					},
+					headers: {
+						'Content-Type': 'application/json'
+					}
+				}).then(res => {
+					console.log('已屏蔽' + this.myFriends[index].nickname);
+				});
+			}
+		},
 		changeencrypted() {
 			this.$router.push({
 				name: 'retrieve',
@@ -332,6 +378,15 @@ export default {
 				}
 			}).then(res => {
 				this.myFriends = res.data.data;
+				for (var i = 0; i < this.myFriends.length; i++) {
+					if (this.myFriends[i].collectionFlag == 1) {
+						this.rightShow[i] = true;
+					} else {
+						this.rightShow[i] = false;
+					}
+				}
+				console.log(this.rightShow);
+				console.log(this.myFriends);
 			});
 		},
 		// 添加好友按钮的动作监听
@@ -349,8 +404,12 @@ export default {
 			});
 		},
 		// 跳转到好友中心页面的方法
-		toPersion(id) {
-			this.$router.push('/personal/' + id);
+		toPersion(id,index) {
+			if(this.myFriends[index].collection == 1) {
+				this.$router.push('/personal/' + id)
+			}else {
+				alert('你没有访问TA空间的权限哦~')
+			}
 		},
 		// 同意添加好友的方法
 		aggreee(id) {
@@ -395,8 +454,13 @@ export default {
 				alert('好友已被删除');
 			});
 		},
+		showPermissionIcon() {
+			this.delteteBtnStatus = false; 
+			this.permissionBtnStatusShow =! this.permissionBtnStatusShow;
+		},
 		showDeleteIcon() {
-			this.delteteBtnStatus = !this.delteteBtnStatus;
+			this.permissionBtnStatusShow = false;
+			this.delteteBtnStatus =! this.delteteBtnStatus;
 		},
 		// 音乐播放方法
 		play() {
@@ -418,19 +482,36 @@ export default {
 				this.src = this.musics[index].content;
 			});
 		},
-		// 随机切换背景色
 		change() {
-			var allcolor = document.getElementById('allcolor');
-			allcolor.style.backgroundColor = this.morecolor[this.colorindex + 1];
-			var navcolor = document.getElementById('navcolor');
-			navcolor.style.backgroundColor = this.morecolor[this.colorindex];
-			this.colorindex += 1;
 			if (this.colorindex == this.morecolor.length) {
 				this.colorindex = 0;
 			}
+			this.colorindex += 1;
+			this.mycolor();
+		},
+		mycolor() {
+			var allcolor = document.getElementById('allcolor');
+			var navcolor = document.getElementById('navcolor');
+			allcolor.style.backgroundColor = this.morecolor[this.colorindex + 1];
+			navcolor.style.backgroundColor = this.morecolor[this.colorindex];
+			// alert(this.user.skinId)
+			this.axios({
+				method: 'post',
+				url: this.GLOBAL.baseUrl + '/user/skin',
+				data: {
+					id: this.user.id,
+					skinId: this.colorindex
+				}
+			}).then(res => {
+				// alert(res.data.msg)
+				// console.log(res.data.msg)
+			});
 		}
 	},
-
+	mounted() {
+		this.colorindex = this.user.skinId;
+		this.mycolor();
+	},
 	created() {
 		this.friends(this.friendDto);
 		this.user = JSON.parse(localStorage.getItem('user'));

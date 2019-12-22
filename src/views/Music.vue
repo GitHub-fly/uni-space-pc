@@ -119,6 +119,16 @@ export default {
 };
 </script>
 
-<style>
-	
+<style scoped="">
+.hy-index-large {
+	display: flex;
+	width: 100%;
+	height: 100%;
+	justify-content: space-between;
+}
+.hy-index-mid {
+	display: flex;
+	width: 73%;
+	flex-wrap: wrap;
+}
 </style>

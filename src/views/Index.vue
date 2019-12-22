@@ -4,8 +4,8 @@
 			<v-card height="400" width="100%" class="mx-auto">
 				<v-list-item>
 					<v-list-item-content>
-						<v-list-item-title class="title red--text">UNI-SPAECE</v-list-item-title>
-						<v-list-item-subtitle class="orange--text">Merry Christmas</v-list-item-subtitle>
+						<v-list-item-title class="title red--text" style="cursor: default;">UNI-SPAECE</v-list-item-title>
+						<v-list-item-subtitle class="orange--text" style="cursor: default;">Merry Christmas</v-list-item-subtitle>
 					</v-list-item-content>
 				</v-list-item>
 
