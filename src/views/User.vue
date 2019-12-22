@@ -37,9 +37,7 @@
 										女
 									</label>
 								</div>
-
 								<span class="content" v-else>{{ user.gender }}</span>
-
 								<i class="iconfont" @click="saveGender()" v-if="showSaveGender">&#xea6e;保存</i>
 								<i class="iconfont" @click="updateGender()" v-if="showUpdateGender">&#xe600;修改</i>
 							</div>
@@ -48,8 +46,7 @@
 						<div class="hy-user-info" @mouseover="showFunctionIntro()" @mouseleave="hideFunctionIntro()">
 							<h1 class="title">简介</h1>
 							<div class="value">
-								<!-- <input type="text" class="input" v-model="user.introduction" v-if="showInputIntro" /> -->
-								<textarea id="textarea" v-if="showInputIntro" rows="5" :value="user.introduction"></textarea>
+								<textarea id="textarea" v-if="showInputIntro" rows="3" v-model="user.introduction"></textarea>
 								<span class="content-intro" v-else>{{ user.introduction.substring(0, 13) }}</span>
 								<i class="iconfont" @click="saveIntro()" v-if="showSaveIntro">&#xea6e;保存</i>
 								<i class="iconfont" @click="updateIntro()" v-if="showUpdateIntro">&#xe600;修改</i>
@@ -104,7 +101,7 @@
 										<option :value="index + 1" v-for="(item, index) in 12" :key="index">{{ item }}</option>
 									</select>
 									<select name="day" id="day">
-										<option :value="index" v-for="(item, index) in days" :key="index">{{ item }}</option>
+										<option :value="index + 1" v-for="(item, index) in days" :key="index">{{ item }}</option>
 									</select>
 								</div>
 								<span class="content" v-else>{{ user.birthday }}</span>
@@ -289,7 +286,7 @@ export default {
 			for (var i = 0; i < genders.length; i++) {
 				if (genders[i].checked) {
 					this.user.gender = genders[i].value;
-					return;
+					break;
 				}
 			}
 			this.save();
@@ -324,17 +321,9 @@ export default {
 			this.showSaveAddress = true;
 		},
 		saveAddress() {
-			this.axios({
-				method: 'put',
-				url: this.GLOBAL.baseUrl + '/user/userData',
-				data: JSON.stringify(this.user),
-				headers: {
-					'Content-Type': 'application/json'
-				}
-			}).then(res => {
-				this.showInputAddress = false;
-				this.showSaveAddress = false;
-			});
+			this.save();
+			this.showInputAddress = false;
+			this.showSaveAddress = false;
 		},
 		hideFunctionAddress() {
 			this.showUpdateAddress = false;
@@ -382,8 +371,14 @@ export default {
 		saveBirthday() {
 			let year = document.getElementById('year').value;
 			let month = document.getElementById('month').value;
+			if (month.length != 2) {
+				month = '0' + month
+			}
 			let day = document.getElementById('day').value;
-			this.user.birthady = year + '-' + month + '-' + day;
+			if (day.length != 2) {
+				day = '0' + day
+			}
+			this.user.birthday = (year + '-' + month + '-' + day).toString();
 			this.save();
 			this.showSaveBirthday = false;
 			this.showInputBirthday = false;
@@ -391,7 +386,6 @@ export default {
 		hideFunctionBirthday() {
 			this.showUpdateBirthday = false;
 		},
-
 		changeDays() {
 			let year = document.getElementById('year').value;
 			let month = document.getElementById('month').value;
@@ -434,6 +428,9 @@ export default {
 <style scoped>
 * {
 	transition: all 1s ease 0s;
+}
+.iconfont {
+	cursor: pointer;
 }
 #file {
 	position: absolute;
@@ -480,10 +477,10 @@ select {
 	height: 100%;
 }
 textarea {
-	width: 75%;
+	margin-top: -25px;
+	width: 60%;
 }
 .content-intro {
-	/* font-family: '楷体'; */
 	font-size: 18px;
 }
 .iconfont {
@@ -547,7 +544,6 @@ textarea {
 }
 .hy-index-large {
 	width: 100%;
-	height: 800px;
 	display: flex;
 }
 
