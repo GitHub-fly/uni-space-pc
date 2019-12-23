@@ -52,11 +52,6 @@ const routes = [{
 						component: User
 					},
 					{
-						path: '/index/music',
-						name: 'music',
-						component: Music
-					},
-					{
 						path: '/index/mylog/:id',
 						component: Mylog
 					},
@@ -89,6 +84,11 @@ const routes = [{
 		path: '/',
 		name: 'sign',
 		component: Sign
+	},
+	{
+		path: '/music',
+		name: 'music',
+		component: Music
 	},
 	{
 		path: '/test',

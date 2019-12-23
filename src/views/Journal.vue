@@ -16,8 +16,8 @@
 								</v-list-item-content>
 
 								<v-card-actions>
-									<v-btn text @click="getmylog(journal.userId)">查看日志</v-btn>
-									<v-btn text @click="getmyphoto(journal.userId)">查看相册</v-btn>
+									<v-btn text color="orange" @click="getmylog(journal.userId)">查看日志</v-btn>
+									<v-btn text color="orange" @click="getmyphoto(journal.userId)">查看相册</v-btn>
 								</v-card-actions>
 							</v-list-item>
 						</v-card>
@@ -46,14 +46,14 @@
 								</v-card-text>
 
 								<v-card-actions>
-									<v-btn text color="deep-purple accent-4" absolute bottom right @click="journaldetail(journal.id)">查看详细信息</v-btn>
+									<v-btn text color="orange accent-4" absolute bottom right @click="journaldetail(journal.id)">查看详细信息</v-btn>
 								</v-card-actions>
-								<v-btn @click="changeColor(index)" class="ma-2" text icon><v-icon :style="{ color: color[index] ? 'red' : '' }">mdi-heart</v-icon></v-btn>
-								<p class="font-weight-regular">({{ likes[index] }})</p>
-								<v-btn class="ma-2" text icon><v-icon color="black ">mdi-message-text</v-icon></v-btn>
-								<p class="font-weight-regular">({{ journal.comments }})</p>
-								<v-btn class="ma-2" text icon><v-icon color="black ">mdi-arrow-up-bold-box-outline</v-icon></v-btn>
-								<p class="font-weight-regular">({{ journal.comments }})</p>
+								<v-btn @click="changeColor(index)" class="ma-2" text icon><v-icon :style="{ color: color[index] ? 'red' : 'grey' }">mdi-heart</v-icon></v-btn>
+								<p class="font-weight-regular">{{ likes[index] }}</p>
+								<v-btn class="ma-2" text icon><v-icon color="grey">mdi-message-text</v-icon></v-btn>
+								<p class="font-weight-regular">{{ journal.comments }}</p>
+								<v-btn class="ma-2" text icon><v-icon color="grey">mdi-arrow-up-bold-box-outline</v-icon></v-btn>
+								<p class="font-weight-regular">{{ journal.comments }}</p>
 							</v-card>
 						</div>
 					</div>

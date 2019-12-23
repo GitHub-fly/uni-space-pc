@@ -33,23 +33,27 @@ export default {
 	},
 	methods: {
 		topublish() {
-			this.content = this.editor.txt.html();
-			console.log(this.content);
-			this.axios({
-				method: 'put',
-				url: this.GLOBAL.baseUrl + '/journal/user/journal/pcjournal',
-				data: {
-					content: this.content,
-					userId: JSON.parse(localStorage.getItem('user')).id,
-					title: this.usertitle
-				}
-			}).then(res => {
-				alert(res.data.data);
-				this.editor = '';
-				this.content = '';
-				this.usertitle = '';
-				this.$router.push('/personal/' + JSON.parse(localStorage.getItem('user')).id);
-			});
+			if (this.usertitle == '' || this.content == '') {
+				alert('请输入内容');
+			} else {
+				this.content = this.editor.txt.html();
+				console.log(this.content);
+				this.axios({
+					method: 'put',
+					url: this.GLOBAL.baseUrl + '/journal/user/journal/pcjournal',
+					data: {
+						content: this.content,
+						userId: JSON.parse(localStorage.getItem('user')).id,
+						title: this.usertitle
+					}
+				}).then(res => {
+					alert(res.data.data);
+					this.editor = '';
+					this.content = '';
+					this.usertitle = '';
+					this.$router.push('/personal/' + JSON.parse(localStorage.getItem('user')).id);
+				});
+			}
 		},
 		async initEditor() {
 			this.editor = new Editor('#editor'); /* 括号里面的对应的是html里div的id */

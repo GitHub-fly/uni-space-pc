@@ -59,14 +59,14 @@
 				<v-col cols="4" v-for="(album, index) in photoAlbums" :key="index">
 					<v-hover v-slot:default="{ hover }">
 						<v-card max-width="350" min-height="350" :elevation="hover ? 12 : 2" :class="{ 'on-hover': hover }">
-							<!-- 无密保则显示相册封面图 -->
-							<v-img v-if="album.securityId == null" :src="album.cover" height="200px"></v-img>
-
 							<!-- 如果相册设置了密保问题 -->
-							<v-img v-else src="../assets/img/uni_lock.png" height="200px" class="align-center white--text">
+							<v-img v-if="album.securityId != null && !createBtnStatus()" src="../assets/img/uni_lock.png" height="200px" class="align-center white--text">
 								<v-card-title class="justify-center">回答问题可见</v-card-title>
 							</v-img>
-							
+
+							<!-- 无密保则显示相册封面图 -->
+							<v-img v-else :src="album.cover" height="200px"></v-img>
+
 							<v-card-title>
 								<!-- v-model 这里有问题 -->
 								<!-- v-model 这里有问题 -->
@@ -74,25 +74,33 @@
 								<!-- v-model 这里有问题 -->
 								<!-- v-model 这里有问题 -->
 								<!-- 相册密保的dialog -->
-								<v-dialog v-if="album.securityId != null" v-model="dialogAlbum[index]" persistent max-width="290">
+								<v-dialog v-if="album.securityId != null && !createBtnStatus()" v-model="dialogAlbums[index]" persistent max-width="290">
 									<template v-slot:activator="{ on }">
-										<v-btn color="primary" dark v-on="on" @click="getSecurityId(album.securityId)">Open Dialog</v-btn>
+										<v-btn small text v-on="on" @click="getSecurityId(album.securityId)">
+											<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-lock"></use></svg>
+										</v-btn>
 									</template>
 									<v-card>
 										<v-card-title class="headline">{{ securitys.question }}</v-card-title>
-										<v-card-text>
-											<v-text-field label="答案" clearable v-model="answer"></v-text-field>
-										</v-card-text>
+										<v-card-text><v-text-field label="答案" clearable v-model="answer"></v-text-field></v-card-text>
 										<v-card-actions>
 											<v-spacer></v-spacer>
 											<v-btn color="green darken-1" text @click="checkAnswer(album)">确定</v-btn>
-											<v-btn color="green darken-1" text @click="exitBtn()">取消</v-btn>
+											<v-btn color="green darken-1" text @click="exitBtn(index)">取消</v-btn>
 										</v-card-actions>
 									</v-card>
 								</v-dialog>
 
 								<!-- 相册名称区域 -->
-								<v-btn @click="toPhoto(album)" text class="title" v-show="editFlags[index] === false">{{ album.name }}</v-btn>
+								<v-chips>
+									<v-btn text class="title">
+										{{ album.name }}
+										<v-btn small v-if="album.securityId == null" @click="toPhoto(album)" v-show="editFlags[index] === false" text class="title">
+											<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-jinru"></use></svg>
+										</v-btn>
+									</v-btn>
+								</v-chips>
+
 								<input type="text" v-model="album.name" style="border: 1px solid lavender;" v-show="editFlags[index] === true" />
 							</v-card-title>
 
@@ -142,10 +150,11 @@ export default {
 			albumPermissionStatus: null,
 			btnStatus: true,
 			dialog: false,
-			dialogAlbum: [],
+			dialogAlbum: false,
+			dialogAlbums: [],
 			flags: [],
 			editFlags: [],
-			securitys:[],
+			securitys: [],
 			photoAlbums: [],
 			showIntroductions: [],
 
@@ -165,16 +174,16 @@ export default {
 	},
 	methods: {
 		// dialog 取消按钮的监听
-		exitBtn(){
-			this.answer = ''
-			this.dialogAlbum = false
+		exitBtn(index) {
+			this.answer = '';
+			this.dialogAlbums[index] = false;
 		},
 		// 监听相册密保的答案是否正确
 		checkAnswer(album) {
 			if (this.answer == this.securitys.answer) {
-				this.$router.push('/index/photo/' + album.id)
-			} else{
-				alert('答案不正确')
+				this.$router.push('/index/photo/' + album.id);
+			} else {
+				alert('答案不正确');
 			}
 		},
 		// 获取相册密保信息
@@ -189,8 +198,8 @@ export default {
 					'Content-Type': 'application/json'
 				}
 			}).then(res => {
-				this.securitys = res.data.data
-				console.log(this.securitys)
+				this.securitys = res.data.data;
+				console.log(this.securitys);
 			});
 		},
 		// 删除指定id的相册
@@ -200,7 +209,7 @@ export default {
 			this.flags.splice(index, 1);
 			this.axios({
 				method: 'delete',
-				url: this.GLOBAL.baseUrl + '/photoalbum/dpa',
+				url: this.GLOBAL.baseUrl + '/photoalbum/delete',
 				data: {
 					userId: JSON.parse(localStorage.getItem('user')).id,
 					id: id
@@ -238,7 +247,7 @@ export default {
 			// 调用接口更改数据信息
 			album.name = this.axios({
 				method: 'put',
-				url: this.GLOBAL.baseUrl + '/photoalbum/upa',
+				url: this.GLOBAL.baseUrl + '/photoalbum/update',
 				data: JSON.stringify(album),
 				headers: {
 					'Content-Type': 'application/json'
@@ -306,7 +315,7 @@ export default {
 					// 调用接口，创建相册
 					this.axios({
 						method: 'post',
-						url: this.GLOBAL.baseUrl + '/photoalbum/apa',
+						url: this.GLOBAL.baseUrl + '/photoalbum/add',
 						data: JSON.stringify(this.photoAlbumDto),
 						headers: {
 							'Content-Type': 'application/json'
@@ -340,9 +349,7 @@ export default {
 		// 跳转到相册详情页面
 		toPhoto(album) {
 			localStorage.setItem('photoAlbum', JSON.stringify(album));
-			this.$router.push('/index/photo/' + album.id)
-
-			
+			this.$router.push('/index/photo/' + album.id);
 		},
 
 		// 数据初始化的方法
@@ -369,13 +376,13 @@ export default {
 				for (var i = 0; i < this.photoAlbums.length; i++) {
 					this.flags[i] = false;
 					this.editFlags[i] = false;
-					if(this.photoAlbums.securityId == null){
-						this.dialogAlbum[i] = false;
+					if (this.photoAlbums.securityId == null) {
+						this.dialogAlbums[i] = false;
 					} else {
-						this.dialogAlbum[i] = true;
+						this.dialogAlbums[i] = true;
 					}
 				}
-				console.log(this.dialogAlbum)
+				console.log(this.dialogAlbums);
 			});
 		},
 
@@ -405,6 +412,10 @@ export default {
 </script>
 
 <style scoped>
+.iconf-Christmas {
+	width: 20px;
+	height: 20px;
+}	
 .createBtn {
 	/* margin-left: 1%; */
 }

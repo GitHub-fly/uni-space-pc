@@ -4,7 +4,15 @@
 			<v-bottom-navigation :value="activeBtn" id="navcolor" height="70px">
 				<div class="hy-nav-top">
 					<div class="hy-nav-top-left">
-						<v-btn @click="change()" class="title" height="100%" width="30%">Skin</v-btn>
+						<v-tooltip bottom>
+							<template v-slot:activator="{ on }">
+								<v-btn text v-on="on" @click="change()" height="100%" width="30%">
+									<svg aria-hidden="true" class="iconf-Christmas-large"><use xlink:href="#icon-shipin"></use></svg>
+								</v-btn>
+							</template>
+							<span>点我可以换皮肤哦~</span>
+						</v-tooltip>
+
 						<v-btn height="100%" width="35%" to="/nav"><v-img width="70%" height="100%" style="border-radius: 3px;" src="../assets/img/ic_launcher.png"></v-img></v-btn>
 						<div height="100%" class="red--text title" style="cursor: default;">UNI-SPACE</div>
 					</div>
@@ -64,6 +72,34 @@
 							</template>
 							<span>好友列表</span>
 						</v-tooltip>
+
+						<v-menu offset-y>
+							<template v-slot:activator="{ on }">
+								<!-- <v-btn v-on="on" style="height: 100%;"><i class="iconfont icon">&#xe722;</i></v-btn> -->
+								<!-- <v-tooltip bottom> -->
+								<!-- <v-badge>
+									<template v-slot:badge>
+										{{ this.messageList.length }}
+									</template> -->
+									<v-btn v-on="on" @click="getMessage()" style="height: 100%;">
+										<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-milu"></use></svg>
+									</v-btn>
+								<!-- </v-badge> -->
+								<!-- <span>消息</span>
+							</v-tooltip> -->
+							</template>
+
+							<v-list>
+								<v-list-item v-for="(message, index) in messageList" :key="index">
+									<v-list-item-avatar><v-img :src="message.avatar"></v-img></v-list-item-avatar>
+									<v-list-item-content>
+										<v-list-item-title>{{ message.title.substring(0, 3) }}...</v-list-item-title>
+									</v-list-item-content>
+
+									<v-list-item-icon><v-icon color="pink">mdi-heart</v-icon></v-list-item-icon>
+								</v-list-item>
+							</v-list>
+						</v-menu>
 
 						<v-menu offset-y>
 							<template v-slot:activator="{ on }">
@@ -155,7 +191,7 @@
 						<v-list three-line>
 							<template v-for="(item, index) in myFriends">
 								<v-list-item :key="index">
-									<v-list-item-avatar @click="toPersion(item.id,index)" style="cursor: pointer;"><v-img :src="item.avatar"></v-img></v-list-item-avatar>
+									<v-list-item-avatar @click="toPersion(item.id, index)" style="cursor: pointer;"><v-img :src="item.avatar"></v-img></v-list-item-avatar>
 									<v-list-item-content>
 										<v-list-item-title>
 											<div class="xxq-titleDiv">
@@ -163,7 +199,7 @@
 												<v-btn icon small v-if="tabText === '添加好友'"><v-icon @click="addFriend(item.id)">+</v-icon></v-btn>
 												<v-btn icon small v-if="delteteBtnStatus"><v-icon small @click="deleteFriend(item.id)">mdi-minus</v-icon></v-btn>
 												<v-chip @click="changeRight(index)" v-if="permissionBtnStatusShow" class="white px-0" fluid>
-													<v-switch  v-model="rightShow[index]" ></v-switch>
+													<v-switch v-model="rightShow[index]"></v-switch>
 												</v-chip>
 												<div class="applicationBox" v-if="tabText === '好友请求'">
 													<v-btn icon small><i class="iconfont" @click="aggreee(item.id)">&#xe7cd;</i></v-btn>
@@ -238,6 +274,7 @@ export default {
 				}
 			],
 			myFriends: [],
+			messageList: [],
 			rightShow: [],
 			items: {
 				header: 'MyFriends'
@@ -404,11 +441,11 @@ export default {
 			});
 		},
 		// 跳转到好友中心页面的方法
-		toPersion(id,index) {
-			if(this.myFriends[index].collection == 1) {
-				this.$router.push('/personal/' + id)
-			}else {
-				alert('你没有访问TA空间的权限哦~')
+		toPersion(id, index) {
+			if (this.myFriends[index].collection == 1) {
+				this.$router.push('/personal/' + id);
+			} else {
+				alert('你没有访问TA空间的权限哦~');
 			}
 		},
 		// 同意添加好友的方法
@@ -455,12 +492,12 @@ export default {
 			});
 		},
 		showPermissionIcon() {
-			this.delteteBtnStatus = false; 
-			this.permissionBtnStatusShow =! this.permissionBtnStatusShow;
+			this.delteteBtnStatus = false;
+			this.permissionBtnStatusShow = !this.permissionBtnStatusShow;
 		},
 		showDeleteIcon() {
 			this.permissionBtnStatusShow = false;
-			this.delteteBtnStatus =! this.delteteBtnStatus;
+			this.delteteBtnStatus = !this.delteteBtnStatus;
 		},
 		// 音乐播放方法
 		play() {
@@ -502,7 +539,19 @@ export default {
 					id: this.user.id,
 					skinId: this.colorindex
 				}
+			}).then(res => {});
+		},
+		//获取点赞消息记录
+		getMessage() {
+			this.axios({
+				method: 'post',
+				url: this.GLOBAL.baseUrl + '/message/likes',
+				data: {
+					id: this.user.id
+				}
 			}).then(res => {
+				this.messageList = res.data.data;
+				console.log(this.messageList);
 				// alert(res.data.msg)
 				// console.log(res.data.msg)
 			});

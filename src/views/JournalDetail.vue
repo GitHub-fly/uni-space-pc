@@ -267,6 +267,9 @@ export default {
 			if (this.$route.params.id) {
 				//判断id是否有值
 				this.initData();
+				//变量scrollTop是滚动条滚动时，距离顶部的距离
+				var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+				scrollTop = 0;
 			}
 		}
 	},

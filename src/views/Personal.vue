@@ -22,13 +22,30 @@
 
 							<v-col class="text-no-wrap" cols="5" sm="3"><strong v-html="message.title"></strong></v-col>
 
-							<v-col class="grey--text hidden-sm-and-down">
-								<!-- &mdash; 文章数 {{ user.journalSum }} -->
-								<v-btn outlined class="mr-3">文章 {{ user.journalSum }}</v-btn>
-								<v-btn outlined @click="toAlbum()">
+							<v-col class="grey--text hidden-sm-and-down d-flex">
+								
+								<v-tooltip bottom>
+									<template v-slot:activator="{ on }">
+										<v-btn text v-on="on" class="mr-3">
+											<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-guaizhangtang"></use></svg>文章{{ user.journalSum }}
+										</v-btn>
+									</template>
+									<span>查看TA的文章</span>
+								</v-tooltip>
+								
+								<v-tooltip bottom>
+									<template v-slot:activator="{ on }">
+										<v-btn text v-on="on" class="mr-3" @click="toAlbum()">
+											<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-tangguo"></use></svg>相册{{ user.photoAlbumSum }}
+										</v-btn>
+									</template>
+									<span>查看TA的相册</span>
+								</v-tooltip>
+								
+								<!-- <v-btn outlined @click="toAlbum()">
 									<v-icon>mdi-image</v-icon>
 									相册 {{ user.photoAlbumSum }}
-								</v-btn>
+								</v-btn> -->
 							</v-col>
 						</v-row>
 					</v-expansion-panel-header>
@@ -45,49 +62,39 @@
 		<v-row v-if="journal != null">
 			<v-col cols="12">
 				<v-card class="mx-auto" max-width="100%">
-					<v-img class="white--text align-end" height="200px" :src="journal.thumbnail"><v-card-title v-text="journal.title"></v-card-title></v-img>
+					<v-img class="white--text align-end" height="200px" :src="journal.thumbnail"><v-card-title class="journalTitle" @click="journaldetail(journal.id)" v-text="journal.title"></v-card-title></v-img>
 
 					<v-card-subtitle class="pb-0">{{ journal.createTime }}</v-card-subtitle>
 
 					<v-card-text class="text--primary" v-html="journal.content.substring(0, 80)"></v-card-text>
 
 					<v-card-actions>
+						<v-spacer></v-spacer>
 						<v-btn color="orange" text>{{ journal.likes }} 人喜欢</v-btn>
 
 						<v-btn color="orange" text>{{ journal.comments }} 人评论</v-btn>
 
-						<v-spacer></v-spacer>
-						<v-btn icon @click="likes(journal.id)">
-							<v-icon>mdi-heart</v-icon>
-						</v-btn>
-						<v-btn icon><v-icon>mdi-bookmark</v-icon></v-btn>
-						<v-btn icon><v-icon>mdi-share-variant</v-icon></v-btn>
 					</v-card-actions>
 				</v-card>
 			</v-col>
 		</v-row>
+		
 		<!-- 剩下日志数据 -->
 		<v-row v-if="journals">
 			<v-col v-for="(card, index) in journals.slice(1)" :key="index" cols="4">
 				<v-card class="mx-auto" max-width="100%">
-					<v-img class="white--text align-end" height="200px" :src="card.thumbnail"><v-card-title v-text="card.title"></v-card-title></v-img>
+					<v-img class="white--text align-end" height="200px" :src="card.thumbnail"><v-card-title class="journalTitle" @click="journaldetail(journal.id)" v-text="card.title"></v-card-title></v-img>
 
 					<v-card-subtitle class="pb-0">{{ card.createTime }}</v-card-subtitle>
 
 					<v-card-text class="text--primary" v-html="card.content.substring(0, 50)"></v-card-text>
 
 					<v-card-actions>
+						<v-spacer></v-spacer>
 						<v-btn color="orange" text>{{ card.likes }} 人喜欢</v-btn>
 
 						<v-btn color="orange" text>{{ card.comments }} 人评论</v-btn>
 
-						<v-spacer></v-spacer>
-
-						<v-btn icon @click="likes(card.id)"><v-icon>mdi-heart</v-icon></v-btn>
-
-						<v-btn icon><v-icon>mdi-bookmark</v-icon></v-btn>
-
-						<v-btn icon><v-icon>mdi-share-variant</v-icon></v-btn>
 					</v-card-actions>
 				</v-card>
 			</v-col>
@@ -135,7 +142,7 @@ export default {
 		toAlbum() {
 			this.$router.push('/index/photoAlbum/' + this.userId)
 		},
-		// 掉接口获取该界面主人的基本信息和日志数据
+		// 调接口获取该界面主人的基本信息和日志数据
 		initData() {
 			// 获取网页地址url
 			var query = window.location.href;
@@ -146,7 +153,7 @@ export default {
 			// 获取该好友的基本信息
 			this.axios({
 				method: 'post',
-				url: this.GLOBAL.baseUrl + '/user/id',
+				url: this.GLOBAL.baseUrl + '/user/sum',
 				data: JSON.stringify({
 					id: this.userId
 				}),
@@ -155,12 +162,15 @@ export default {
 				}
 			}).then(res => {
 				this.user = res.data.data;
+				console.log(JSON.stringify(this.user))
 			});
 			// 获取该好友的日志信息
 			this.getUserJournals(this.userId);
 		},
-		// 点赞操作的方法（可能点赞，可以取消赞）
-		likes(journalId) {},
+		// 跳转到日志详情
+		journaldetail(id) {
+			this.$router.push('/index/journal/detail/' + id);
+		},
 		// 获取好友日志的方法
 		getUserJournals(id) {
 			this.axios({
@@ -193,5 +203,9 @@ export default {
 }
 span {
 	display: block;
+}
+.journalTitle {
+	display: inline-block;
+	cursor: pointer;
 }
 </style>

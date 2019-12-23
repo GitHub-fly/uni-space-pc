@@ -26,7 +26,7 @@
 						<v-list-item-content><v-list-item-title>相册</v-list-item-title></v-list-item-content>
 					</v-list-item>
 
-					<v-list-item to="/index/music">
+					<v-list-item to="/music">
 						<!-- <v-list-item-icon><i class="iconfont">&#xe6bb;</i></v-list-item-icon> -->
 						<v-list-item-icon>
 							<svg class="iconf" aria-hidden="true"><use xlink:href="#icon-guaizhangtang"></use></svg>

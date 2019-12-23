@@ -71,7 +71,7 @@ export default {
 			});
 		},
 		play() {
-			this.$router.push('/');
+			this.$router.push('/nav');
 		},
 
 		canel(index) {
