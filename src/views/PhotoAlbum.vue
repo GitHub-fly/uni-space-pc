@@ -1,6 +1,7 @@
 <template>
 	<div class="hy-index-large">
 		<div class="hy-index-mid">
+			<!-- 相册页最顶部的按钮们 -->
 			<v-row>
 				<!-- persistent 点击对话框外部不能使其关闭 -->
 				<v-dialog v-model="dialog" persistent max-width="600px">
@@ -8,6 +9,8 @@
 						<v-btn v-show="createBtnStatus()" color="pink" dark v-on="on" class="createBtn">创建相册</v-btn>
 						<v-btn v-show="!createBtnStatus()" color="gray" dark class="createBtn">好友相册</v-btn>
 					</template>
+
+					<!-- 创建相册的dialog界面 -->
 					<v-card>
 						<v-card-title><span class="headline">New album</span></v-card-title>
 						<v-card-text>
@@ -51,16 +54,48 @@
 				</v-dialog>
 			</v-row>
 
+			<!-- 相册区域 -->
 			<v-row>
 				<v-col cols="4" v-for="(album, index) in photoAlbums" :key="index">
 					<v-hover v-slot:default="{ hover }">
 						<v-card max-width="350" min-height="350" :elevation="hover ? 12 : 2" :class="{ 'on-hover': hover }">
-							<v-img :src="album.cover" height="200px"></v-img>
+							<!-- 无密保则显示相册封面图 -->
+							<v-img v-if="album.securityId == null" :src="album.cover" height="200px"></v-img>
+
+							<!-- 如果相册设置了密保问题 -->
+							<v-img v-else src="../assets/img/uni_lock.png" height="200px" class="align-center white--text">
+								<v-card-title class="justify-center">回答问题可见</v-card-title>
+							</v-img>
+							
 							<v-card-title>
+								<!-- v-model 这里有问题 -->
+								<!-- v-model 这里有问题 -->
+								<!-- v-model 这里有问题 -->
+								<!-- v-model 这里有问题 -->
+								<!-- v-model 这里有问题 -->
+								<!-- 相册密保的dialog -->
+								<v-dialog v-if="album.securityId != null" v-model="dialogAlbum[index]" persistent max-width="290">
+									<template v-slot:activator="{ on }">
+										<v-btn color="primary" dark v-on="on" @click="getSecurityId(album.securityId)">Open Dialog</v-btn>
+									</template>
+									<v-card>
+										<v-card-title class="headline">{{ securitys.question }}</v-card-title>
+										<v-card-text>
+											<v-text-field label="答案" clearable v-model="answer"></v-text-field>
+										</v-card-text>
+										<v-card-actions>
+											<v-spacer></v-spacer>
+											<v-btn color="green darken-1" text @click="checkAnswer(album)">确定</v-btn>
+											<v-btn color="green darken-1" text @click="exitBtn()">取消</v-btn>
+										</v-card-actions>
+									</v-card>
+								</v-dialog>
+
 								<!-- 相册名称区域 -->
 								<v-btn @click="toPhoto(album)" text class="title" v-show="editFlags[index] === false">{{ album.name }}</v-btn>
 								<input type="text" v-model="album.name" style="border: 1px solid lavender;" v-show="editFlags[index] === true" />
 							</v-card-title>
+
 							<v-card-subtitle>{{ album.createTime }}</v-card-subtitle>
 							<!-- 相册简介区域 -->
 							<!-- 不可编辑区 -->
@@ -100,12 +135,17 @@
 export default {
 	data() {
 		return {
+			answer: null,
+			albumInfoMsg: null,
+			albumInfo: null,
 			userId: null,
+			albumPermissionStatus: null,
 			btnStatus: true,
 			dialog: false,
+			dialogAlbum: [],
 			flags: [],
 			editFlags: [],
-
+			securitys:[],
 			photoAlbums: [],
 			showIntroductions: [],
 
@@ -124,6 +164,35 @@ export default {
 		};
 	},
 	methods: {
+		// dialog 取消按钮的监听
+		exitBtn(){
+			this.answer = ''
+			this.dialogAlbum = false
+		},
+		// 监听相册密保的答案是否正确
+		checkAnswer(album) {
+			if (this.answer == this.securitys.answer) {
+				this.$router.push('/index/photo/' + album.id)
+			} else{
+				alert('答案不正确')
+			}
+		},
+		// 获取相册密保信息
+		getSecurityId(securityId) {
+			this.axios({
+				method: 'post',
+				url: this.GLOBAL.baseUrl + '/security/find',
+				data: {
+					id: securityId
+				},
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(res => {
+				this.securitys = res.data.data
+				console.log(this.securitys)
+			});
+		},
 		// 删除指定id的相册
 		deleteAlbum(id, index) {
 			// splice(index, 1) --> 指从第index个开始（但不包括）删除一个数据
@@ -257,11 +326,59 @@ export default {
 				});
 			}
 		},
+
+		// 好像要改
+		// 好像要改
+		// 好像要改
+		// 好像要改
+		// 好像要改
+		// 好像要改
+		// 好像要改
+		// 好像要改
+		// 好像要改
+		// 好像要改
 		// 跳转到相册详情页面
 		toPhoto(album) {
 			localStorage.setItem('photoAlbum', JSON.stringify(album));
-			this.$router.push('/index/photo/' + album.id);
+			this.$router.push('/index/photo/' + album.id)
+
+			
 		},
+
+		// 数据初始化的方法
+		init() {
+			// 获取网页地址url
+			var query = window.location.href;
+			// 锁定到最后一个"/"的位置
+			var begin = query.lastIndexOf('/') + 1;
+			// 取出地址中最后的id值
+			this.userId = query.substring(begin);
+			// 初始化相册数组
+			this.axios({
+				method: 'post',
+				url: this.GLOBAL.baseUrl + '/photoalbum/all',
+				data: {
+					id: this.userId
+				},
+				headers: {
+					'Content-Type': 'application/json'
+				}
+			}).then(res => {
+				this.photoAlbums = res.data.data;
+				console.log(this.photoAlbums);
+				for (var i = 0; i < this.photoAlbums.length; i++) {
+					this.flags[i] = false;
+					this.editFlags[i] = false;
+					if(this.photoAlbums.securityId == null){
+						this.dialogAlbum[i] = false;
+					} else {
+						this.dialogAlbum[i] = true;
+					}
+				}
+				console.log(this.dialogAlbum)
+			});
+		},
+
 		// 判断创建按钮是否出现（是否为当前登录者空间）
 		createBtnStatus() {
 			if (this.userId == JSON.parse(localStorage.getItem('user')).id) {
@@ -272,29 +389,17 @@ export default {
 		}
 	},
 	created() {
-		// 获取网页地址url
-		var query = window.location.href;
-		// 锁定到最后一个"/"的位置
-		var begin = query.lastIndexOf('/') + 1;
-		// 取出地址中最后的id值
-		this.userId = query.substring(begin);
-		// 初始化相册数组
-		this.axios({
-			method: 'post',
-			url: this.GLOBAL.baseUrl + '/photoalbum/all',
-			data: {
-				id: this.userId
-			},
-			headers: {
-				'Content-Type': 'application/json'
+		this.init();
+	},
+	// 实时监听路由变化
+	watch: {
+		$route(to, from) {
+			//监听路由是否变化
+			if (this.$route.params.id) {
+				//判断id是否有值
+				this.init();
 			}
-		}).then(res => {
-			this.photoAlbums = res.data.data;
-			for (var i = 0; i < this.photoAlbums.length; i++) {
-				this.flags[i] = false;
-				this.editFlags[i] = false;
-			}
-		});
+		}
 	}
 };
 </script>

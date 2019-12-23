@@ -252,7 +252,7 @@ export default {
 	methods: {
 		// 改变访问权限值（1/0）
 		changeRight(index) {
-			if (this.rightShow[index] == true) {
+			if (this.rightShow[index]) {
 				this.axios({
 					method: 'PUT',
 					url: this.GLOBAL.baseUrl + '/friend/collection',
@@ -571,7 +571,7 @@ export default {
 	justify-content: space-between;
 }
 
-.xxq-myFriendsBox {
+.myFriendsBox {
 	height: 608px;
 	overflow: auto;
 }

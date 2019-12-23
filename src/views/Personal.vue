@@ -41,7 +41,7 @@
 			</v-expansion-panels>
 		</v-row>
 
-		<!-- 第一行的数据 -->
+		<!-- 最新一篇日志的数据 -->
 		<v-row v-if="journal != null">
 			<v-col cols="12">
 				<v-card class="mx-auto" max-width="100%">

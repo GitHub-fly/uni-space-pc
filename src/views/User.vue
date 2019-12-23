@@ -553,6 +553,7 @@ textarea {
 }
 
 .hy-index-mid {
+	z-index: 2;
 	display: flex;
 	flex-wrap: wrap;
 }
