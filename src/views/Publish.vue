@@ -33,28 +33,32 @@ export default {
 	},
 	methods: {
 		topublish() {
-			if (this.usertitle == '' || this.content == '') {
-				alert('请输入内容');
-			} else {
-				this.content = this.editor.txt.html();
-				console.log(this.content);
-				this.axios({
-					method: 'put',
-					url: this.GLOBAL.baseUrl + '/journal/user/journal/pcjournal',
-					data: {
-						content: this.content,
-						userId: JSON.parse(localStorage.getItem('user')).id,
-						title: this.usertitle
-					}
-				}).then(res => {
-					alert(res.data.data);
-					this.editor = '';
-					this.content = '';
-					this.usertitle = '';
-					this.$router.push('/personal/' + JSON.parse(localStorage.getItem('user')).id);
-				});
-			}
+			this.content = this.editor.txt.html();
+			this.content = JSON.stringify(this.content);
+			console.log(this.content);
+			this.content = this.content
+				.replace(/\\/g, '\\\\')
+				.replace(/\\/g, '\\/')
+				.replace(/\'/g, "\\'")
+				.replace(/\"/g, '\\"')
+				.split('\n')
+				.join('");\ndocument.writeln("');
+			this.axios({
+				method: 'put',
+				url: this.GLOBAL.baseUrl + '/journal/user/journal/mobilejournal',
+				data: {
+					content: this.content,
+					userId: 1,
+					title: this.usertitle
+				}
+			}).then(res => {
+				alert(res.data.data);
+				this.usertitle = '';
+				this.editor = '';
+			});
 		},
+
+		upload() {},
 		async initEditor() {
 			this.editor = new Editor('#editor'); /* 括号里面的对应的是html里div的id */
 			/* 配置菜单栏 */
@@ -87,8 +91,10 @@ export default {
 			this.editor.customConfig.customUploadImg = async (files, insert) => {
 				/* files 是 input 中选中的文件列表 */
 				let formData = new FormData();
+				// console.log(files);
 				for (var i = 0; i < files.length; i++) {
 					formData.append('file', files[i]);
+					// console.log(formData.get("file"))
 				}
 				this.axios({
 					method: 'post',
@@ -100,6 +106,7 @@ export default {
 						console.log(res.data.data[j]);
 					}
 				});
+
 				// let data = await this.upload()
 				/* upload方法是后台提供的上传图片的接口 */
 				/* insert 是编辑器自带的 获取图片 url 后，插入到编辑器的方法 上传代码返回结果之后，将图片插入到编辑器中*/

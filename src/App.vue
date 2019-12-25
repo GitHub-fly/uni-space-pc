@@ -17,8 +17,8 @@ export default {
 </script>
 
 <style>
-@import url('assets/css/basic.css');
-@import url('assets/css/style.css');
+@import url('./assets/css/basic.css');
+@import url('./assets/css/style.css');
 .snowf-canvas {
 	position: absolute;
 	left: 0;

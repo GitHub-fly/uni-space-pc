@@ -45,9 +45,7 @@
 									<!-- {{journal.content | filterFun}} -->
 								</v-card-text>
 
-								<v-card-actions>
-									<v-btn text color="orange accent-4" absolute bottom right @click="journaldetail(journal.id)">查看详细信息</v-btn>
-								</v-card-actions>
+								<v-card-actions><v-btn text color="orange accent-4" absolute bottom right @click="journaldetail(journal.id)">查看详细信息</v-btn></v-card-actions>
 								<v-btn @click="changeColor(index)" class="ma-2" text icon><v-icon :style="{ color: color[index] ? 'red' : 'grey' }">mdi-heart</v-icon></v-btn>
 								<p class="font-weight-regular">{{ likes[index] }}</p>
 								<v-btn class="ma-2" text icon><v-icon color="grey">mdi-message-text</v-icon></v-btn>
@@ -269,6 +267,8 @@ export default {
 				}
 			}).then(res => {
 				this.recommendFriends = res.data.data;
+				
+				console.log(this.recommendFriends);
 			});
 		},
 		// 添加好友按钮的动作监听

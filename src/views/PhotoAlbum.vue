@@ -6,8 +6,14 @@
 				<!-- persistent 点击对话框外部不能使其关闭 -->
 				<v-dialog v-model="dialog" persistent max-width="600px">
 					<template v-slot:activator="{ on }">
-						<v-btn v-show="createBtnStatus()" color="pink" dark v-on="on" class="createBtn">创建相册</v-btn>
-						<v-btn v-show="!createBtnStatus()" color="gray" dark class="createBtn">好友相册</v-btn>
+						<v-btn height="10%" v-show="createBtnStatus()" text v-on="on" class="createBtn" style="height: 100%;">
+							<svg class="iconf-Christmas-large " aria-hidden="true" @click="toexit()"><use xlink:href="#icon-dangao"></use></svg>
+							创建相册
+						</v-btn>
+						<v-btn v-show="!createBtnStatus()" text class="createBtn" style="height: 100%;">
+							<svg class="iconf-Christmas-large" aria-hidden="true" @click="toexit()"><use xlink:href="#icon-dangao"></use></svg>
+							好友相册
+						</v-btn>
 					</template>
 
 					<!-- 创建相册的dialog界面 -->
@@ -415,7 +421,7 @@ export default {
 .iconf-Christmas {
 	width: 20px;
 	height: 20px;
-}	
+}
 .createBtn {
 	/* margin-left: 1%; */
 }

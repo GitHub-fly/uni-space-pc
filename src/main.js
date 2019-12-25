@@ -11,9 +11,11 @@ import Vuetify from 'vuetify/lib'
 import colors from 'vuetify/lib/util/colors'
 // 引入音乐组件
 import vueAplayer from 'vue-aplayer'
+import Editor from 'wangeditor';
+
 
 //让vue使用axios
-Vue.use(VueAxios, axios, vueAplayer)
+Vue.use(VueAxios, axios, vueAplayer, Editor)
 Vue.prototype.GLOBAL = global_
 
 Vue.config.productionTip = false

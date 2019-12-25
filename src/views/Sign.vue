@@ -9,10 +9,10 @@
 				</div>
 				<div class="hy-sign-content">
 					<!-- 注册页面的手机号输入框 -->
-					<v-text-field label="手机号" clearable v-model="userDto.mobile" @input="checkPhone()"></v-text-field>
+					<v-text-field dark label="手机号" clearable v-model="userDto.mobile" @input="checkPhone()"></v-text-field>
 
 					<div style="display: flex;">
-						<v-text-field label="验证码" clearable v-model="usercode" @input="checkregbtn"></v-text-field>
+						<v-text-field dark label="验证码" clearable v-model="usercode" @input="checkregbtn"></v-text-field>
 
 						<a @click="getcode" style="cursor: pointer;" :disabled="codeDisabled">{{ codemsg }}</a>
 
@@ -27,12 +27,13 @@
 				<div class="blank">
 					<label class="alert">{{ mobileTip }}</label>
 				</div>
-				<a @click="addlogin" class="hy-nopassword-text">免密登录</a>
+				<a @click="addlogin" class="xxq-orange hy-nopassword-text">免密登录</a>
 				<div class="hy-sign-content">
 					<!-- 验证码登录的账号输入框 -->
-					<v-text-field label="账号" clearable v-model="userDto.mobile" @input="checkPhone()"></v-text-field>
+					<v-text-field dark label="账号" clearable v-model="userDto.mobile" @input="checkPhone()"></v-text-field>
 					<!-- 验证码登录页面的密码输入框 -->
 					<v-text-field
+						dark
 						:append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
 						:rules="[rules.required, rules.min]"
 						:type="show1 ? 'text' : 'password'"
@@ -46,15 +47,13 @@
 					></v-text-field>
 					<!-- 验证码登录页面的图形验证码及输入框 -->
 					<div class="code-box">
-						<v-text-field label="验证码" clearable v-model="usercode" @input="checkpiccode()"></v-text-field>
-						<div class="verify" @click.prevent="refresh">
-							<img ref="codeImg" />
-						</div>
+						<v-text-field dark label="验证码" clearable v-model="usercode" @input="checkpiccode()"></v-text-field>
+						<div class="verify" @click.prevent="refresh"><img ref="codeImg" /></div>
 					</div>
 				</div>
 
 				<button @click="signIn()" :disabled="loginbtn" :class="{ graybtn: loginbtn }">登录</button>
-				<a @click="forgetpassword" class="hy-sign-forget">忘记密码</a>
+				<a @click="forgetpassword" class="xxq-orange hy-sign-forget">忘记密码</a>
 				<div class="hy-icon-pos">
 					<i class="iconfont " style="color: #4cafe9;">&#xe6ca;</i>
 					<i class="iconfont " style="color: #e71f19">&#xe666;</i>
@@ -70,11 +69,10 @@
 				<!-- 免密登录页的主体部分 -->
 				<div class="hy-sign-content">
 					<!-- 免密登录页面的手机号输入框 -->
-					<v-text-field label="手机号" clearable v-model="userDto.mobile" @input="checkPhone()"></v-text-field>
+					<v-text-field dark label="手机号" clearable v-model="userDto.mobile" @input="checkPhone()"></v-text-field>
 					<!-- 免密登录页面的验证码输入框及输入按钮 -->
 					<div style="display: flex;">
-						>
-						<v-text-field label="验证码" clearable v-model="usercode" @input="checkregbtn"></v-text-field>
+						<v-text-field dark label="验证码" clearable v-model="usercode" @input="checkregbtn"></v-text-field>
 						<!-- <input type="text" placeholder="验证码" style="width: 70%;" v-model="usercode" @input="checkregbtn"> -->
 						<a @click="getcode" style="cursor:pointer;">{{ codemsg }}</a>
 					</div>
@@ -90,7 +88,7 @@
 				<!-- 找回密码页的主体部分 -->
 				<div class="hy-sign-content">
 					<!-- 找回密码的手机号输入框 -->
-					<v-text-field label="手机号" clearable v-model="userDto.mobile" @input="checkPhone()"></v-text-field>
+					<v-text-field dark label="手机号" clearable v-model="userDto.mobile" @input="checkPhone()"></v-text-field>
 					<!-- 找回密码页的验证码及验证码按钮 -->
 					<div style="display: flex;">
 						<v-text-field label="验证码" clearable v-model="usercode" @input="checkretcode()"></v-text-field>
@@ -98,6 +96,7 @@
 					</div>
 					<!-- 找回密码页的密码输入框 -->
 					<v-text-field
+						dark
 						:append-icon="show1 ? 'mdi-eye' : 'mdi-eye-off'"
 						:rules="[rules.required, rules.min]"
 						:type="show1 ? 'text' : 'password'"
@@ -207,10 +206,10 @@ export default {
 							if (res.data.msg == '成功') {
 								this.tipmsg = '登录成功';
 								this.getmask();
+								localStorage.setItem('user', JSON.stringify(res.data.data));
 								this.$router.push({
 									path: 'nav'
 								});
-								localStorage.setItem('user', JSON.stringify(res.data.data));
 							} else {
 								this.tipmsg = res.data.msg;
 								this.getmask();
@@ -252,6 +251,7 @@ export default {
 					}).then(res => {
 						if (res.data.msg === '成功') {
 							this.tipmsg = '登录成功';
+							localStorage.setItem('user', JSON.stringify(res.data.data));
 							this.$router.push({
 								path: 'nav'
 							});
@@ -282,6 +282,12 @@ export default {
 					console.log(res.data);
 					if (res.data.msg === '成功') {
 						this.tipmsg = '注册成功';
+						this.getmask();
+						
+						localStorage.setItem('user', JSON.stringify(res.data.data));
+						this.$router.push({
+							path: 'nav'
+						});
 					} else {
 						this.tipmsg = res.data.msg;
 						this.getmask();
@@ -406,7 +412,7 @@ export default {
 							method: 'put',
 							url: this.GLOBAL.baseUrl + '/user/userPassword',
 							data: {
-								name: this.userDto.mobile,
+								mobile: this.userDto.mobile,
 								password: this.userDto.password,
 								verifyCode: this.usercode
 							}
@@ -770,5 +776,9 @@ button.ghost {
 	src: url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.eot?#iefix') format('embedded-opentype'), url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.woff2') format('woff2'),
 		url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.woff') format('woff'), url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.ttf') format('truetype'),
 		url('//at.alicdn.com/t/font_1551082_2eu4o9k3sdz.svg#iconfont') format('svg');
+}
+
+.xxq-orange {
+	color: #e24f37;
 }
 </style>

@@ -1,8 +1,8 @@
 <template>
-	<div class="hy-index-large">
+	<div class="hy-index-large" style="background-color: red;">
 		<div class="hy-index-mid">
 			<div style="width: 100%;" v-for="(journal, index) in myjournal" :key="index">
-				<div class="hy-index-mid-row">
+				<div class="hy-index-mid-row ">
 					<!-- 个人日志列表 -->
 					<div class="hy-index-mid-article">
 						<v-card height="30%">
@@ -23,12 +23,12 @@
 			</div>
 		</div>
 
-		<div class="hy-index-rigth">
+		<div class="hy-index-rigth ">
 			<v-card class="" style="margin-bottom: 2%;" v-for="(journal, index) in manyjournal" :key="index">
 				<v-img class="white--text align-end" height="120px" :src="journal.thumbnail"></v-img>
 				<v-card-title class="body-1 journalTitle">{{ journal.title }}</v-card-title>
 				<v-card-actions>
-					<v-spacer></v-spacer>
+					<!-- <v-spacer></v-spacer> -->
 					<v-btn color="orange" text @click="journaldetail(journal.id)">查看详情</v-btn>
 				</v-card-actions>
 			</v-card>
@@ -101,7 +101,7 @@ export default {
 	text-indent: 2em;
 }
 .hy-index-large {
-	width: 100%;
+	width: 80%;
 	display: flex;
 	justify-content: space-between;
 }
@@ -111,12 +111,12 @@ export default {
 }
 
 .hy-index-mid {
-	width: 73%;
+	width: 65%;
 	display: flex;
 	flex-wrap: wrap;
 }
 
 .hy-index-rigth {
-	width: 25%;
+	width: 32%;
 }
 </style>

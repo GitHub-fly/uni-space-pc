@@ -26,7 +26,7 @@
 						<v-list-item-content><v-list-item-title>相册</v-list-item-title></v-list-item-content>
 					</v-list-item>
 
-					<v-list-item to="/music">
+					<v-list-item to="/index/music">
 						<!-- <v-list-item-icon><i class="iconfont">&#xe6bb;</i></v-list-item-icon> -->
 						<v-list-item-icon>
 							<svg class="iconf" aria-hidden="true"><use xlink:href="#icon-guaizhangtang"></use></svg>
@@ -34,9 +34,9 @@
 						<v-list-item-content><v-list-item-title>音乐</v-list-item-title></v-list-item-content>
 					</v-list-item>
 				</v-list>
+				<iframe class="frame" scrolling="no" frameborder="0" allowtransparency="true" :src="src"></iframe>
 			</v-card>
 		</div>
-
 		<router-view class="view" />
 	</div>
 </template>
@@ -44,10 +44,14 @@
 <script>
 export default {
 	data() {
-		return {};
+		return {
+			src: null
+		};
 	},
 
-	created() {},
+	created() {
+		this.src = 'http://i.tianqi.com/index.php?c=code&id=12&icon=1&num=3';
+	},
 
 	methods: {
 		toAlbum() {
@@ -60,8 +64,15 @@ export default {
 </script>
 
 <style scoped>
+.frame {
+	width: 100%;
+	margin-left: 20px;
+	display: flex;
+	flex-wrap: wrap;
+}
 .area {
 	display: flex;
+	height: 900px;
 }
 .view {
 	margin-left: 2%;

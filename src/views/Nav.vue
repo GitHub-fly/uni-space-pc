@@ -81,9 +81,9 @@
 									<template v-slot:badge>
 										{{ this.messageList.length }}
 									</template> -->
-									<v-btn v-on="on" @click="getMessage()" style="height: 100%;">
-										<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-milu"></use></svg>
-									</v-btn>
+								<v-btn v-on="on" @click="getMessage()" style="height: 100%;">
+									<svg class="iconf-Christmas" aria-hidden="true"><use xlink:href="#icon-milu"></use></svg>
+								</v-btn>
 								<!-- </v-badge> -->
 								<!-- <span>消息</span>
 							</v-tooltip> -->
@@ -202,8 +202,8 @@
 													<v-switch v-model="rightShow[index]"></v-switch>
 												</v-chip>
 												<div class="applicationBox" v-if="tabText === '好友请求'">
-													<v-btn icon small><i class="iconfont" @click="aggreee(item.id)">&#xe7cd;</i></v-btn>
-													<v-btn icon small><i class="iconfont" @click="reject(item.id)">&#xe65a;</i></v-btn>
+													<v-btn @click="aggreee(item.id)" icon small><i class="iconfont">&#xe7cd;</i></v-btn>
+													<v-btn @click="reject(item.id)" icon small><i class="iconfont">&#xe65a;</i></v-btn>
 												</div>
 											</div>
 										</v-list-item-title>
@@ -263,6 +263,7 @@ export default {
 			permissionBtnStatus: false,
 			permissionBtnStatusShow: false,
 			user: null,
+			token1: null,
 			messages: [
 				{
 					title: 'Home',
@@ -283,7 +284,8 @@ export default {
 				fromId: JSON.parse(localStorage.getItem('user')).id,
 				keyWords: '',
 				toId: null
-			}
+			},
+			userDto: { id: JSON.parse(localStorage.getItem('user')).id }
 		};
 	},
 	methods: {
@@ -415,11 +417,13 @@ export default {
 				}
 			}).then(res => {
 				this.myFriends = res.data.data;
-				for (var i = 0; i < this.myFriends.length; i++) {
-					if (this.myFriends[i].collectionFlag == 1) {
-						this.rightShow[i] = true;
-					} else {
-						this.rightShow[i] = false;
+				if (this.myFriends != null) {
+					for (var i = 0; i < this.myFriends.length; i++) {
+						if (this.myFriends[i].collectionFlag == 1) {
+							this.rightShow[i] = true;
+						} else {
+							this.rightShow[i] = false;
+						}
 					}
 				}
 				console.log(this.rightShow);
@@ -450,6 +454,7 @@ export default {
 		},
 		// 同意添加好友的方法
 		aggreee(id) {
+			console.log(id);
 			this.friendDto.toId = id;
 			this.axios({
 				method: 'put',
@@ -459,6 +464,7 @@ export default {
 					'Content-Type': 'application/json'
 				}
 			}).then(res => {
+				console.log(this.friendDto.toId);
 				this.showInfoFriendBox();
 			});
 		},
@@ -555,6 +561,16 @@ export default {
 				// alert(res.data.msg)
 				// console.log(res.data.msg)
 			});
+		},
+
+		getToken() {
+			this.axios({ method: 'post', url: this.GLOBAL.baseUrl + '/user/login', data: JSON.stringify(this.userDto), headers: { 'Content-Type': 'application/json' } }).then(
+				res => {
+					if (res.data.msg == '成功') {
+						this.token = res.data.data;
+					}
+				}
+			);
 		}
 	},
 	mounted() {

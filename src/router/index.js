@@ -22,8 +22,7 @@ Vue.use(VueRouter)
 const routes = [{
 		path: 'nav',
 		component: Nav,
-		children: [
-			{
+		children: [{
 				path: '/nav',
 				redirect: '/index'
 			},
@@ -60,6 +59,11 @@ const routes = [{
 						component: JournalDetail
 					},
 					{
+						path: '/index/music',
+						name: 'music',
+						component: Music
+					},
+					{
 						path: '/index/retrieve',
 						name: 'retrieve',
 						component: Retrieve
@@ -84,11 +88,6 @@ const routes = [{
 		path: '/',
 		name: 'sign',
 		component: Sign
-	},
-	{
-		path: '/music',
-		name: 'music',
-		component: Music
 	},
 	{
 		path: '/test',
